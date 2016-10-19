@@ -79,6 +79,12 @@ namespace Ra
 
         const ShaderProgram* ShaderProgramManager::getShaderProgram(const ShaderConfiguration& config)
         {
+            auto found = m_shaderPrograms.find(config);
+            if (found != m_shaderPrograms.end())
+            {
+                return found->second.get();
+            }
+
             return addShaderProgram(config);
         }
 
