@@ -45,7 +45,7 @@ namespace Ra
         public:
             RA_CORE_ALIGNED_NEW
 
-            explicit Material( const std::string& name );
+            explicit Material(std::string name);
             ~Material();
 
             // FIXME(Charly): This should be a "gl material" class work
