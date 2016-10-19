@@ -9,6 +9,8 @@
 #include <Core/Index/IndexMap.hpp>
 #include <Core/Utils/Singleton.hpp>
 
+#include <Engine/Renderer/OpenGL/OpenGL.hpp>
+
 namespace Ra
 {
     namespace Engine
@@ -21,6 +23,9 @@ namespace Ra
 
         using MaterialPtr = std::shared_ptr<Material>;
         using RenderTechniquePtr = std::shared_ptr<RenderTechnique>;
+        using MeshPtr = std::shared_ptr<Mesh>;
+        using TexturePtr = std::shared_ptr<Texture>;
+        using ShaderProgramPtr = std::shared_ptr<ShaderProgram>;
 
         class RA_ENGINE_API AssetManager
         {
@@ -32,6 +37,9 @@ namespace Ra
 
             Core::Index createRenderTechnique();
             Core::Index createMaterial(std::string name);
+            Core::Index createShaderProgram();
+            Core::Index createTexture();
+            Core::Index createMesh(std::string name, GLenum renderMode = GL_TRIANGLES);
 
             inline RenderTechnique* renderTechnique(const Core::Index& idx)
             { return m_renderTechniques.at(idx).get(); }
@@ -45,14 +53,25 @@ namespace Ra
 
             inline void removeRenderTechnique(const Core::Index& idx)
             { m_renderTechniques.remove(idx); }
+
             inline void removeMaterial(const Core::Index& idx)
             { m_materials.remove(idx); }
 
+            inline void removeShaderProgram(const Core::Index& idx)
+            { m_shaderPrograms.remove(idx); }
 
+            inline void removeMesh(const Core::Index& idx)
+            { m_meshes.remove(idx); }
+
+            inline void removeTexture(const Core::Index& idx)
+            { m_textures.remove(idx); }
 
         private:
-            Core::IndexMap<RenderTechniquePtr> m_renderTechniques;
-            Core::IndexMap<MaterialPtr> m_materials;
+            Core::IndexMap<RenderTechniquePtr>  m_renderTechniques;
+            Core::IndexMap<MaterialPtr>         m_materials;
+            Core::IndexMap<MeshPtr>             m_meshes;
+            Core::IndexMap<ShaderProgramPtr>    m_shaderPrograms;
+            Core::IndexMap<TexturePtr>          m_textures;
         };
     }
 }
