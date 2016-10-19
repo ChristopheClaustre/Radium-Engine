@@ -87,6 +87,7 @@ endif()
 
 if ("${ENABLE_FANCY_GL}" STREQUAL "False")
   add_definitions(-DNO_TRANSPARENCY)
+  add_definitions(-DUSE_OPENGL330)
   message("Fancy OpenGL Effects are disabled")
 endif()
 
