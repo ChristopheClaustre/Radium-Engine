@@ -27,16 +27,15 @@ namespace Ra
 {
     namespace Engine
     {
+        class AssetManager;
         class Camera;
-        class RenderObject;
         class FBO;
         class Light;
         class Mesh;
-        class ShaderProgram;
-        class ShaderProgramManager;
-        class Texture;
-        class TextureManager;
+        class RenderObject;
         class RenderObjectManager;
+        class ShaderProgram;
+        class Texture;
     }
 }
 
@@ -283,7 +282,7 @@ namespace Ra
             uint m_width;
             uint m_height;
 
-            ShaderProgramManager* m_shaderMgr;
+            AssetManager* m_assetMgr;
             RenderObjectManager* m_roMgr;
 
             // FIXME(Charly): Should we change "displayedTexture" to "debuggedTexture" ?
@@ -296,7 +295,7 @@ namespace Ra
              */
             Texture* m_displayedTexture;
 
-            std::unique_ptr<Texture> m_fancyTexture;
+            Texture* m_fancyTexture;
             std::map<std::string, Texture*> m_secondaryTextures;
 
             // FIXME(Charly): Scene class
@@ -310,11 +309,14 @@ namespace Ra
             std::vector<RenderObjectPtr> m_uiRenderObjects;
 
             // Simple quad mesh, used to render the final image
-            std::unique_ptr<Mesh> m_quadMesh;
+            Mesh* m_quadMesh;
 
             bool m_drawDebug;           // Should we render debug stuff ?
             bool m_wireframe;           // Are we rendering in "real" wireframe mode
             bool m_postProcessEnabled;  // Should we do post processing ?
+
+            ShaderProgram* m_drawScreenShader;
+            ShaderProgram* m_pickingShader;
 
         private:
             // Qt has the nice idea to bind an fbo before giving you the opengl context,
@@ -328,11 +330,11 @@ namespace Ra
 
             // PICKING STUFF
             std::unique_ptr<FBO>     m_pickingFbo;
-            std::unique_ptr<Texture> m_pickingTexture;
+            Texture* m_pickingTexture;
 
             // TODO(Charly): Check if this leads to some rendering / picking bugs
             // (because different depth textures would be written, and so on)
-            std::unique_ptr<Texture>    m_depthTexture;
+            Texture* m_depthTexture;
 
             std::vector<PickingQuery>   m_pickingQueries;
             std::vector<PickingQuery>   m_lastFramePickingQueries;

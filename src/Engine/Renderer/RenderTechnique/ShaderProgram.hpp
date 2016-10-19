@@ -44,10 +44,10 @@ namespace Ra
             std::vector<struct LineErr> subfiles;
         };
 
-        /// A struct used to create shader programs later on. 
+        /// A struct used to create shader programs later on.
         /// A ShaderConfiguration should be added once to the ShaderConfigurationFactory,
         /// then the factory must be used to retrieve the added shader configurations.
-        /// Typical use case : 
+        /// Typical use case :
         ///     /**************************** CREATION ****************************/
         ///     // Create the shader configuration once (see MainApplication::addBasicShaders for example)
         ///     ShaderConfiguration config("MyConfig");
@@ -56,12 +56,12 @@ namespace Ra
         ///     config.addShader(ShaderType_FRAGMENT, "path/to/shader.frag.glsl");
         ///     // Same for other shader types. Vertex and fragment are required, other are optional
         ///     // Note that, for a compute shader, only the compute shader is needed.
-        ///     
+        ///
         ///     // Add the configuration to the factory
         ///     ShaderConfigurationFactory::addConfiguration(config);
-        ///      
+        ///
         ///     /**************************** USAGE ****************************/
-        ///     // When you want to reuse created shader configurations, just set it using 
+        ///     // When you want to reuse created shader configurations, just set it using
         ///     auto config = ShaderConfigurationFactory::getConfiguration("MyConfig");
         ///     // You can then pass it to createRenderObject for example
         ///     createRenderObject(name, component, RenderObjectType::Fancy, mesh, config, material);
@@ -73,10 +73,10 @@ namespace Ra
             ShaderConfiguration() = default;
             /// Initializes a shader configuration with a name
             /// Warning: This does not query the corresponding configuration in the ShaderConfigurationFactory
-            /// The proper way to do this is by calling 
+            /// The proper way to do this is by calling
             /// ShaderConfigurationFactory::getConfiguration(name);
             ShaderConfiguration(const std::string& name);
-            
+
             /// Initializes a configuration with a name, a vertex and a fragment shader
             /// This does not add the configuration to the factory
             /// ShaderConfigurationFactory::addConfiguration(config) must be called.

@@ -290,7 +290,12 @@ namespace Ra
         void ShaderObject::compile( const std::string& shader, const std::set<std::string>& properties )
         {
             const char* data[3];
+#if defined(USE_OPENGL330)
+            data[0] = "#version 330\n"
+              "#extension GL_ARB_separate_shader_objects;\n";
+#else
             data[0] = "#version 410\n";
+#endif
 
             std::stringstream ss;
             for ( auto property : properties )

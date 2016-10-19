@@ -20,6 +20,7 @@
 #include <Engine/Entity/Entity.hpp>
 #include <Engine/Component/Component.hpp>
 
+#include <Engine/Managers/AssetManager.hpp>
 #include <Engine/Managers/EntityManager/EntityManager.hpp>
 #include <Engine/Managers/ComponentMessenger/ComponentMessenger.hpp>
 #include <Engine/Managers/SystemDisplay/SystemDisplay.hpp>
@@ -46,7 +47,7 @@ namespace Ra
             m_entityManager.reset( new EntityManager );
             m_renderObjectManager.reset( new RenderObjectManager );
             ComponentMessenger::createInstance();
-
+            AssetManager::createInstance();
         }
 
         void RadiumEngine::cleanup()

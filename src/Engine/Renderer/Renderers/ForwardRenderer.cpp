@@ -12,6 +12,7 @@
 #include <Core/Containers/MakeShared.hpp>
 
 #include <Engine/RadiumEngine.hpp>
+#include <Engine/Managers/AssetManager.hpp>
 #include <Engine/Renderer/OpenGL/OpenGL.hpp>
 #include <Engine/Renderer/OpenGL/FBO.hpp>
 #include <Engine/Renderer/RenderTechnique/RenderTechnique.hpp>
@@ -71,13 +72,13 @@ namespace Ra
 
         void ForwardRenderer::initShaders()
         {
-            m_shaderMgr->addShaderProgram("DepthMap", "../Shaders/DepthMap.vert.glsl", "../Shaders/DepthMap.frag.glsl");
-            m_shaderMgr->addShaderProgram("DepthAmbientPass", "../Shaders/BlinnPhong.vert.glsl", "../Shaders/DepthAmbientPass.frag.glsl");
-            m_shaderMgr->addShaderProgram("FinalCompose", "../Shaders/Basic2D.vert.glsl", "../Shaders/FinalCompose.frag.glsl");
+            m_depthShader           = m_assetMgr->shaderProgram(m_assetMgr->createShaderProgram("../Shaders/DepthMap.vert.glsl", "../Shaders/DepthMap.frag.glsl"));
+            m_ambientPassShader     = m_assetMgr->shaderProgram(m_assetMgr->createShaderProgram("../Shaders/BlinnPhong.vert.glsl", "../Shaders/DepthAmbientPass.frag.glsl"));
+            m_finalComposeShader    = m_assetMgr->shaderProgram(m_assetMgr->createShaderProgram("../Shaders/Basic2D.vert.glsl", "../Shaders/FinalCompose.frag.glsl"));
 #ifndef NO_TRANSPARENCY
-            m_shaderMgr->addShaderProgram("LitOIT", "../Shaders/BlinnPhong.vert.glsl", "../Shaders/LitOIT.frag.glsl");
-            m_shaderMgr->addShaderProgram("UnlitOIT", "../Shaders/Plain.vert.glsl", "../Shaders/UnlitOIT.frag.glsl");
-            m_shaderMgr->addShaderProgram("ComposeOIT", "../Shaders/Basic2D.vert.glsl", "../Shaders/ComposeOIT.frag.glsl");
+            m_litOITShader          = m_assetMgr->shaderProgram(m_assetMgr->createShaderProgram("../Shaders/BlinnPhong.vert.glsl", "../Shaders/LitOIT.frag.glsl"));
+            m_unlitOITShader        = m_assetMgr->shaderProgram(m_assetMgr->createShaderProgram("../Shaders/Plain.vert.glsl", "../Shaders/UnlitOIT.frag.glsl"));
+            m_composeOITShader      = m_assetMgr->shaderProgram(m_assetMgr->createShaderProgram("../Shaders/Basic2D.vert.glsl", "../Shaders/ComposeOIT.frag.glsl"));
 #endif
         }
 
@@ -88,13 +89,13 @@ namespace Ra
             m_postprocessFbo.reset(new FBO(FBO::Component_Color | FBO::Component_Depth, m_width, m_height));
 
             // Render pass
-            m_textures[RendererTextures_Depth].reset(new Texture("Depth"));
-            m_textures[RendererTextures_HDR].reset(new Texture("HDR"));
-            m_textures[RendererTextures_Normal].reset(new Texture("Normal"));
-            m_textures[RendererTextures_Diffuse].reset(new Texture("Diffuse"));
-            m_textures[RendererTextures_Specular].reset(new Texture("Specular"));
-            m_textures[RendererTextures_OITAccum].reset(new Texture("OIT Accum"));
-            m_textures[RendererTextures_OITRevealage].reset(new Texture("OIT Revealage"));
+            m_textures[RendererTextures_Depth]          = m_assetMgr->texture(m_assetMgr->createTexture("Depth"));
+            m_textures[RendererTextures_HDR]            = m_assetMgr->texture(m_assetMgr->createTexture("HDR"));
+            m_textures[RendererTextures_Normal]         = m_assetMgr->texture(m_assetMgr->createTexture("Normal"));
+            m_textures[RendererTextures_Diffuse]        = m_assetMgr->texture(m_assetMgr->createTexture("Diffuse"));
+            m_textures[RendererTextures_Specular]       = m_assetMgr->texture(m_assetMgr->createTexture("Specular"));
+            m_textures[RendererTextures_OITAccum]       = m_assetMgr->texture(m_assetMgr->createTexture("OIT Accum"));
+            m_textures[RendererTextures_OITRevealage]   = m_assetMgr->texture(m_assetMgr->createTexture("OIT Revealage"));
 
             m_textures[RendererTextures_Depth]->internalFormat = GL_DEPTH_COMPONENT24;
             m_textures[RendererTextures_Depth]->dataType = GL_UNSIGNED_INT;
@@ -117,13 +118,13 @@ namespace Ra
             m_textures[RendererTextures_OITRevealage]->internalFormat = GL_RGBA32F;
             m_textures[RendererTextures_OITRevealage]->dataType = GL_FLOAT;
 
-            m_secondaryTextures["Depth Texture"]    = m_textures[RendererTextures_Depth].get();
-            m_secondaryTextures["HDR Texture"]      = m_textures[RendererTextures_HDR].get();
-            m_secondaryTextures["Normal Texture"]   = m_textures[RendererTextures_Normal].get();
-            m_secondaryTextures["Diffuse Texture"]  = m_textures[RendererTextures_Diffuse].get();
-            m_secondaryTextures["Specular Texture"] = m_textures[RendererTextures_Specular].get();
-            m_secondaryTextures["OIT Accum"]        = m_textures[RendererTextures_OITAccum].get();
-            m_secondaryTextures["OIT Revealage"]    = m_textures[RendererTextures_OITRevealage].get();
+            m_secondaryTextures["Depth Texture"]    = m_textures[RendererTextures_Depth];
+            m_secondaryTextures["HDR Texture"]      = m_textures[RendererTextures_HDR];
+            m_secondaryTextures["Normal Texture"]   = m_textures[RendererTextures_Normal];
+            m_secondaryTextures["Diffuse Texture"]  = m_textures[RendererTextures_Diffuse];
+            m_secondaryTextures["Specular Texture"] = m_textures[RendererTextures_Specular];
+            m_secondaryTextures["OIT Accum"]        = m_textures[RendererTextures_OITAccum];
+            m_secondaryTextures["OIT Revealage"]    = m_textures[RendererTextures_OITRevealage];
         }
 
         void ForwardRenderer::updateStepInternal( const RenderData& renderData )
@@ -185,7 +186,7 @@ namespace Ra
 
             GL_ASSERT( glDrawBuffers( 4, buffers ) );
 
-            shader = m_shaderMgr->getShaderProgram("DepthAmbientPass");
+            shader = m_ambientPassShader;
             shader->bind();
             for ( const auto& ro : m_fancyRenderObjects )
             {
@@ -258,7 +259,7 @@ namespace Ra
             GL_ASSERT(glBlendFunci(0, GL_ONE, GL_ONE));
             GL_ASSERT(glBlendFunci(1, GL_ZERO, GL_ONE_MINUS_SRC_ALPHA));
 
-            shader = m_shaderMgr->getShaderProgram("LitOIT");
+            shader = m_litOITShader;
             shader->bind();
 
             if ( m_lights.size() > 0 )
@@ -298,10 +299,10 @@ namespace Ra
             GL_ASSERT(glDepthFunc(GL_ALWAYS));
             GL_ASSERT(glBlendFunc(GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA));
 
-            shader = m_shaderMgr->getShaderProgram("ComposeOIT");
+            shader = m_composeOITShader;
             shader->bind();
-            shader->setUniform("u_OITSumColor", m_textures[RendererTextures_OITAccum].get(), 0);
-            shader->setUniform("u_OITSumWeight", m_textures[RendererTextures_OITRevealage].get(), 1);
+            shader->setUniform("u_OITSumColor", m_textures[RendererTextures_OITAccum], 0);
+            shader->setUniform("u_OITSumWeight", m_textures[RendererTextures_OITRevealage], 1);
 
             m_quadMesh->render();
 #endif
@@ -440,8 +441,8 @@ namespace Ra
 
                 shader = m_shaderMgr->getShaderProgram("ComposeOIT");
                 shader->bind();
-                shader->setUniform("u_OITSumColor", m_textures[TEX_OIT_TEXTURE_ACCUM].get(), 0);
-                shader->setUniform("u_OITSumWeight", m_textures[TEX_OIT_TEXTURE_REVEALAGE].get(), 1);
+                shader->setUniform("u_OITSumColor", m_textures[TEX_OIT_TEXTURE_ACCUM], 0);
+                shader->setUniform("u_OITSumWeight", m_textures[TEX_OIT_TEXTURE_REVEALAGE], 1);
 
                 m_quadMesh->render();
 
@@ -557,9 +558,9 @@ namespace Ra
 
             GL_ASSERT(glDrawBuffers(1, buffers));
             GL_ASSERT(glViewport(0, 0, m_width, m_height));
-            shader = m_shaderMgr->getShaderProgram("DrawScreen");
+            shader = m_drawScreenShader;
             shader->bind();
-            shader->setUniform("screenTexture", m_textures[RendererTextures_HDR].get(), 0);
+            shader->setUniform("screenTexture", m_textures[RendererTextures_HDR], 0);
             m_quadMesh->render();
         }
 
@@ -577,28 +578,28 @@ namespace Ra
 
             m_fbo->bind();
             m_fbo->setSize( m_width, m_height );
-            m_fbo->attachTexture(GL_DEPTH_ATTACHMENT , m_textures[RendererTextures_Depth].get());
-            m_fbo->attachTexture(GL_COLOR_ATTACHMENT0, m_textures[RendererTextures_HDR].get());
-            m_fbo->attachTexture(GL_COLOR_ATTACHMENT1, m_textures[RendererTextures_Normal].get());
-            m_fbo->attachTexture(GL_COLOR_ATTACHMENT2, m_textures[RendererTextures_Diffuse].get());
-            m_fbo->attachTexture(GL_COLOR_ATTACHMENT3, m_textures[RendererTextures_Specular].get());
+            m_fbo->attachTexture(GL_DEPTH_ATTACHMENT , m_textures[RendererTextures_Depth]);
+            m_fbo->attachTexture(GL_COLOR_ATTACHMENT0, m_textures[RendererTextures_HDR]);
+            m_fbo->attachTexture(GL_COLOR_ATTACHMENT1, m_textures[RendererTextures_Normal]);
+            m_fbo->attachTexture(GL_COLOR_ATTACHMENT2, m_textures[RendererTextures_Diffuse]);
+            m_fbo->attachTexture(GL_COLOR_ATTACHMENT3, m_textures[RendererTextures_Specular]);
             m_fbo->check();
             m_fbo->unbind( true );
 
 #ifndef NO_TRANSPARENCY
             m_oitFbo->bind();
             m_oitFbo->setSize( m_width, m_height );
-            m_oitFbo->attachTexture(GL_DEPTH_ATTACHMENT , m_textures[RendererTextures_Depth].get());
-            m_oitFbo->attachTexture(GL_COLOR_ATTACHMENT0, m_textures[RendererTextures_OITAccum].get());
-            m_oitFbo->attachTexture(GL_COLOR_ATTACHMENT1, m_textures[RendererTextures_OITRevealage].get());
+            m_oitFbo->attachTexture(GL_DEPTH_ATTACHMENT , m_textures[RendererTextures_Depth]);
+            m_oitFbo->attachTexture(GL_COLOR_ATTACHMENT0, m_textures[RendererTextures_OITAccum]);
+            m_oitFbo->attachTexture(GL_COLOR_ATTACHMENT1, m_textures[RendererTextures_OITRevealage]);
             m_oitFbo->check();
             m_oitFbo->unbind( true );
 #endif
 
             m_postprocessFbo->bind();
             m_postprocessFbo->setSize(m_width, m_height);
-            m_postprocessFbo->attachTexture(GL_DEPTH_ATTACHMENT , m_textures[RendererTextures_Depth].get());
-            m_postprocessFbo->attachTexture(GL_COLOR_ATTACHMENT0, m_fancyTexture.get());
+            m_postprocessFbo->attachTexture(GL_DEPTH_ATTACHMENT , m_textures[RendererTextures_Depth]);
+            m_postprocessFbo->attachTexture(GL_COLOR_ATTACHMENT0, m_fancyTexture);
             m_postprocessFbo->check();
             m_postprocessFbo->unbind( true );
 

@@ -51,17 +51,26 @@ namespace Ra
             std::unique_ptr<FBO> m_fbo;
             std::unique_ptr<FBO> m_postprocessFbo;
             std::unique_ptr<FBO> m_oitFbo;
-            
+
             std::vector<RenderObjectPtr> m_transparentRenderObjects;
             uint m_fancyTransparentCount;
 
             uint m_pingPongSize;
 
-            std::array<std::unique_ptr<Texture>, RendererTexture_Count> m_textures;
+            std::array<Texture*, RendererTexture_Count> m_textures;
 
             static const int ShadowMapSize = 1024;
             std::vector<std::shared_ptr<Texture>> m_shadowMaps;
             std::vector<Core::Matrix4> m_lightMatrices;
+
+            ShaderProgram* m_depthShader;
+            ShaderProgram* m_ambientPassShader;
+            ShaderProgram* m_finalComposeShader;
+#ifndef NO_TRANSPARENCY
+            ShaderProgram* m_litOITShader;
+            ShaderProgram* m_unlitOITShader;
+            ShaderProgram* m_composeOITShader;
+#endif
         };
 
     } // namespace Engine
