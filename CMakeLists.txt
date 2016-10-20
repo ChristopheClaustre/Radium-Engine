@@ -11,20 +11,33 @@ set( USE_DOUBLE False CACHE BOOL "Use double precision" )
 set( USE_OMP    False CACHE BOOL "Use OpenMP")
 set( ENABLE_FANCY_GL True CACHE BOOL "Enable Fancy OpenGL effects" )
 
+# Set the external project assimp
+include(ExternalAssimp)
+
 if ( NOT CMAKE_BUILD_TYPE )
   set( CMAKE_BUILD_TYPE Debug )
 endif()
-# Set the external project assimp
-include(ExternalAssimp)
 
 # Set the compiler flags.
 include(CompileFlags)
 
+set(GL3W_ROOT "${CMAKE_SOURCE_DIR}/3rdPartyLibraries/gl3w")
+set(GL3W_INC  "${GL3W_ROOT}/include")
+set(GL3W_SRC  "${GL3W_ROOT}/src/gl3w.c")
+
+if (NOT EXISTS ${GL3W_ROOT})
+    execute_process(COMMAND git submodule init)
+    execute_process(COMMAND git submodule update)
+endif()
+
+if (NOT EXISTS ${GL3W_SRC})
+    message(STATUS "Generating gl3w source files")
+    execute_process(COMMAND python gl3w_gen.py WORKING_DIRECTORY ${GL3W_ROOT})
+endif()
+
 # Problem with Qt linking
 # FIXME(Charly): Not sure if this should be done on Linux
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DQT_COMPILING_QSTRING_COMPAT_CPP")
-
-
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 set(EXECUTABLE_OUTPUT_PATH         ${CMAKE_CURRENT_SOURCE_DIR}/bin)
@@ -34,7 +47,6 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib)
 if ( NOT CMAKE_PREFIX_PATH )
   set( CMAKE_PREFIX_PATH ${CMAKE_CURRENT_SOURCE_DIR} )
 endif()
-
 
 # Win32 stuff
 if (MSVC OR MSVC_IDE)
@@ -73,23 +85,23 @@ set( EIGEN_INC ${EXTERNAL_DIR}/Eigen )
 # Assimp
 set( ASSIMP_INC ${EXTERNAL_DIR}/Assimp/include )
 if( APPLE )
-    if ( ${CMAKE_BUILD_TYPE} STREQUAL "Debug" )
-        set( ASSIMP_LIB "${CMAKE_CURRENT_SOURCE_DIR}/lib/libassimpd.dylib" )
-    else()
+    #if ( ${CMAKE_BUILD_TYPE} STREQUAL "Debug" )
+    #    set( ASSIMP_LIB "${CMAKE_CURRENT_SOURCE_DIR}/lib/libassimpd.dylib" )
+    #else()
         set( ASSIMP_LIB "${CMAKE_CURRENT_SOURCE_DIR}/lib/libassimp.dylib" )
-    endif()
+    #endif()
 elseif ( UNIX )
-    if ( ${CMAKE_BUILD_TYPE} STREQUAL "Debug" )
-        set( ASSIMP_LIB "${CMAKE_CURRENT_SOURCE_DIR}/lib/libassimpd.so" )
-    else()
+    #if ( ${CMAKE_BUILD_TYPE} STREQUAL "Debug" )
+    #    set( ASSIMP_LIB "${CMAKE_CURRENT_SOURCE_DIR}/lib/libassimpd.so" )
+    #else()
         set( ASSIMP_LIB "${CMAKE_CURRENT_SOURCE_DIR}/lib/libassimp.so" )
-    endif()
+    #endif()
 elseif (MINGW)
-    if ( ${CMAKE_BUILD_TYPE} STREQUAL "Debug" )
-        set( ASSIMP_LIB "${CMAKE_CURRENT_SOURCE_DIR}/lib/libassimpd.dll.a" )
-    else()
+    #if ( ${CMAKE_BUILD_TYPE} STREQUAL "Debug" )
+    #    set( ASSIMP_LIB "${CMAKE_CURRENT_SOURCE_DIR}/lib/libassimpd.dll.a" )
+    #else()
         set( ASSIMP_LIB "${CMAKE_CURRENT_SOURCE_DIR}/lib/libassimp.dll.a" )
-    endif()
+    #endif()
 elseif( MSVC )
     # in order to prevent DLL hell, each of the DLLs have to be suffixed with the major version and msvc prefix
     if( MSVC70 OR MSVC71 )

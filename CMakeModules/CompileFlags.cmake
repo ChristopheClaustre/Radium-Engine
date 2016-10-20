@@ -86,9 +86,10 @@ else()
 endif()
 
 if ("${ENABLE_FANCY_GL}" STREQUAL "False")
-  add_definitions(-DNO_TRANSPARENCY)
-  add_definitions(-DUSE_OPENGL330)
-  message("Fancy OpenGL Effects are disabled")
+    message("OpenGL 3.3 will be used, fancy effects will be disabled.")
+else()
+    # FIXME(OpenGL 4.5 ?)
+    message("Using OpenGL 4.1")
 endif()
 
 if ("${USE_OMP}" STREQUAL "True")

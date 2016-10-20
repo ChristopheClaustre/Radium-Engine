@@ -23,5 +23,5 @@ ExternalProject_Add(
             -DASSIMP_BUILD_ASSIMP_TOOLS=False
             -DASSIMP_BUILD_SAMPLES=False
             -DASSIMP_BUILD_TESTS=False
-            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+            -DCMAKE_BUILD_TYPE=Release
 )

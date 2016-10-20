@@ -10,6 +10,9 @@
 #include <Engine/RaEngine.hpp>
 #include <Core/Log/Log.hpp>
 
+#include <GL/gl3w.h>
+
+#if 0
 #ifdef OS_MACOS // Apple has different gl includes.
 
 #include <OpenGL/gl3.h>
@@ -30,6 +33,7 @@
 #include <Engine/Renderer/OpenGL/glext.h>
 
 #endif // OS_MACOS
+#endif
 
 /// Checks that an openGLContext is available (mostly for debug checks and asserts).
 inline bool checkOpenGLContext()

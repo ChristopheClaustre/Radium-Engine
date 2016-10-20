@@ -24,6 +24,7 @@ include_directories(
     .
     ${EIGEN_INC}
     ${ASSIMP_INC}
+    ${GL3W_INC}
 )
 
 # Build Core
@@ -33,7 +34,7 @@ file(GLOB_RECURSE core_sources Core/*.cpp)
 file(GLOB_RECURSE core_headers Core/*.h Core/*.hpp)
 file(GLOB_RECURSE core_inlines Core/*.inl)
 
-set(core_libs ${OPENGL_LIBRARIES})
+set(core_libs)
 
 add_library(
     ${core_target} SHARED
@@ -56,10 +57,6 @@ file(GLOB_RECURSE engine_sources Engine/*.cpp)
 file(GLOB_RECURSE engine_headers Engine/*.h Engine/*.hpp)
 file(GLOB_RECURSE engine_inlines Engine/*.inl)
 
-file(GLOB_RECURSE engine_glsl ../Shaders/*.glsl)
-
-set( engine_shaders ${engine_glsl})
-
 set(engine_libs
     radiumCore
     ${GLEW_LIBRARIES}
@@ -72,19 +69,20 @@ add_library(
     ${engine_sources}
     ${engine_headers}
     ${engine_inlines}
-
-    ${engine_shaders}
+    ${GL3W_SRC}
 )
 
 add_dependencies( ${engine_target} ${core_target} assimp )
 
 target_compile_definitions(${engine_target} PRIVATE "-DRA_ENGINE_EXPORTS")
+if ("${ENABLE_FANCY_GL}" STREQUAL "False")
+    target_compile_definitions(${engine_target} PRIVATE "-DNO_TRANSPARENCY -DUSE_OPENGL330")
+endif()
 
 target_link_libraries(
     ${engine_target}
     ${engine_libs}
 )
-
 
 # Build GuiBase
 set(guibase_target radiumGuiBase)
@@ -120,10 +118,14 @@ add_library(
 add_dependencies( ${guibase_target} ${guibase_target} ${core_target} )
 target_compile_definitions(${guibase_target} PRIVATE "-DRA_GUIBASE_EXPORTS")
 
+if ("${ENABLE_FANCY_GL}" STREQUAL "False")
+    target_compile_definitions(${guibase_target} PRIVATE "-DNO_TRANSPARENCY -DUSE_OPENGL330")
+endif()
+
 target_link_libraries(
     ${guibase_target}
     ${guibase_libs}
-)
+    )
 
 # Build tests
 add_subdirectory(Tests)
@@ -148,6 +150,7 @@ if ( NOT ${OMIT_MAIN_APP} )
     file(GLOB_RECURSE app_sources MainApplication/*.cpp)
     file(GLOB_RECURSE app_headers MainApplication/*.h MainApplication/*.hpp)
     file(GLOB_RECURSE app_inlines MainApplication/*.inl)
+    file(GLOB_RECURSE app_shaders ../Shaders/*.glsl)
 
     file(GLOB_RECURSE app_uis     MainApplication/*.ui)
     qt5_wrap_ui(app_uis_moc ${app_uis})
@@ -158,6 +161,7 @@ if ( NOT ${OMIT_MAIN_APP} )
         .
         ${CMAKE_CURRENT_BINARY_DIR} # Moc
         ${EIGEN_INC}
+        ${GL3W_INC}
         )
 
     add_executable(
@@ -165,11 +169,16 @@ if ( NOT ${OMIT_MAIN_APP} )
         ${app_sources}
         ${app_headers}
         ${app_inlines}
+        ${app_shaders}
         ${app_uis_moc}
         ${resources}
         )
 
     add_dependencies( ${app_target} ${core_target} ${engine_target} ${guibase_target} )
+
+    if ("${ENABLE_FANCY_GL}" STREQUAL "False")
+       target_compile_definitions(${app_target} PRIVATE "-DNO_TRANSPARENCY -DUSE_OPENGL330")
+    endif()
 
     target_link_libraries(
         ${app_target}

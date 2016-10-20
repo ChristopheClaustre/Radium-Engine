@@ -54,6 +54,7 @@ include_directories(
     ${RADIUM_INCLUDE_DIR}
     ${EIGEN_INC}
     ${ASSIMP_INC}
+    ${GL3W_INC}
     )
 
 add_library( Animation SHARED ${sources} ${headers} ${inlines} ${app_uis})

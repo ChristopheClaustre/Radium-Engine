@@ -2,15 +2,13 @@
 #define RADIUMENGINE_VIEWER_HPP
 
 #include <Core/CoreMacros.hpp>
-#if defined (OS_WINDOWS)
-#include <Engine/Renderer/OpenGL/glew.h>
-#endif
 
 #include <memory>
 
+// NOTE(charly): Make sure gl3w.h is included first
+#include <Engine/Renderer/OpenGL/OpenGL.hpp>
 #include <QOpenGLWidget>
-#include <QOpenGLFunctions>
-#include <QThread>
+#include <QOpenGLContext>
 
 #include <Core/Math/LinearAlgebra.hpp>
 #include <Engine/RadiumEngine.hpp>
@@ -19,7 +17,6 @@
 // Uncomment this to deactivate multi-threaded rendering.
 // In that case the call to startRendering() is synchronous
 // and waitForRendering() does nothing.
-#define FORCE_RENDERING_ON_MAIN_THREAD
 
 // Forward declarations
 namespace Ra
@@ -66,7 +63,7 @@ namespace Ra
         /// * catching user interaction (mouse clicks) at the lowest level and forward it to
         /// the camera and the rest of the application
         /// * Expose the asynchronous rendering interface
-        class Viewer : public QOpenGLWidget, protected QOpenGLFunctions
+        class Viewer : public QOpenGLWidget
         {
             Q_OBJECT
 
@@ -140,14 +137,6 @@ namespace Ra
 
             /// Toggle the debug drawing
             void enableDebugDraw(int enabled);
-
-        private slots:
-            /// These slots are connected to the base class signals to properly handle
-            /// concurrent access to the renderer.
-            void onAboutToCompose();
-            void onAboutToResize();
-            void onFrameSwapped();
-            void onResized();
 
         private:
 
