@@ -64,6 +64,15 @@ namespace Ra
 
         void Renderer::initialize()
         {
+#if defined(USE_OPENGL330)
+            GLenum fformat = GL_RGB16F;
+            GLenum iformat = GL_RGB16I;
+            GLenum dformat = GL_DEPTH_COMPONENT;
+#else
+            GLenum fformat = GL_RGB32F;
+            GLenum iformat = GL_RGB32I;
+            GLenum dformat = GL_DEPTH_COMPONENT24;
+#endif
             // Initialize managers
             m_assetMgr = AssetManager::getInstance();
             m_roMgr = RadiumEngine::getInstance()->getRenderObjectManager();
@@ -73,20 +82,20 @@ namespace Ra
             m_pickingShader    = m_assetMgr->shaderProgram(m_assetMgr->createShaderProgram("../Shaders/Picking.vert.glsl", "../Shaders/Picking.frag.glsl"));
 
             m_depthTexture = m_assetMgr->texture(m_assetMgr->createTexture("Depth"));
-            m_depthTexture->internalFormat = GL_DEPTH_COMPONENT24;
+            m_depthTexture->internalFormat = dformat;
             m_depthTexture->dataType = GL_UNSIGNED_INT;
 
             // Picking
             m_pickingFbo.reset(new FBO(FBO::Component( FBO::Component_Color | FBO::Component_Depth ), m_width, m_height));
             m_pickingTexture = m_assetMgr->texture(m_assetMgr->createTexture("Picking"));
-            m_pickingTexture->internalFormat = GL_RGBA32I;
+            m_pickingTexture->internalFormat = iformat;
             m_pickingTexture->dataType = GL_INT;
             m_pickingTexture->minFilter = GL_NEAREST;
             m_pickingTexture->magFilter = GL_NEAREST;
 
             // Final texture
             m_fancyTexture = m_assetMgr->texture(m_assetMgr->createTexture("Final"));
-            m_fancyTexture->internalFormat = GL_RGBA32F;
+            m_fancyTexture->internalFormat = fformat;
             m_fancyTexture->dataType = GL_FLOAT;
 
             m_displayedTexture = m_fancyTexture;

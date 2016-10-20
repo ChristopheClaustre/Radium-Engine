@@ -118,7 +118,7 @@ namespace Ra
         // Create default format for Qt.
         QSurfaceFormat format;
 #if defined(USE_OPENGL330)
-        format.setVersion(3, 3);
+        format.setVersion(3, 0);
 #else
         format.setVersion(4, 1);
 #endif

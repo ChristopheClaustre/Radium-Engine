@@ -97,25 +97,30 @@ namespace Ra
             m_textures[RendererTextures_OITAccum]       = m_assetMgr->texture(m_assetMgr->createTexture("OIT Accum"));
             m_textures[RendererTextures_OITRevealage]   = m_assetMgr->texture(m_assetMgr->createTexture("OIT Revealage"));
 
+#if defined(USE_OPENGL330)
+            GLenum fformat = GL_RGB16F;
+#else
+            GLenum fformat = GL_RGB32F;
+#endif
             m_textures[RendererTextures_Depth]->internalFormat = GL_DEPTH_COMPONENT24;
             m_textures[RendererTextures_Depth]->dataType = GL_UNSIGNED_INT;
 
-            m_textures[RendererTextures_HDR]->internalFormat = GL_RGBA32F;
+            m_textures[RendererTextures_HDR]->internalFormat = fformat;
             m_textures[RendererTextures_HDR]->dataType = GL_FLOAT;
 
-            m_textures[RendererTextures_Normal]->internalFormat = GL_RGBA32F;
+            m_textures[RendererTextures_Normal]->internalFormat = fformat;
             m_textures[RendererTextures_Normal]->dataType = GL_FLOAT;
 
-            m_textures[RendererTextures_Diffuse]->internalFormat = GL_RGBA32F;
+            m_textures[RendererTextures_Diffuse]->internalFormat = fformat;
             m_textures[RendererTextures_Diffuse]->dataType = GL_FLOAT;
 
-            m_textures[RendererTextures_Specular]->internalFormat = GL_RGBA32F;
+            m_textures[RendererTextures_Specular]->internalFormat = fformat;
             m_textures[RendererTextures_Specular]->dataType = GL_FLOAT;
 
-            m_textures[RendererTextures_OITAccum]->internalFormat = GL_RGBA32F;
+            m_textures[RendererTextures_OITAccum]->internalFormat = fformat;
             m_textures[RendererTextures_OITAccum]->dataType = GL_FLOAT;
 
-            m_textures[RendererTextures_OITRevealage]->internalFormat = GL_RGBA32F;
+            m_textures[RendererTextures_OITRevealage]->internalFormat = fformat;
             m_textures[RendererTextures_OITRevealage]->dataType = GL_FLOAT;
 
             m_secondaryTextures["Depth Texture"]    = m_textures[RendererTextures_Depth];

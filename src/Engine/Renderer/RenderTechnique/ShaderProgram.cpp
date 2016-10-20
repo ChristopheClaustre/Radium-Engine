@@ -292,7 +292,7 @@ namespace Ra
             const char* data[3];
 #if defined(USE_OPENGL330)
             data[0] = "#version 330\n"
-              "#extension GL_ARB_separate_shader_objects;\n";
+                      "#extension GL_ARB_separate_shader_objects : require\n";
 #else
             data[0] = "#version 410\n";
 #endif
