@@ -15,6 +15,7 @@
 
 #include <Core/Mesh/DCEL/Iterator/Vertex/VVIterator.hpp>
 #include <Core/Mesh/DCEL/Iterator/Vertex/VFIterator.hpp>
+#include <Core/Mesh/DCEL/Iterator/Vertex/VHEIterator.hpp>
 #include <Core/Mesh/DCEL/Iterator/Edge/EFIterator.hpp>
 
 #include <Core/Mesh/ProgressiveMesh/PriorityQueue.hpp>
@@ -56,7 +57,6 @@ namespace Ra
                 Vertex_ptr v2 = f->HE()->Next()->Next()->V();
 
                 n = Geometry::triangleNormal(v0->P(), v1->P(), v2->P());
-
                 m_quadrics[t] = Quadric(n, -n.dot(v0->P()));
             }
         }
@@ -224,7 +224,6 @@ namespace Ra
             double edgeError;
             Vector3 p = Vector3::Zero();
             int j;
-
 #pragma omp parallel for private(j, edgeProcessedInd, edgeError, p)
             for (unsigned int i = 0; i < numTriangles; i++)
             {
@@ -263,6 +262,9 @@ namespace Ra
             Vector3 p = Vector3::Zero();
             Index vIndex;
 
+            //VHEIterator vsHEIt = VHEIterator(m_dcel->m_vertex[vsIndex]);
+            //HalfEdgeList adjHE = vsHEIt.list();
+
             // Adding an edge
             Vertex_ptr vs = m_dcel->m_vertex[vsIndex];
             HalfEdge_ptr h_start = vs->HE();
@@ -284,14 +286,6 @@ namespace Ra
                 CORE_ASSERT(h->V()->idx == vsIndex, "Invalid reference vertex");
             }
             //pQueue.display();
-        }
-
-        void ProgressiveMesh::test(Index &vs, Index &vt)
-        {
-            vs = m_dcel->m_halfedge[2]->V()->idx;
-            vt = m_dcel->m_halfedge[2]->Next()->V()->idx;
-            Vector3 p = (m_dcel->m_halfedge[2]->V()->P() + m_dcel->m_halfedge[2]->Next()->V()->P()) / 2.;
-            DcelOperations::edgeCollapse(*m_dcel, 2, p);
         }
 
         //--------------------------------------------------
