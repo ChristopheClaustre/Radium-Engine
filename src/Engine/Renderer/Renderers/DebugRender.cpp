@@ -22,104 +22,135 @@ namespace Ra
             auto createProgram = [](const char* vertStr, const char* fragStr) -> uint
             {
                 uint prog = glCreateProgram();
-                
+
                 uint vert = glCreateShader(GL_VERTEX_SHADER);
                 glShaderSource(vert, 1, &vertStr, 0);
                 glCompileShader(vert);
-                
+
                 uint frag = glCreateShader(GL_FRAGMENT_SHADER);
                 glShaderSource(frag, 1, &fragStr, 0);
                 glCompileShader(frag);
-                
+
+                GLint vok, fok;
+                glGetShaderiv(vert, GL_COMPILE_STATUS, &vok);
+                CORE_ASSERT(vok, "Vertex shader not compiled");
+
+                glGetShaderiv(frag, GL_COMPILE_STATUS, &fok);
+                CORE_ASSERT(fok, "Fragment shader not compiled");
+
                 glAttachShader(prog, vert);
                 glAttachShader(prog, frag);
                 glLinkProgram(prog);
-                
+
                 glDetachShader(prog, vert);
                 glDetachShader(prog, frag);
-                
+
                 glDeleteShader(vert);
                 glDeleteShader(frag);
-                
+
                 return prog;
             };
-        
+
             const char* lineVertStr =
+#if defined(USE_OPENGL330)
+                "#version 330\n"
+#else
                 "#version 410\n"
+#endif
                 "layout(location = 0) in vec3 in_pos;\n"
                 "layout(location = 5) in vec3 in_col;\n"
                 "uniform mat4 model;\n"
                 "uniform mat4 view;\n"
                 "uniform mat4 proj;\n"
-                "layout(location = 0) out vec3 out_color;\n"
+                "out vec3 fcol;\n"
                 "void main() {\n"
                 "    gl_Position = proj * view * model * vec4(in_pos, 1.0);\n"
-                "    out_color = in_col;\n"
+                "    fcol = in_col;\n"
                 "}\n";
-            
+
             const char* lineFragStr =
+#if defined(USE_OPENGL330)
+                "#version 330\n"
+#else
                 "#version 410\n"
-                "layout(location = 0) in vec3 in_col;\n"
+#endif
+                "in vec3 fcol;\n"
                 "layout(location = 0) out vec4 out_col;\n"
                 "void main() {\n"
-                "    out_col = vec4(in_col, 1.0);\n"
+                "    out_col = vec4(fcol, 1.0);\n"
                 "}\n";
-            
+
             m_lineProg = createProgram(lineVertStr, lineFragStr);
-            
+
             m_modelLineLoc = glGetUniformLocation(m_lineProg, "model");
             m_viewLineLoc  = glGetUniformLocation(m_lineProg, "view");
             m_projLineLoc  = glGetUniformLocation(m_lineProg, "proj");
-           
+
             static const char* pointVertStr =
+#if defined(USE_OPENGL330)
+                "#version 330\n"
+#else
                 "#version 410\n"
+#endif
                 "layout (location = 0) in vec3 in_pos;\n"
                 "layout (location = 1) in vec3 in_col;\n"
                 "uniform mat4 view;\n"
                 "uniform mat4 proj;\n"
-                "layout(location = 0) out vec3 out_col;\n"
+                "out vec3 fcol;\n"
                 "void main() {\n"
                 "    gl_Position = proj * view * vec4(in_pos, 1.0);\n"
-                "    out_col = in_col;\n"
+                "    fcol = in_col;\n"
                 "    gl_PointSize = 40 / gl_Position.w;\n"
                 "}\n";
-            
+
             static const char* pointFragStr =
+#if defined(USE_OPENGL330)
+                "#version 330\n"
+#else
                 "#version 410\n"
-                "layout(location = 0) in vec3 in_col;\n"
+#endif
+                "in vec3 fcol;\n"
                 "layout(location = 0) out vec4 out_col;\n"
                 "void main() {\n"
-                "    out_col = vec4(in_col, 1.0);\n"
+                "    out_col = vec4(fcol, 1.0);\n"
                 "}\n";
-            
+
             m_pointProg = createProgram(pointVertStr, pointFragStr);
-            
+
             m_viewPointLoc = glGetUniformLocation(m_pointProg, "view");
             m_projPointLoc = glGetUniformLocation(m_pointProg, "proj");
-                                                  
+
             static const char* meshVertStr =
+#if defined(USE_OPENGL330)
+                "#version 330\n"
+#else
                 "#version 410\n"
+#endif
                 "layout(location = 0) in vec3 in_pos;\n"
                 "layout(location = 5) in vec3 in_col;\n"
                 "uniform mat4 model;\n"
                 "uniform mat4 view;\n"
                 "uniform mat4 proj;\n"
-                "layout(location = 0) out vec3 out_col;\n"
+                "out vec3 fcol;\n"
                 "void main() {\n"
                 "    gl_Position = proj * view * model * vec4(in_pos, 1.0);\n"
-                "    out_col = in_col;\n"
+                "    fcol = in_col;\n"
                 "}\n";
-            
+
             static const char* meshFragStr =
+#if defined(USE_OPENGL330)
+                "#version 330\n"
+#else
                 "#version 410\n"
-                "layout(location = 0) in vec3 in_col;\n"
+#endif
+                "in vec3 fcol;\n"
                 "layout (location = 0) out vec4 out_col;\n"
                 "void main() {\n"
-                "    out_col = vec4(in_col, 1.0);\n"
+                "    out_col = vec4(fcol, 1.0);\n"
                 "}\n";
-            
+
             m_meshProg = createProgram(meshVertStr, meshFragStr);
-            
+
             m_modelMeshLoc = glGetUniformLocation(m_meshProg, "model");
             m_viewMeshLoc  = glGetUniformLocation(m_meshProg, "view");
             m_projMeshLoc  = glGetUniformLocation(m_meshProg, "proj");
@@ -154,7 +185,7 @@ namespace Ra
             if (vertices.size() > 0)
             {
                 const Core::Matrix4f id = Core::Matrix4f::Identity();
-                
+
                 glUseProgram(m_lineProg);
                 glUniformMatrix4fv(m_modelLineLoc, 1, GL_FALSE, id.data());
                 glUniformMatrix4fv(m_viewLineLoc, 1, GL_FALSE, viewMatrix.data());
@@ -227,7 +258,7 @@ namespace Ra
                       {
                           return a.mesh->getRenderMode() < b.mesh->getRenderMode();
                       });
-                      
+
             for (; idx < m_meshes.size() && m_meshes[idx].mesh->getRenderMode() != GL_TRIANGLES; ++idx);
 
             glUseProgram(m_lineProg);
@@ -245,7 +276,7 @@ namespace Ra
             glUseProgram(m_meshProg);
             glUniformMatrix4fv(m_viewMeshLoc, 1, GL_FALSE, view.data());
             glUniformMatrix4fv(m_projMeshLoc, 1, GL_FALSE, proj.data());
-            
+
             for (uint i = idx; i < m_meshes.size(); ++i)
             {
                 Core::Matrix4f model = m_meshes[i].transform.matrix().cast<float>();

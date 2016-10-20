@@ -63,11 +63,15 @@ namespace Ra
 
         void ForwardRenderer::initializeInternal()
         {
+            GL_CHECK_ERROR;
             initShaders();
+            GL_CHECK_ERROR;
             initBuffers();
+            GL_CHECK_ERROR;
 
             DebugRender::createInstance();
             DebugRender::getInstance()->initialize();
+            GL_CHECK_ERROR;
         }
 
         void ForwardRenderer::initShaders()

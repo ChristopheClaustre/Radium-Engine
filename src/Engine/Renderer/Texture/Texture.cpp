@@ -1,5 +1,7 @@
 #include <Engine/Renderer/Texture/Texture.hpp>
 
+#include <GL/glx.h>
+
 #include <cstdio>
 
 namespace Ra
@@ -41,15 +43,14 @@ namespace Ra
     {
         CORE_ASSERT(target == GL_TEXTURE_2D, "Wrong texture target");
 
-        LOG(logINFO) << glGetString(GL_VERSION);
-
         if (m_textureId == 0)
         {
             GL_ASSERT(glGenTextures(1, &m_textureId));
         }
 
-        GL_ASSERT(glBindTexture(target, m_textureId));
-        GL_ASSERT(glTexImage2D(target, 0, internalFormat, w, h, 0, format, dataType, data));
+        LOG(logINFO) << "hey " << m_name << " " << m_textureId;
+        glBindTexture(target, m_textureId);
+        glTexImage2D(target, 0, internalFormat, w, h, 0, format, dataType, data);
 
         GL_ASSERT(glTexParameteri(target, GL_TEXTURE_WRAP_S, wrapS));
         GL_ASSERT(glTexParameteri(target, GL_TEXTURE_WRAP_T, wrapT));
@@ -57,6 +58,7 @@ namespace Ra
         GL_ASSERT(glTexParameteri(target, GL_TEXTURE_MAG_FILTER, magFilter));
 
         GL_ASSERT(glGenerateMipmap(target));
+        GL_CHECK_ERROR;
 
         m_format = format;
         m_width  = w;

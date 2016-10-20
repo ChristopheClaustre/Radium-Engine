@@ -118,6 +118,11 @@ namespace Ra
     {
         makeCurrent();
 
+        LOG(logINFO) << "Resize";
+        GL_CHECK_ERROR;
+        GLuint texture;
+        GL_ASSERT(glGenTextures(1, &texture));
+
         // FIXME(Mathias) : Problem of glarea dimension on OsX Retina Display (half the size)
         // Renderer should have been locked by previous events.
         m_camera->resizeViewport( width, height );

@@ -62,13 +62,25 @@ namespace Ra
             TextureManager::destroyInstance();
         }
 
+        void OpenGLDebugFunc(GLenum source, GLenum type, GLuint id,
+                             GLenum severity, GLsizei length, const GLchar* message,
+                             const void* userParam)
+        {
+            if (severity >= GL_DEBUG_SEVERITY_MEDIUM)
+            {
+                LOG(logERROR) << "OpenGL Error : " << message;
+            }
+        }
+
         void Renderer::initialize()
         {
 #if defined(USE_OPENGL330)
-            GLenum fformat = GL_RGB16F;
-            GLenum iformat = GL_RGB16I;
+            GLenum fformat = GL_RGB;
+            GLenum iformat = GL_RGB;
             GLenum dformat = GL_DEPTH_COMPONENT;
 #else
+            glDebugMessageCallback(OpenGLDebugFunc, nullptr);
+
             GLenum fformat = GL_RGB32F;
             GLenum iformat = GL_RGB32I;
             GLenum dformat = GL_DEPTH_COMPONENT24;
@@ -89,9 +101,9 @@ namespace Ra
             m_pickingFbo.reset(new FBO(FBO::Component( FBO::Component_Color | FBO::Component_Depth ), m_width, m_height));
             m_pickingTexture = m_assetMgr->texture(m_assetMgr->createTexture("Picking"));
             m_pickingTexture->internalFormat = iformat;
-            m_pickingTexture->dataType = GL_INT;
-            m_pickingTexture->minFilter = GL_NEAREST;
-            m_pickingTexture->magFilter = GL_NEAREST;
+            m_pickingTexture->dataType = GL_UNSIGNED_INT;
+            m_pickingTexture->minFilter = GL_LINEAR;
+            m_pickingTexture->magFilter = GL_LINEAR;
 
             // Final texture
             m_fancyTexture = m_assetMgr->texture(m_assetMgr->createTexture("Final"));
@@ -108,9 +120,8 @@ namespace Ra
             m_quadMesh->loadGeometry( mesh );
             m_quadMesh->updateGL();
 
+            GL_CHECK_ERROR;
             initializeInternal();
-
-            resize( m_width, m_height );
         }
 
         void Renderer::render( const RenderData& data )
