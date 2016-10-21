@@ -25,13 +25,11 @@ set(GL3W_ROOT "${CMAKE_SOURCE_DIR}/3rdPartyLibraries/gl3w")
 set(GL3W_INC  "${GL3W_ROOT}/include")
 set(GL3W_SRC  "${GL3W_ROOT}/src/gl3w.c")
 
-if (NOT EXISTS ${GL3W_ROOT})
-    execute_process(COMMAND git submodule init)
-    execute_process(COMMAND git submodule update)
-endif()
-
-if (NOT EXISTS ${GL3W_SRC})
+if (NOT EXISTS ${GL3W_ROOT} OR NOT EXISTS ${GL3W_SRC})
     message(STATUS "Generating gl3w source files")
+    execute_process(COMMAND git submodule init
+                    COMMAND git submodule update)
+
     execute_process(COMMAND python gl3w_gen.py WORKING_DIRECTORY ${GL3W_ROOT})
 endif()
 
