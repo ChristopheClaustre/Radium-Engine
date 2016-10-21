@@ -12,10 +12,7 @@ namespace Ra
     {
     }
 
-    Engine::Texture::~Texture()
-    {
-        deleteGL();
-    }
+    Engine::Texture::~Texture() { deleteGL(); }
 
     void Engine::Texture::Generate(uint w, uint format, void* data)
     {
@@ -29,14 +26,14 @@ namespace Ra
         GL_ASSERT(glBindTexture(target, m_textureId));
         GL_ASSERT(glTexImage1D(target, 0, internalFormat, w, 0, format, dataType, data));
 
-        GL_ASSERT(glTexParameteri(target, GL_TEXTURE_WRAP_S, GL_REPEAT ) );
+        GL_ASSERT(glTexParameteri(target, GL_TEXTURE_WRAP_S, GL_REPEAT));
         GL_ASSERT(glTexParameteri(target, GL_TEXTURE_MIN_FILTER, minFilter));
         GL_ASSERT(glTexParameteri(target, GL_TEXTURE_MAG_FILTER, magFilter));
 
         GL_ASSERT(glGenerateMipmap(target));
 
         m_format = format;
-        m_width = w;
+        m_width  = w;
     }
 
     void Engine::Texture::Generate(uint w, uint h, uint format, void* data)
@@ -48,7 +45,6 @@ namespace Ra
             GL_ASSERT(glGenTextures(1, &m_textureId));
         }
 
-        LOG(logINFO) << "hey " << m_name << " " << m_textureId;
         glBindTexture(target, m_textureId);
         glTexImage2D(target, 0, internalFormat, w, h, 0, format, dataType, data);
 
@@ -105,7 +101,15 @@ namespace Ra
         // FIXME Type was forced to GL_Scalar, check calls for this method.
         for (int i = 0; i < 6; ++i)
         {
-            GL_ASSERT(glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, internalFormat, w, h, 0, format, dataType, data[i]));
+            GL_ASSERT(glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+                                   0,
+                                   internalFormat,
+                                   w,
+                                   h,
+                                   0,
+                                   format,
+                                   dataType,
+                                   data[i]));
         }
 
         GL_ASSERT(glTexParameteri(target, GL_TEXTURE_WRAP_S, wrapS));
@@ -116,11 +120,11 @@ namespace Ra
         GL_ASSERT(glGenerateMipmap(target));
 
         m_format = format;
-        m_width = w;
+        m_width  = w;
         m_height = h;
     }
 
-    void Engine::Texture::bind( int unit )
+    void Engine::Texture::bind(int unit)
     {
         if (unit >= 0)
         {
@@ -134,11 +138,11 @@ namespace Ra
     {
         if (m_textureId != 0)
         {
-            GL_ASSERT( glDeleteTextures( 1, &m_textureId ) );
+            GL_ASSERT(glDeleteTextures(1, &m_textureId));
         }
     }
 
-    void Engine::Texture::updateData( void* data )
+    void Engine::Texture::updateData(void* data)
     {
         GL_ASSERT(glBindTexture(target, m_textureId));
 
@@ -146,23 +150,42 @@ namespace Ra
         {
             case GL_TEXTURE_1D:
             {
-                GL_ASSERT(glTexImage1D(target, 0, internalFormat, m_width, 0, m_format, dataType, data));
+                GL_ASSERT(
+                    glTexImage1D(target, 0, internalFormat, m_width, 0, m_format, dataType, data));
             }
 
             case GL_TEXTURE_2D:
             {
-                GL_ASSERT(glTexImage2D(target, 0, internalFormat, m_width, m_height, 0, m_format, dataType, data));
-            } break;
+                GL_ASSERT(glTexImage2D(target,
+                                       0,
+                                       internalFormat,
+                                       m_width,
+                                       m_height,
+                                       0,
+                                       m_format,
+                                       dataType,
+                                       data));
+            }
+            break;
 
             case GL_TEXTURE_3D:
             {
-                GL_ASSERT(glTexImage3D(target, 0, internalFormat, m_width, m_height, m_depth, 0, m_format, dataType, data));
-            } break;
+                GL_ASSERT(glTexImage3D(target,
+                                       0,
+                                       internalFormat,
+                                       m_width,
+                                       m_height,
+                                       m_depth,
+                                       0,
+                                       m_format,
+                                       dataType,
+                                       data));
+            }
+            break;
 
-            default:
-            {
-                CORE_ASSERT( 0, "Dafuck ?" );
-            } break;
+            default: { CORE_ASSERT(0, "Dafuck ?");
+            }
+            break;
         }
     }
 } // namespace Ra

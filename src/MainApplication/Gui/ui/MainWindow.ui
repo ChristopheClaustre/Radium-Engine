@@ -158,11 +158,6 @@
               </item>
               <item>
                <property name="text">
-                <string>BlinnPhongWireframe</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
                 <string>BlinnPhong</string>
                </property>
               </item>

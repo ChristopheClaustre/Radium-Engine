@@ -1,0 +1,13 @@
+-I/tmp/EasyClangComplete/cmake_builds/ad7bf81d7a908250a57f1c21f2f7a504
+-isystem/usr/include/x86_64-linux-gnu/qt5
+-isystem/usr/include/x86_64-linux-gnu/qt5/QtGui
+-DSkinning_EXPORTS
+-I/home/zouch/Prog/Radium-Engine/Plugins/Skinning/src
+-isystem/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64
+-DQT_CORE_LIB
+-I/home/zouch/Prog/Radium-Engine/Plugins/Skinning
+-DQT_WIDGETS_LIB
+-isystem/usr/include/x86_64-linux-gnu/qt5/QtCore
+-isystem/usr/include/x86_64-linux-gnu/qt5/QtWidgets
+-DQT_GUI_LIB
+-DQT_NO_DEBUG

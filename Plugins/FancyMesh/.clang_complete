@@ -1,0 +1,13 @@
+-isystem/usr/include/x86_64-linux-gnu/qt5
+-isystem/usr/include/x86_64-linux-gnu/qt5/QtGui
+-isystem/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64
+-DQT_CORE_LIB
+-isystem/usr/include/x86_64-linux-gnu/qt5/QtCore
+-DFancyMesh_EXPORTS
+-DQT_WIDGETS_LIB
+-isystem/usr/include/x86_64-linux-gnu/qt5/QtWidgets
+-I/home/zouch/Prog/Radium-Engine/Plugins/FancyMesh
+-I/tmp/EasyClangComplete/cmake_builds/3229e507c5dc03c6b82ebcae7d7f5190
+-I/home/zouch/Prog/Radium-Engine/Plugins/FancyMesh/src
+-DQT_GUI_LIB
+-DQT_NO_DEBUG

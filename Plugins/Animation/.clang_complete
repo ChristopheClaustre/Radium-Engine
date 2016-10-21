@@ -1,0 +1,13 @@
+-I/home/zouch/Prog/Radium-Engine/Plugins/Animation
+-isystem/usr/include/x86_64-linux-gnu/qt5
+-isystem/usr/include/x86_64-linux-gnu/qt5/QtGui
+-DAnimation_EXPORTS
+-I/tmp/EasyClangComplete/cmake_builds/b112f9cf3cf42b9e81953768f00578f7
+-isystem/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64
+-DQT_CORE_LIB
+-isystem/usr/include/x86_64-linux-gnu/qt5/QtCore
+-DQT_GUI_LIB
+-DQT_WIDGETS_LIB
+-isystem/usr/include/x86_64-linux-gnu/qt5/QtWidgets
+-I/home/zouch/Prog/Radium-Engine/Plugins/Animation/src
+-DQT_NO_DEBUG

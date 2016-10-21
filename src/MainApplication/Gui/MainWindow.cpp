@@ -1,23 +1,23 @@
 #include <MainApplication/Gui/MainWindow.hpp>
 
-#include <QSettings>
 #include <QFileDialog>
+#include <QSettings>
 #include <QToolButton>
 
 #include <assimp/Importer.hpp>
 
-#include <Engine/RadiumEngine.hpp>
 #include <Engine/Component/Component.hpp>
 #include <Engine/Entity/Entity.hpp>
-#include <Engine/Renderer/Renderer.hpp>
+#include <Engine/RadiumEngine.hpp>
 #include <Engine/Renderer/RenderTechnique/RenderTechnique.hpp>
-#include <Engine/Renderer/RenderTechnique/ShaderProgram.hpp>
 #include <Engine/Renderer/RenderTechnique/ShaderConfigFactory.hpp>
+#include <Engine/Renderer/RenderTechnique/ShaderProgram.hpp>
+#include <Engine/Renderer/Renderer.hpp>
 
 #include <GuiBase/TreeModel/EntityTreeModel.hpp>
 
-#include <MainApplication/MainApplication.hpp>
 #include <MainApplication/Gui/MaterialEditor.hpp>
+#include <MainApplication/MainApplication.hpp>
 #include <MainApplication/Viewer/CameraInterface.hpp>
 
 #include <MainApplication/PluginBase/RadiumPluginInterface.hpp>
@@ -28,7 +28,7 @@ namespace Ra
 {
 
     Gui::MainWindow::MainWindow(QWidget* parent)
-            : QMainWindow(parent)
+        : QMainWindow(parent)
     {
         // Note : at this point most of the components (including the Engine) are
         // not initialized. Listen to the "started" signal.
@@ -42,13 +42,13 @@ namespace Ra
         headers << tr("Entities -> Components");
         m_itemModel = new GuiBase::ItemModel(mainApp->getEngine(), this);
         m_entitiesTreeView->setModel(m_itemModel);
-        m_materialEditor = new MaterialEditor();
+        m_materialEditor   = new MaterialEditor();
         m_selectionManager = new GuiBase::SelectionManager(m_itemModel, this);
         m_entitiesTreeView->setSelectionModel(m_selectionManager);
 
         createConnections();
 
-        mainApp->framesCountForStatsChanged((uint) m_avgFramesCount->value());
+        mainApp->framesCountForStatsChanged((uint)m_avgFramesCount->value());
     }
 
     Gui::MainWindow::~MainWindow()
@@ -56,19 +56,22 @@ namespace Ra
         // Child QObjects will automatically be deleted
     }
 
-    void Gui::MainWindow::cleanup()
-    {
-        gizmoShowNone();
-    }
+    void Gui::MainWindow::cleanup() { gizmoShowNone(); }
 
     void Gui::MainWindow::createConnections()
     {
         connect(actionOpenMesh, &QAction::triggered, this, &MainWindow::loadFile);
         connect(actionReload_Shaders, &QAction::triggered, m_viewer, &Viewer::reloadShaders);
-        connect(actionOpen_Material_Editor, &QAction::triggered, this, &MainWindow::openMaterialEditor);
+        connect(actionOpen_Material_Editor,
+                &QAction::triggered,
+                this,
+                &MainWindow::openMaterialEditor);
 
         // Toolbox setup
-        connect(actionToggle_Local_Global, &QAction::toggled, m_viewer->getGizmoManager(), &GizmoManager::setLocal);
+        connect(actionToggle_Local_Global,
+                &QAction::toggled,
+                m_viewer->getGizmoManager(),
+                &GizmoManager::setLocal);
         connect(actionGizmoOff, &QAction::triggered, this, &MainWindow::gizmoShowNone);
         connect(actionGizmoTranslate, &QAction::triggered, this, &MainWindow::gizmoShowTranslate);
         connect(actionGizmoRotate, &QAction::triggered, this, &MainWindow::gizmoShowRotate);
@@ -80,40 +83,69 @@ namespace Ra
 
         // Connect picking results (TODO Val : use events to dispatch picking directly)
         connect(m_viewer, &Viewer::rightClickPicking, this, &MainWindow::handlePicking);
-        connect(m_viewer, &Viewer::leftClickPicking, m_viewer->getGizmoManager(), &GizmoManager::handlePickingResult);
+        connect(m_viewer,
+                &Viewer::leftClickPicking,
+                m_viewer->getGizmoManager(),
+                &GizmoManager::handlePickingResult);
 
-        connect(m_avgFramesCount, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
-                mainApp, &MainApplication::framesCountForStatsChanged);
+        connect(m_avgFramesCount,
+                static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+                mainApp,
+                &MainApplication::framesCountForStatsChanged);
         connect(mainApp, &MainApplication::updateFrameStats, this, &MainWindow::onUpdateFramestats);
 
         // Inform property editors of new selections
-        connect(m_selectionManager, &GuiBase::SelectionManager::selectionChanged, this, &MainWindow::onSelectionChanged);
-        //connect(this, &MainWindow::selectedItem, tab_edition, &TransformEditorWidget::setEditable);
-        connect(this, &MainWindow::selectedItem, m_viewer->getGizmoManager(), &GizmoManager::setEditable);
-        connect(this, &MainWindow::selectedItem, m_viewer->getGizmoManager(), &GizmoManager::setEditable);
+        connect(m_selectionManager,
+                &GuiBase::SelectionManager::selectionChanged,
+                this,
+                &MainWindow::onSelectionChanged);
+        // connect(this, &MainWindow::selectedItem, tab_edition,
+        // &TransformEditorWidget::setEditable);
+        connect(this,
+                &MainWindow::selectedItem,
+                m_viewer->getGizmoManager(),
+                &GizmoManager::setEditable);
+        connect(this,
+                &MainWindow::selectedItem,
+                m_viewer->getGizmoManager(),
+                &GizmoManager::setEditable);
 
         // Enable changing shaders
-        connect(m_currentShaderBox, static_cast<void (QComboBox::*)(const QString&)>( &QComboBox::currentIndexChanged ),
-                this, &MainWindow::changeRenderObjectShader);
+        connect(m_currentShaderBox,
+                static_cast<void (QComboBox::*)(const QString&)>(&QComboBox::currentIndexChanged),
+                this,
+                &MainWindow::changeRenderObjectShader);
 
         // RO Stuff
-        connect(m_toggleRenderObjectButton, &QPushButton::clicked, this, &MainWindow::toggleVisisbleRO);
+        connect(m_toggleRenderObjectButton,
+                &QPushButton::clicked,
+                this,
+                &MainWindow::toggleVisisbleRO);
         connect(m_editRenderObjectButton, &QPushButton::clicked, this, &MainWindow::editRO);
 
         // Renderer stuff
         connect(m_viewer, &Viewer::rendererReady, this, &MainWindow::onRendererReady);
 
         connect(m_displayedTextureCombo,
-                static_cast<void (QComboBox::*)(const QString&)>( &QComboBox::currentIndexChanged ),
-                m_viewer, &Viewer::displayTexture);
+                static_cast<void (QComboBox::*)(const QString&)>(&QComboBox::currentIndexChanged),
+                m_viewer,
+                &Viewer::displayTexture);
 
-        connect(m_enablePostProcess, &QCheckBox::stateChanged, m_viewer, &Viewer::enablePostProcess);
-        connect(m_enableDebugDraw,   &QCheckBox::stateChanged, m_viewer, &Viewer::enableDebugDraw);
-        connect(m_realFrameRate,     &QCheckBox::stateChanged, mainApp,  &MainApplication::setRealFrameRate);
+        connect(m_enablePostProcess,
+                &QCheckBox::stateChanged,
+                m_viewer,
+                &Viewer::enablePostProcess);
+        connect(m_enableDebugDraw, &QCheckBox::stateChanged, m_viewer, &Viewer::enableDebugDraw);
+        connect(m_realFrameRate,
+                &QCheckBox::stateChanged,
+                mainApp,
+                &MainApplication::setRealFrameRate);
 
         // Connect engine signals to the appropriate callbacks
-        std::function<void(const Engine::ItemEntry&)> add = std::bind(&MainWindow::onItemAdded, this, std::placeholders::_1);
-        std::function<void(const Engine::ItemEntry&)> del = std::bind(&MainWindow::onItemRemoved, this, std::placeholders::_1);
+        std::function<void(const Engine::ItemEntry&)> add =
+            std::bind(&MainWindow::onItemAdded, this, std::placeholders::_1);
+        std::function<void(const Engine::ItemEntry&)> del =
+            std::bind(&MainWindow::onItemRemoved, this, std::placeholders::_1);
         mainApp->m_engine->getSignalManager()->m_entityCreatedCallbacks.push_back(add);
         mainApp->m_engine->getSignalManager()->m_entityDestroyedCallbacks.push_back(del);
 
@@ -122,13 +154,12 @@ namespace Ra
 
         mainApp->m_engine->getSignalManager()->m_roAddedCallbacks.push_back(add);
         mainApp->m_engine->getSignalManager()->m_roRemovedCallbacks.push_back(del);
-
     }
 
     void Gui::MainWindow::loadFile()
     {
         // Filter the files
-        aiString extList;
+        aiString         extList;
         Assimp::Importer importer;
         importer.GetExtensionList(extList);
         std::string extListStd(extList.C_Str());
@@ -136,8 +167,8 @@ namespace Ra
         QString filter = QString::fromStdString(extListStd);
 
         QSettings settings;
-        QString path = settings.value("files/load", QDir::homePath()).toString();
-        path = QFileDialog::getOpenFileName(this, "Open File", path, filter);
+        QString   path = settings.value("files/load", QDir::homePath()).toString();
+        path           = QFileDialog::getOpenFileName(this, "Open File", path, filter);
         if (path.size() > 0)
         {
             settings.setValue("files/load", path);
@@ -148,29 +179,32 @@ namespace Ra
     void Gui::MainWindow::onUpdateFramestats(const std::vector<FrameTimerData>& stats)
     {
         QString framesA2B = QString("Frames #%1 to #%2 stats :")
-                .arg(stats.front().numFrame).arg(stats.back().numFrame);
+                                .arg(stats.front().numFrame)
+                                .arg(stats.back().numFrame);
         m_frameA2BLabel->setText(framesA2B);
 
-        long sumEvents = 0;
-        long sumRender = 0;
-        long sumTasks = 0;
-        long sumFrame = 0;
+        long sumEvents     = 0;
+        long sumRender     = 0;
+        long sumTasks      = 0;
+        long sumFrame      = 0;
         long sumInterFrame = 0;
 
         for (uint i = 0; i < stats.size(); ++i)
         {
             sumEvents += Core::Timer::getIntervalMicro(stats[i].eventsStart, stats[i].eventsEnd);
-            sumRender += Core::Timer::getIntervalMicro(stats[i].renderData.renderStart, stats[i].renderData.renderEnd);
+            sumRender += Core::Timer::getIntervalMicro(stats[i].renderData.renderStart,
+                                                       stats[i].renderData.renderEnd);
             sumTasks += Core::Timer::getIntervalMicro(stats[i].tasksStart, stats[i].tasksEnd);
             sumFrame += Core::Timer::getIntervalMicro(stats[i].frameStart, stats[i].frameEnd);
 
             if (i > 0)
             {
-                sumInterFrame += Core::Timer::getIntervalMicro(stats[i - 1].frameEnd, stats[i].frameEnd);
+                sumInterFrame +=
+                    Core::Timer::getIntervalMicro(stats[i - 1].frameEnd, stats[i].frameEnd);
             }
         }
 
-        const uint N(stats.size());
+        const uint   N(stats.size());
         const Scalar T(N * 1000000.f);
 
         m_eventsTime->setValue(sumEvents / N);
@@ -184,27 +218,24 @@ namespace Ra
         m_avgFramerate->setValue((N - 1) * Scalar(1000000.0 / sumInterFrame));
     }
 
-    Gui::Viewer* Gui::MainWindow::getViewer()
-    {
-        return m_viewer;
-    }
+    Gui::Viewer* Gui::MainWindow::getViewer() { return m_viewer; }
 
-    GuiBase::SelectionManager* Gui::MainWindow::getSelectionManager()
-    {
-        return m_selectionManager;
-    }
+    GuiBase::SelectionManager* Gui::MainWindow::getSelectionManager() { return m_selectionManager; }
 
     void Gui::MainWindow::handlePicking(int pickingResult)
     {
-        Ra::Core::Index roIndex(pickingResult);
+        Ra::Core::Index           roIndex(pickingResult);
         Ra::Engine::RadiumEngine* engine = Ra::Engine::RadiumEngine::getInstance();
         if (roIndex.isValid())
         {
-            Ra::Engine::Component* comp = engine->getRenderObjectManager()->getRenderObject(roIndex)->getComponent();
+            Ra::Engine::Component* comp =
+                engine->getRenderObjectManager()->getRenderObject(roIndex)->getComponent();
             Ra::Engine::Entity* ent = comp->getEntity();
 
             // For now we don't enable group selection.
-            m_selectionManager->setCurrentEntry(ItemEntry(ent, comp, roIndex), QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Current);
+            m_selectionManager->setCurrentEntry(ItemEntry(ent, comp, roIndex),
+                                                QItemSelectionModel::ClearAndSelect |
+                                                    QItemSelectionModel::Current);
         }
         else
         {
@@ -212,13 +243,15 @@ namespace Ra
         }
     }
 
-    void Gui::MainWindow::onSelectionChanged(const QItemSelection& selected, const QItemSelection& deselected)
+    void Gui::MainWindow::onSelectionChanged(const QItemSelection& selected,
+                                             const QItemSelection& deselected)
     {
         if (m_selectionManager->hasSelection())
         {
             const ItemEntry& ent = m_selectionManager->currentItem();
-            emit selectedItem(ent);
-            m_selectedItemName->setText(QString::fromStdString(getEntryName(mainApp->getEngine(), ent)));
+            emit             selectedItem(ent);
+            m_selectedItemName->setText(
+                QString::fromStdString(getEntryName(mainApp->getEngine(), ent)));
             m_editRenderObjectButton->setEnabled(false);
 
             if (ent.isRoNode())
@@ -226,10 +259,11 @@ namespace Ra
                 m_editRenderObjectButton->setEnabled(true);
 
                 m_materialEditor->changeRenderObject(ent.m_roIndex);
-                const std::string& shaderName = mainApp->m_engine->getRenderObjectManager()->getRenderObject(
-                                                               ent.m_roIndex)
-                                                       ->getRenderTechnique()->shader->getBasicConfiguration().m_name;
-
+                const std::string& shaderName =
+                    mainApp->m_engine->getRenderObjectManager()
+                        ->getRenderObject(ent.m_roIndex)
+                        ->renderTechnique->shader->getBasicConfiguration()
+                        .m_name;
 
                 if (m_currentShaderBox->findText(shaderName.c_str()) == -1)
                 {
@@ -272,7 +306,6 @@ namespace Ra
         m_viewer->getGizmoManager()->changeGizmoType(GizmoManager::ROTATION);
     }
 
-
     void Gui::MainWindow::changeRenderObjectShader(const QString& shaderName)
     {
         std::string name = shaderName.toStdString();
@@ -287,13 +320,15 @@ namespace Ra
             return;
         }
 
-        const auto& ro = mainApp->m_engine->getRenderObjectManager()->getRenderObject(item.m_roIndex);
-        if (ro->getRenderTechnique()->shader->getBasicConfiguration().m_name == name)
+        const auto& ro =
+            mainApp->m_engine->getRenderObjectManager()->getRenderObject(item.m_roIndex);
+        if (ro->renderTechnique->shader->getBasicConfiguration().m_name == name)
         {
             return;
         }
-        Engine::ShaderConfiguration config = Ra::Engine::ShaderConfigurationFactory::getConfiguration(name);
-        ro->getRenderTechnique()->changeShader(config);
+        Engine::ShaderConfiguration config =
+            Ra::Engine::ShaderConfigurationFactory::getConfiguration(name);
+        ro->renderTechnique->changeShader(config);
     }
 
     void Gui::MainWindow::toggleVisisbleRO()
@@ -311,7 +346,8 @@ namespace Ra
         }
         for (auto roIdx : getItemROs(mainApp->m_engine.get(), item))
         {
-            mainApp->m_engine->getRenderObjectManager()->getRenderObject(roIdx)->setVisible(!hasVisible);
+            mainApp->m_engine->getRenderObjectManager()->getRenderObject(roIdx)->setVisible(
+                !hasVisible);
         }
     }
 
@@ -325,10 +361,7 @@ namespace Ra
         }
     }
 
-    void Gui::MainWindow::openMaterialEditor()
-    {
-        m_materialEditor->show();
-    }
+    void Gui::MainWindow::openMaterialEditor() { m_materialEditor->show(); }
 
     void Gui::MainWindow::updateUi(Plugins::RadiumPluginInterface* plugin)
     {
@@ -365,16 +398,11 @@ namespace Ra
         m_viewer->getGizmoManager()->updateValues();
     }
 
-    void Gui::MainWindow::onItemAdded(const Engine::ItemEntry& ent)
-    {
-        m_itemModel->addItem(ent);
-    }
+    void Gui::MainWindow::onItemAdded(const Engine::ItemEntry& ent) { m_itemModel->addItem(ent); }
 
     void Gui::MainWindow::onItemRemoved(const Engine::ItemEntry& ent)
     {
-        m_itemModel->removeItem(ent) ;
+        m_itemModel->removeItem(ent);
     }
-
-
 
 } // namespace Ra

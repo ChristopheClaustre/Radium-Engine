@@ -22,22 +22,24 @@ namespace Ra
         class ShaderConfiguration;
         class Texture;
 
-        using MaterialPtr           = std::shared_ptr<Material>;
-        using RenderTechniquePtr    = std::shared_ptr<RenderTechnique>;
-        using MeshPtr               = std::shared_ptr<Mesh>;
-        using TexturePtr            = std::shared_ptr<Texture>;
-        using ShaderProgramPtr      = std::shared_ptr<ShaderProgram>;
+        using MaterialPtr        = std::shared_ptr<Material>;
+        using RenderTechniquePtr = std::shared_ptr<RenderTechnique>;
+        using MeshPtr            = std::shared_ptr<Mesh>;
+        using TexturePtr         = std::shared_ptr<Texture>;
+        using ShaderProgramPtr   = std::shared_ptr<ShaderProgram>;
 
         class RA_ENGINE_API AssetManager
         {
             RA_SINGLETON_INTERFACE(AssetManager);
 
         public:
-            AssetManager() = default;
+            AssetManager()  = default;
             ~AssetManager() = default;
 
             Core::Index createRenderTechnique();
             Core::Index createMaterial(std::string name);
+            Core::Index createTexture(std::string name);
+            Core::Index createMesh(std::string name, GLenum renderMode = GL_TRIANGLES);
 
             Core::Index createShaderProgram();
             Core::Index createShaderProgram(std::string vertFile,
@@ -50,55 +52,61 @@ namespace Ra
 
             void reloadShaderPrograms();
 
-            Core::Index createTexture(std::string name);
-            Core::Index createMesh(std::string name, GLenum renderMode = GL_TRIANGLES);
-
             inline RenderTechnique* renderTechnique(const Core::Index& idx)
-            { return m_renderTechniques.at(idx).get(); }
+            {
+                return m_renderTechniques.at(idx).get();
+            }
             inline const RenderTechnique* renderTechnique(const Core::Index& idx) const
-            { return m_renderTechniques.at(idx).get(); }
+            {
+                return m_renderTechniques.at(idx).get();
+            }
 
-            inline Material* material(const Core::Index& idx)
-            { return m_materials.at(idx).get(); }
+            inline Material* material(const Core::Index& idx) { return m_materials.at(idx).get(); }
             inline const Material* material(const Core::Index& idx) const
-            { return m_materials.at(idx).get(); }
+            {
+                return m_materials.at(idx).get();
+            }
 
             inline ShaderProgram* shaderProgram(const Core::Index& idx)
-            { return m_shaderPrograms.at(idx).get(); }
+            {
+                return m_shaderPrograms.at(idx).get();
+            }
             inline const ShaderProgram* shaderProgram(const Core::Index& idx) const
-            { return m_shaderPrograms.at(idx).get(); }
+            {
+                return m_shaderPrograms.at(idx).get();
+            }
 
-            inline Texture* texture(const Core::Index& idx)
-            { return m_textures.at(idx).get(); }
+            inline Texture* texture(const Core::Index& idx) { return m_textures.at(idx).get(); }
             inline const Texture* texture(const Core::Index& idx) const
-            { return m_textures.at(idx).get(); }
+            {
+                return m_textures.at(idx).get();
+            }
 
-            inline Mesh* mesh(const Core::Index& idx)
-            { return m_meshes.at(idx).get(); }
-            inline const Mesh* mesh(const Core::Index& idx) const
-            { return m_meshes.at(idx).get(); }
+            inline Mesh* mesh(const Core::Index& idx) { return m_meshes.at(idx).get(); }
+            inline const Mesh* mesh(const Core::Index& idx) const { return m_meshes.at(idx).get(); }
 
             inline void removeRenderTechnique(const Core::Index& idx)
-            { m_renderTechniques.remove(idx); }
+            {
+                m_renderTechniques.remove(idx);
+            }
 
-            inline void removeMaterial(const Core::Index& idx)
-            { m_materials.remove(idx); }
+            inline void removeMaterial(const Core::Index& idx) { m_materials.remove(idx); }
 
             inline void removeShaderProgram(const Core::Index& idx)
-            { m_shaderPrograms.remove(idx); }
+            {
+                m_shaderPrograms.remove(idx);
+            }
 
-            inline void removeMesh(const Core::Index& idx)
-            { m_meshes.remove(idx); }
+            inline void removeMesh(const Core::Index& idx) { m_meshes.remove(idx); }
 
-            inline void removeTexture(const Core::Index& idx)
-            { m_textures.remove(idx); }
+            inline void removeTexture(const Core::Index& idx) { m_textures.remove(idx); }
 
         private:
-            Core::IndexMap<RenderTechniquePtr>  m_renderTechniques;
-            Core::IndexMap<MaterialPtr>         m_materials;
-            Core::IndexMap<MeshPtr>             m_meshes;
-            Core::IndexMap<ShaderProgramPtr>    m_shaderPrograms;
-            Core::IndexMap<TexturePtr>          m_textures;
+            Core::IndexMap<RenderTechniquePtr> m_renderTechniques;
+            Core::IndexMap<MaterialPtr>        m_materials;
+            Core::IndexMap<MeshPtr>            m_meshes;
+            Core::IndexMap<ShaderProgramPtr>   m_shaderPrograms;
+            Core::IndexMap<TexturePtr>         m_textures;
         };
     }
 }
