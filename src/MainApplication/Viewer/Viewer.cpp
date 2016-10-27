@@ -232,16 +232,15 @@ namespace Ra
 #ifdef OS_MACOS
                 // (Mathias) no middle button on Apple (only left, right and wheel)
                 // replace middle button by <ctrl>+left (note : ctrl = "command"
-                // fake the subsistem by setting MiddleButtonEvent and masking ControlModifier
+                // fake the subsystem by setting MiddleButtonEvent and masking ControlModifier
                 if (event->modifiers().testFlag( Qt::ControlModifier ) )
                 {
                     auto mods = event->modifiers();
                     mods^=Qt::ControlModifier;
-                    auto macevent = new QMouseEvent(event->type(), event->localPos(), event->windowPos(), event->screenPos(),
-                                                    Qt::MiddleButton, event->buttons(),
-                                                    mods, event->source() );
-                    m_camera->handleMousePressEvent(macevent);
-                    delete macevent;
+                    QMouseEvent macevent(event->type(), event->localPos(), event->windowPos(), event->screenPos(),
+                                                Qt::MiddleButton, event->buttons(),
+                                                mods, event->source() );
+                    m_camera->handleMousePressEvent(&macevent);
                 }
 #endif
                 if ( isKeyPressed( Key_Space ) )

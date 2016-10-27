@@ -179,11 +179,13 @@ namespace Ra
             // Z prepass
             GL_ASSERT( glEnable( GL_DEPTH_TEST ) );
             GL_ASSERT( glDepthFunc( GL_LESS ) );
-            GL_ASSERT( glDepthMask( GL_TRUE ) );
+            // Mathias : not needed : state is already set 20 lines above
+            // GL_ASSERT( glDepthMask( GL_TRUE ) );
 
             GL_ASSERT( glDisable( GL_BLEND ) );
 
-            GL_ASSERT( glDrawBuffers( 4, buffers ) );
+            // Mathias : not needed : state is already set 20 lines above
+            //GL_ASSERT( glDrawBuffers( 4, buffers ) );
 
             shader = m_shaderMgr->getShaderProgram("DepthAmbientPass");
             shader->bind();
