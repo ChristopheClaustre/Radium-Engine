@@ -46,6 +46,11 @@ namespace Ra
 
         const ItemEntry& ItemModel::getEntry(const QModelIndex& index) const
         {
+            return static_cast<const EngineTreeItem*>(getItem(index))->m_entry;
+        }
+
+        ItemEntry& ItemModel::getEntry(const QModelIndex& index)
+        {
             return static_cast<EngineTreeItem*>(getItem(index))->m_entry;
         }
 
@@ -137,6 +142,8 @@ namespace Ra
                 parentItem->m_children.erase(childPos);
                 endRemoveRows();
             }
+
+            LOG(logINFO) << "Done removing";
         }
 
 

@@ -36,6 +36,7 @@ namespace FancyMeshPlugin
 
     FancyMeshComponent::~FancyMeshComponent()
     {
+        // TODO: Remove from component messenger
     }
 
     void FancyMeshComponent::initialize()

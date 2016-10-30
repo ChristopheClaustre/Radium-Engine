@@ -74,7 +74,7 @@ namespace Ra
             auto ent = m_entities[idx];
             std::string name = ent->getName();
 
-            CORE_ASSERT( ent.unique(), "Non-unique entity about to be removed." );
+            // CORE_ASSERT( ent.unique(), "Non-unique entity about to be removed." );
 
             RadiumEngine::getInstance()->getSignalManager()->fireEntityDestroyed(ItemEntry(ent.get()));
             ent.reset();

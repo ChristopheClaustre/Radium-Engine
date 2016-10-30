@@ -16,6 +16,12 @@ find_package(Qt5Core    REQUIRED)
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5OpenGL  REQUIRED)
 
+# prevent error "You must build your code with position independent code if Qt was built with..
+if (Qt5_POSITION_INDEPENDENT_CODE)
+    message("Yeah brah")
+    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+endif()
+
 if (MSVC OR MSVC_IDE OR MINGW)
   find_package(GLEW       REQUIRED) #only used on windows builds.
 endif (MSVC OR MSVC_IDE OR MINGW)

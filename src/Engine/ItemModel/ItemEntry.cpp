@@ -80,5 +80,40 @@ namespace Ra
             return m_entity->idx != Engine::SystemEntity::getInstance()->idx;
         }
 
+        void ItemEntry::remove()
+        {
+            LOG(logINFO) << "0";
+            if (isRoNode())
+            {
+                LOG(logINFO) << "RO : " << m_roIndex;
+                m_component->removeRenderObject(m_roIndex);
+                return;
+            }
+
+            if (isComponentNode())
+            {
+                LOG(logINFO) << "Comp : " << m_component->getName();
+
+                for (auto ro : m_component->m_renderObjects)
+                {
+                    ItemEntry entry(m_entity, m_component, ro);
+                    entry.remove();
+                }
+
+                m_entity->removeComponent(m_component->getName());
+                return;
+            }
+
+            LOG(logINFO) << "1";
+            for (const auto& comp : m_entity->getComponents())
+            {
+                ItemEntry entry(m_entity, comp.get());
+                entry.remove();
+            }
+
+            LOG(logINFO) << "2";
+            RadiumEngine::getInstance()->getEntityManager()->removeEntity(m_entity);
+            LOG(logINFO) << "3";
+        }
     }
 }

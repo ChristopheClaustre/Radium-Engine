@@ -85,10 +85,12 @@ namespace Ra
             //void gizmoShowScale();
 
             /// Slot for the "visible" button
-            void toggleVisisbleRO();
+            void toggleVisibleSelected();
 
             /// Slot for the "edit" button.
             void editRO();
+
+            void removeSelected();
 
             /// Cleanup resources.
             void cleanup();

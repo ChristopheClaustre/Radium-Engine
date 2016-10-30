@@ -97,7 +97,8 @@ namespace Ra
                 this, &MainWindow::changeRenderObjectShader);
 
         // RO Stuff
-        connect(m_toggleRenderObjectButton, &QPushButton::clicked, this, &MainWindow::toggleVisisbleRO);
+        connect(m_toggleRenderObjectButton, &QPushButton::clicked, this, &MainWindow::toggleVisibleSelected);
+        connect(m_removeEntityButton, &QPushButton::clicked, this, &MainWindow::removeSelected);
         connect(m_editRenderObjectButton, &QPushButton::clicked, this, &MainWindow::editRO);
 
         // Renderer stuff
@@ -122,7 +123,6 @@ namespace Ra
 
         mainApp->m_engine->getSignalManager()->m_roAddedCallbacks.push_back(add);
         mainApp->m_engine->getSignalManager()->m_roRemovedCallbacks.push_back(del);
-
     }
 
     void Gui::MainWindow::loadFile()
@@ -296,7 +296,7 @@ namespace Ra
         ro->getRenderTechnique()->changeShader(config);
     }
 
-    void Gui::MainWindow::toggleVisisbleRO()
+    void Gui::MainWindow::toggleVisibleSelected()
     {
         const ItemEntry& item = m_selectionManager->currentItem();
         // If at least one RO is visible, turn them off.
@@ -309,10 +309,17 @@ namespace Ra
                 break;
             }
         }
+
         for (auto roIdx : getItemROs(mainApp->m_engine.get(), item))
         {
             mainApp->m_engine->getRenderObjectManager()->getRenderObject(roIdx)->setVisible(!hasVisible);
         }
+    }
+
+    void Gui::MainWindow::removeSelected()
+    {
+        ItemEntry item = m_selectionManager->currentItem();
+        item.remove();
     }
 
     void Gui::MainWindow::editRO()

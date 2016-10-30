@@ -65,6 +65,8 @@ namespace Ra
             /// Debug checks.
             inline void checkConsistency() const;
 
+            void remove();
+
 
             /// The entity represented by the item, or owning the object represented.
             Ra::Engine::Entity* m_entity;

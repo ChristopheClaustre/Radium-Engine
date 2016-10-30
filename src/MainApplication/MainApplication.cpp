@@ -35,6 +35,9 @@
 
 #include <MainApplication/PluginBase/RadiumPluginInterface.hpp>
 
+#include <vector>
+#include <map>
+
 // Const parameters : TODO : make config / command line options
 
 

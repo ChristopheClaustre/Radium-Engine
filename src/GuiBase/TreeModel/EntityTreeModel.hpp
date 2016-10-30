@@ -55,6 +55,7 @@ namespace Ra
             /// Returns the entry corresponding to a given index or an invalid entry
             /// if the index doesn't match any entry.
             const Engine::ItemEntry& getEntry( const QModelIndex& index )const;
+            Engine::ItemEntry& getEntry(const QModelIndex& index);
 
             /// Returns the index corresponding to the given entry if it exists in the
             /// model, or an invalid index if not found.

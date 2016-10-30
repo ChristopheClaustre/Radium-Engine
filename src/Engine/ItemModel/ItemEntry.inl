@@ -1,5 +1,7 @@
 #include "ItemEntry.hpp"
 
+#include <Engine/Entity/Entity.hpp>
+
 namespace Ra
 {
     namespace Engine
