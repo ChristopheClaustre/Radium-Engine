@@ -128,6 +128,9 @@ namespace Ra
             /// Slot to accept a new renderer
             void onRendererReady();
 
+            void toggleLeftSidebar();
+            void toggleRightSidebar();
+
         private:
             /// Stores the internal model of engine objects for selection.
             GuiBase::ItemModel* m_itemModel;

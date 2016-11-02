@@ -21,6 +21,7 @@
 #include <MainApplication/Viewer/CameraInterface.hpp>
 
 #include <MainApplication/PluginBase/RadiumPluginInterface.hpp>
+#include <QtWidgets/QAction>
 
 using Ra::Engine::ItemEntry;
 
@@ -66,6 +67,9 @@ namespace Ra
         connect(actionOpenMesh, &QAction::triggered, this, &MainWindow::loadFile);
         connect(actionReload_Shaders, &QAction::triggered, m_viewer, &Viewer::reloadShaders);
         connect(actionOpen_Material_Editor, &QAction::triggered, this, &MainWindow::openMaterialEditor);
+
+        connect(actionToggle_Left_Sidebar, &QAction::triggered, this, &MainWindow::toggleLeftSidebar);
+        connect(actionToggle_Right_Sidebar, &QAction::triggered, this, &MainWindow::toggleRightSidebar);
 
         // Toolbox setup
         connect(actionToggle_Local_Global, &QAction::toggled, m_viewer->getGizmoManager(), &GizmoManager::setLocal);
@@ -378,6 +382,14 @@ namespace Ra
         m_itemModel->removeItem(ent) ;
     }
 
+    void Gui::MainWindow::toggleLeftSidebar()
+    {
+        leftSidebar->setVisible(!leftSidebar->isVisible());
+    }
 
+    void Gui::MainWindow::toggleRightSidebar()
+    {
+        rightSidebar->setVisible(!rightSidebar->isVisible());
+    }
 
 } // namespace Ra
