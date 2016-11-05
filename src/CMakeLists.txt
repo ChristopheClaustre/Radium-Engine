@@ -12,18 +12,18 @@ endif( "${isSysDir}" STREQUAL "-1" )
 
 # Find packages
 find_package(OpenGL     REQUIRED)
-find_package(Qt5Core    REQUIRED)
-find_package(Qt5Widgets REQUIRED)
-find_package(Qt5OpenGL  REQUIRED)
 
 if (MSVC OR MSVC_IDE OR MINGW)
   find_package(GLEW       REQUIRED) #only used on windows builds.
 endif (MSVC OR MSVC_IDE OR MINGW)
 
+message(STATUS "${CMAKE_SOURCE_DIR}")
+
 include_directories(
     .
     ${EIGEN_INC}
     ${ASSIMP_INC}
+    ${CMAKE_SOURCE_DIR}/3rdPartyLibraries/OpenGL
 )
 
 # Build Core
@@ -62,10 +62,10 @@ set( engine_shaders ${engine_glsl})
 
 set(engine_libs
     radiumCore
-    ${GLEW_LIBRARIES}
+#    ${GLEW_LIBRARIES}
     ${ASSIMP_LIB}
-    ${Qt5OpenGL_LIBRARIES}
-    ${OPENGL_LIBRARIES})
+    ${OPENGL_LIBRARIES}
+    )
 
 add_library(
     ${engine_target} SHARED
@@ -85,6 +85,9 @@ target_link_libraries(
     ${engine_libs}
 )
 
+find_package(Qt5Core    REQUIRED)
+find_package(Qt5Widgets REQUIRED)
+find_package(Qt5OpenGL  REQUIRED)
 
 # Build GuiBase
 set(guibase_target radiumGuiBase)

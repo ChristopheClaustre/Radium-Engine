@@ -19,15 +19,9 @@
 
 #else // Non-apple OSes.
 
-#ifdef OS_WINDOWS // Windows requires GLEW.
-//#include <Engine/Renderer/OpenGL/glew.h>
-#endif // OS_WINDOWS
-
 // Now the standard OpenGL includes.
-#define GL_GLEXT_PROTOTYPES 1
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include <Engine/Renderer/OpenGL/glext.h>
+#define GL_GLEXT_PROTOTYPES
+#include <GL/glcorearb.h>
 
 #endif // OS_MACOS
 
