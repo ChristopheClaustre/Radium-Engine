@@ -32,7 +32,11 @@
 /// Helper functions
 namespace
 {
-    class RenderThread : public QThread, protected QOpenGLFunctions
+#if defined(RA_USE_OPENGL_3)
+    class RenderThread : public QThread, protected QOpenGLFunctions_3_2_Core
+#else
+    class RenderThread : public QThread, protected QOpenGLFunctions_4_1_Core
+#endif
     {
     public:
         RA_CORE_ALIGNED_NEW
@@ -120,23 +124,23 @@ namespace Ra
         LOG( logINFO ) << "OpenGL   : " << glGetString( GL_VERSION );
         LOG( logINFO ) << "GLSL     : " << glGetString( GL_SHADING_LANGUAGE_VERSION );
 
-#if defined (OS_WINDOWS)
-        glewExperimental = GL_TRUE;
-
-        GLuint result = glewInit();
-        if ( result != GLEW_OK )
-        {
-            std::string errorStr;
-            Ra::Core::StringUtils::stringPrintf( errorStr, " GLEW init failed : %s", glewGetErrorString( result ) );
-            CORE_ERROR( errorStr.c_str() );
-        }
-        else
-        {
-            LOG( logINFO ) << "GLEW     : " << glewGetString( GLEW_VERSION );
-            glFlushError();
-        }
-
-#endif
+//#if defined (OS_WINDOWS)
+//        glewExperimental = GL_TRUE;
+//
+//        GLuint result = glewInit();
+//        if ( result != GLEW_OK )
+//        {
+//            std::string errorStr;
+//            Ra::Core::StringUtils::stringPrintf( errorStr, " GLEW init failed : %s", glewGetErrorString( result ) );
+//            CORE_ERROR( errorStr.c_str() );
+//        }
+//        else
+//        {
+//            LOG( logINFO ) << "GLEW     : " << glewGetString( GLEW_VERSION );
+//            glFlushError();
+//        }
+//
+//#endif
 
 #if defined(FORCE_RENDERING_ON_MAIN_THREAD)
         LOG( logDEBUG ) << "Rendering on main thread";

@@ -20,7 +20,7 @@
 #else // Non-apple OSes.
 
 #ifdef OS_WINDOWS // Windows requires GLEW.
-#include <Engine/Renderer/OpenGL/glew.h>
+//#include <Engine/Renderer/OpenGL/glew.h>
 #endif // OS_WINDOWS
 
 // Now the standard OpenGL includes.

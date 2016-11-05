@@ -103,8 +103,9 @@ else()
   message(STATUS "Using single precision.")
 endif()
 
-if (${ENABLE_FANCY_GL})
+if (NOT ${ENABLE_FANCY_GL})
   add_definitions(-DNO_TRANSPARENCY)
+  add_definitions(-DRA_USE_OPENGL_3)
   message(STATUS "Fancy OpenGL Effects are disabled")
 endif()
 
