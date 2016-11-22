@@ -310,7 +310,6 @@ namespace Ra
             if (m_wireframe)
             {
                 m_fbo->useAsTarget();
-                shader = m_shaderMgr->getShaderProgram("Wireframe");
 
                 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
                 glEnable(GL_LINE_SMOOTH);
@@ -322,12 +321,11 @@ namespace Ra
                 GL_ASSERT( glDepthFunc( GL_LEQUAL ) );
                 GL_ASSERT( glDepthMask( GL_FALSE ) );
 
-                GL_ASSERT( glEnable( GL_BLEND ) );
-                GL_ASSERT( glBlendFunc( GL_ONE, GL_ONE ) );
-
                 GL_ASSERT( glDrawBuffers( 1, buffers) );   // Draw color texture
-
 #if 0
+                //GL_ASSERT( glEnable( GL_BLEND ) );
+                //GL_ASSERT( glBlendFunc( GL_ONE, GL_ONE ) );
+
                 if ( m_lights.size() > 0 )
                 {
                     for ( const auto& l : m_lights )
@@ -367,6 +365,9 @@ namespace Ra
                     }
                 }
 #else
+                shader = m_shaderMgr->getShaderProgram("Wireframe");
+                shader->bind();
+
                 RenderParameters params;
                 for (const auto& ro : m_fancyRenderObjects)
                 {
