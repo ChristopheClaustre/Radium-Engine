@@ -79,6 +79,7 @@ namespace Ra
             m_shaderMgr->addShaderProgram("UnlitOIT", "../Shaders/Plain.vert.glsl", "../Shaders/UnlitOIT.frag.glsl");
             m_shaderMgr->addShaderProgram("ComposeOIT", "../Shaders/Basic2D.vert.glsl", "../Shaders/ComposeOIT.frag.glsl");
 #endif
+            m_shaderMgr->addShaderProgram("Wireframe", "../Shaders/BlinnPhong.vert.glsl", "../Shaders/Wireframe.frag.glsl");
         }
 
         void ForwardRenderer::initBuffers()
@@ -309,6 +310,7 @@ namespace Ra
             if (m_wireframe)
             {
                 m_fbo->useAsTarget();
+                shader = m_shaderMgr->getShaderProgram("Wireframe");
 
                 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
                 glEnable(GL_LINE_SMOOTH);
@@ -325,6 +327,7 @@ namespace Ra
 
                 GL_ASSERT( glDrawBuffers( 1, buffers) );   // Draw color texture
 
+#if 0
                 if ( m_lights.size() > 0 )
                 {
                     for ( const auto& l : m_lights )
@@ -334,13 +337,13 @@ namespace Ra
 
                         for ( const auto& ro : m_fancyRenderObjects )
                         {
-                            ro->render(params, renderData);
+                            ro->render(params, renderData, shader);
                         }
 
                         for (size_t i = 0; i < m_fancyTransparentCount; ++i)
                         {
                             auto& ro = m_transparentRenderObjects[i];
-                            ro->render(params, renderData);
+                            ro->render(params, renderData, shader);
                         }
                     }
                 }
@@ -354,15 +357,28 @@ namespace Ra
 
                     for ( const auto& ro : m_fancyRenderObjects )
                     {
-                        ro->render(params, renderData);
+                        ro->render(params, renderData, shader);
                     }
 
                     for (size_t i = 0; i < m_fancyTransparentCount; ++i)
                     {
                         auto& ro = m_transparentRenderObjects[i];
-                        ro->render(params, renderData);
+                        ro->render(params, renderData, shader);
                     }
                 }
+#else
+                RenderParameters params;
+                for (const auto& ro : m_fancyRenderObjects)
+                {
+                    ro->render(params, renderData, shader);
+                }
+
+                for (size_t i = 0; i < m_fancyTransparentCount; ++i)
+                {
+                    auto& ro = m_transparentRenderObjects[i];
+                    ro->render(params, renderData, shader);
+                }
+#endif
 
                 glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
                 glDisable(GL_POLYGON_OFFSET_LINE);
