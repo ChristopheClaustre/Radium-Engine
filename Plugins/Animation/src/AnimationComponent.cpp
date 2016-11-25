@@ -16,6 +16,7 @@
 #include <Engine/Managers/ComponentMessenger/ComponentMessenger.hpp>
 
 #include <Drawing/SkeletonBoneDrawable.hpp>
+#include <Engine/Managers/SystemDisplay/SystemDisplay.hpp>
 #include "Core/Mesh/TriangleMesh.hpp"
 
 using Ra::Engine::ComponentMessenger;
@@ -169,7 +170,8 @@ namespace AnimationPlugin
         std::map< uint, uint > table;
         std::set< Ra::Asset::Time > keyTime;
 
-        for( uint n = 0; n < data.size(); ++n ) {
+        int n =0;
+        //for( uint n = 0; n < data.size(); ++n ) {
             auto handleAnim = data[n]->getFrames();
             for( uint i = 0; i < m_skel.size(); ++i ) {
                 for( uint j = 0; j < handleAnim.size(); ++j ) {
@@ -187,15 +189,15 @@ namespace AnimationPlugin
             m_animations.push_back( Ra::Core::Animation::Animation() );
             for( const auto& t : keyTime ) {
                 for( const auto& it : table ) {
-                    //pose[it.second] = ( m_skel.m_graph.isRoot( it.second ) ) ? m_skel.m_pose[it.second] : handleAnim[it.first].m_anim.at( t );
-                    pose[it.second] = handleAnim[it.first].m_anim.at( t );
+                    pose[it.second] = ( m_skel.m_graph.isRoot( it.second ) ) ? m_skel.m_pose[it.second] : handleAnim[it.first].m_anim.at( t );
+                    //pose[it.second] = handleAnim[it.first].m_anim.at( t );
                 }
                 m_animations.back().addKeyPose( pose, t );
                 keypose.insertKeyFrame( t, pose );
             }
 
             m_dt.push_back( data[n]->getTimeStep() );
-        }
+        //}
         m_animationID = 0;
         m_animationTime = 0.0;
     }
@@ -221,6 +223,13 @@ namespace AnimationPlugin
         for( const auto& r : root ) {
             addBone( -1, r, component, edgeList, processed, indexTable );
         }
+
+        Ra::Core::Vector3 a,b;
+
+       /* m_skel.getBonePoints(29,a,b);
+        RA_DISPLAY_POINT(a, Ra::Core::Colors::Red(), 0.1f);
+        RA_DISPLAY_POINT(b, Ra::Core::Colors::Red(), 0.1f);
+*/
     }
 
 
