@@ -176,7 +176,7 @@ namespace Ra
     {
         using namespace Engine::DrawPrimitives;
 
-        Engine::SystemEntity::uiCmp()->addRenderObject(
+        /*Engine::SystemEntity::uiCmp()->addRenderObject(
             Primitive(Engine::SystemEntity::uiCmp(), Grid(
                     Core::Vector3::Zero(), Core::Vector3::UnitX(),
                     Core::Vector3::UnitZ(), Core::Colors::Grey(0.6f))));
@@ -193,7 +193,7 @@ namespace Ra
         for (auto& c: e->getComponents())
         {
             c->initialize();
-        }
+        }*/
     }
 
     void BaseApplication::loadFile( QString path )

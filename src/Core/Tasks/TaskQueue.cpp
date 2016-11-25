@@ -109,7 +109,7 @@ namespace Ra
            {
                ON_DEBUG(bool result =) addDependency( pre.first, pre.second );
                ON_DEBUG( std::string errMsg = "Pending dependency unresolved : "+ pre.first; )
-               CORE_ASSERT( result, errMsg.c_str() );
+             //  CORE_ASSERT( result, errMsg.c_str() );
            }
            m_pendingDepsPre.clear();
            m_pendingDepsSucc.clear();

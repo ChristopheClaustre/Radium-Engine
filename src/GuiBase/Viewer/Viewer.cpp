@@ -88,10 +88,17 @@ namespace Ra
         m_currentRenderer = m_renderers[0].get();
 
         auto light = Ra::Core::make_shared<Engine::DirectionalLight>();
+        auto key = Ra::Core::make_shared<Engine::DirectionalLight>();
+        key->setDirection({-1,0,0});
+        key->setColor( {0.5, 0.1, 0.0,1.0});
 
+        auto fill = Ra::Core::make_shared<Engine::DirectionalLight>();
+        fill->setDirection({0,-1,-1});
         for ( auto& renderer : m_renderers )
         {
             renderer->addLight( light );
+            renderer->addLight(key);
+            renderer->addLight(fill);
         }
 
         m_camera->attachLight( light );
