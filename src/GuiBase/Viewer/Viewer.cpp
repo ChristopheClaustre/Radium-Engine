@@ -90,7 +90,7 @@ namespace Ra
         auto light = Ra::Core::make_shared<Engine::DirectionalLight>();
         auto key = Ra::Core::make_shared<Engine::DirectionalLight>();
         key->setDirection({-1,0,0});
-        key->setColor( {0.5, 0.1, 0.0,1.0});
+        key->setColor( {0.5f, 0.1f, 0.0f,1.0f});
 
         auto fill = Ra::Core::make_shared<Engine::DirectionalLight>();
         fill->setDirection({0,-1,-1});
