@@ -1,7 +1,5 @@
 #include <QTimer>
-#include <QObject>
 #include <QApplication>
-#include <QCoreApplication>
 
 #include <Core/Time/Timer.hpp>
 #include <Core/Tasks/Task.hpp>
@@ -20,8 +18,6 @@ classic "Spinning Cube" demo. */
 
 namespace
 {
-
-
     /// Our minimal application uses QTimer to be called at a regular frame rate.
     class MinimalApp : public QApplication
     {
