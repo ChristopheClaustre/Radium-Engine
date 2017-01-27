@@ -20,6 +20,8 @@ ExternalProject_Add(
         INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}
         CMAKE_ARGS
             -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
+            -DCMAKE_C_FLAGS=-fPIC
+            -DCMAKE_CXX_FLAGS=-fPIC
             -DASSIMP_BUILD_ASSIMP_TOOLS=False
             -DASSIMP_BUILD_SAMPLES=False
             -DASSIMP_BUILD_TESTS=False
