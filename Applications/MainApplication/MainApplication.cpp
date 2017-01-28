@@ -382,6 +382,7 @@ namespace Ra
         PluginContext context;
         context.m_engine = m_engine.get();
         context.m_selectionManager = m_mainWindow->getSelectionManager();
+        context.m_viewer = m_mainWindow->getViewer();
 
         for (const auto& filename : pluginsDir.entryList(QDir::Files))
         {
