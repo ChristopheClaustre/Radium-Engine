@@ -13,5 +13,6 @@ set( PLUGIN_OUTPUT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../Plugins/bin" )
 
 #add_subdirectory( Dummy )
 add_subdirectory( FancyMesh )
+add_subdirectory( PointyCloud )
 add_subdirectory( Animation )
 add_subdirectory( Skinning )
