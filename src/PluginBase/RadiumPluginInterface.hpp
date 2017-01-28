@@ -14,12 +14,17 @@ namespace Ra
     {
         class SelectionManager;
     }
+    namespace Gui
+    {
+        class Viewer;
+    }
 
     /// Data passed to the plugin constructor.
     struct PluginContext
     {
         Engine::RadiumEngine* m_engine;
         GuiBase::SelectionManager* m_selectionManager;
+        Gui::Viewer* m_viewer;
     };
 
     namespace Plugins
