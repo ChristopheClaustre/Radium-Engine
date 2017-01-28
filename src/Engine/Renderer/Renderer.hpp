@@ -308,6 +308,7 @@ namespace Ra
             std::vector<RenderObjectPtr> m_debugRenderObjects;
             std::vector<RenderObjectPtr> m_xrayRenderObjects;
             std::vector<RenderObjectPtr> m_uiRenderObjects;
+            std::vector<RenderObjectPtr> m_pointyRenderObjects;
 
             // Simple quad mesh, used to render the final image
             std::unique_ptr<Mesh> m_quadMesh;

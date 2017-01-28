@@ -170,10 +170,11 @@ namespace Ra
 
         void Renderer::updateRenderObjectsInternal( const RenderData& renderData )
         {
-            for ( auto& ro : m_fancyRenderObjects ) ro->updateGL();
-            for ( auto& ro : m_xrayRenderObjects  ) ro->updateGL();
-            for ( auto& ro : m_debugRenderObjects ) ro->updateGL();
-            for ( auto& ro : m_uiRenderObjects    ) ro->updateGL();
+            for ( auto& ro : m_fancyRenderObjects   ) ro->updateGL();
+            for ( auto& ro : m_xrayRenderObjects    ) ro->updateGL();
+            for ( auto& ro : m_debugRenderObjects   ) ro->updateGL();
+            for ( auto& ro : m_uiRenderObjects      ) ro->updateGL();
+            for ( auto& ro : m_pointyRenderObjects  ) ro->updateGL();
         }
 
         void Renderer::feedRenderQueuesInternal( const RenderData& renderData )
@@ -182,10 +183,12 @@ namespace Ra
             m_debugRenderObjects.clear();
             m_uiRenderObjects.clear();
             m_xrayRenderObjects.clear();
+            m_pointyRenderObjects.clear();
 
-            m_roMgr->getRenderObjectsByType( renderData, m_fancyRenderObjects, RenderObjectType::Fancy );
-            m_roMgr->getRenderObjectsByType( renderData, m_debugRenderObjects, RenderObjectType::Debug );
-            m_roMgr->getRenderObjectsByType( renderData, m_uiRenderObjects,    RenderObjectType::UI );
+            m_roMgr->getRenderObjectsByType( renderData, m_fancyRenderObjects,  RenderObjectType::Fancy );
+            m_roMgr->getRenderObjectsByType( renderData, m_debugRenderObjects,  RenderObjectType::Debug );
+            m_roMgr->getRenderObjectsByType( renderData, m_uiRenderObjects,     RenderObjectType::UI );
+            m_roMgr->getRenderObjectsByType( renderData, m_pointyRenderObjects, RenderObjectType::Pointy );
 
             for ( auto it = m_fancyRenderObjects.begin(); it != m_fancyRenderObjects.end(); )
             {
@@ -225,6 +228,19 @@ namespace Ra
                     ++it;
                 }
             }
+
+            for ( auto it = m_pointyRenderObjects.begin(); it != m_pointyRenderObjects.end(); )
+            {
+                if ( (*it)->isXRay() )
+                {
+                    m_pointyRenderObjects.push_back( *it );
+                    it = m_pointyRenderObjects.erase( it );
+                }
+                else
+                {
+                    ++it;
+                }
+            }
         }
 
         void Renderer::doPicking( const RenderData& renderData )
@@ -250,6 +266,26 @@ namespace Ra
             GL_ASSERT( glDepthFunc( GL_LESS ) );
 
             for ( const auto& ro : m_fancyRenderObjects )
+            {
+                if ( ro->isVisible() )
+                {
+                    int id = ro->idx.getValue();
+                    shader->setUniform( "objectId", id );
+
+                    Core::Matrix4 M = ro->getTransformAsMatrix();
+                    shader->setUniform( "transform.proj", renderData.projMatrix );
+                    shader->setUniform( "transform.view", renderData.viewMatrix );
+                    shader->setUniform( "transform.model", M );
+
+                    ro->getRenderTechnique()->material->bind( shader );
+
+                    // render
+                    ro->getMesh()->render();
+                }
+            }
+
+            //Draw point cloud objects
+            for ( const auto& ro : m_pointyRenderObjects )
             {
                 if ( ro->isVisible() )
                 {
@@ -408,6 +444,11 @@ namespace Ra
             }
 
             for ( auto& ro : m_uiRenderObjects )
+            {
+                ro->hasBeenRenderedOnce();
+            }
+
+            for ( auto& ro : m_pointyRenderObjects )
             {
                 ro->hasBeenRenderedOnce();
             }
