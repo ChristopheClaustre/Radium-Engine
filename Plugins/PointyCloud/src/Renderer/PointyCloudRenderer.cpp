@@ -49,10 +49,6 @@ namespace Ra
         {
         }
 
-        void PointyCloudRenderer::updateStepInternal( const RenderData& renderData )
-        {
-        }
-
         void PointyCloudRenderer::renderInternal( const RenderData& renderData )
         {
         }
