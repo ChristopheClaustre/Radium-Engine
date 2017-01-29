@@ -24,7 +24,7 @@ namespace Ra
 
 namespace PointyCloudPlugin
 {
-    class PC_PLUGIN_API PointyCloudComponent : public Ra::Engine::Component
+    class POINTY_PLUGIN_API PointyCloudComponent : public Ra::Engine::Component
     {
     public:
         PointyCloudComponent( const std::string& name);
@@ -41,6 +41,13 @@ namespace PointyCloudPlugin
         /// Returns the current display geometry.
         const Ra::Core::TriangleMesh& getMesh() const;
 
+        void setInfluenceRadius(float);
+        void setBeta(float);
+        void setThreshold(float);
+        void setUpsamplingMethod(UPSAMPLING_METHOD);
+        void setProjectionMethod(PROJECTION_METHOD);
+        void setOptimizationByOctree(bool);
+        void setOptimizationByCUDA(bool);
 
     private:
 

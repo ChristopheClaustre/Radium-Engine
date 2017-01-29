@@ -141,10 +141,6 @@ namespace PointyCloudPlugin
 
     void PointyCloudComponent::setMeshInput(const std::shared_ptr<Ra::Engine::Mesh> meshShared)
     {
-//        CORE_ASSERT( meshptr, " Input is null");
-
-//        std::shared_ptr<Ra::Engine::Mesh> meshShared();
-//        meshShared.reset(meshptr);
         getRoMgr()->getRenderObject(getRenderObjectIndex())->setMesh(meshShared);
     }
 

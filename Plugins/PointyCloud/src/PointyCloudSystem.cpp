@@ -44,7 +44,54 @@ namespace PointyCloudPlugin
 
     void PointyCloudSystem::generateTasks( Ra::Core::TaskQueue* taskQueue, const Ra::Engine::FrameInfo& frameInfo )
     {
-        // Do nothing, as this system only displays meshes.
+        // TODO générer la computePointyCloudTask ;) ;) ;) #YOLO #SWAG
+    }
+
+    void PointyCloudSystem::setSplatRadius(float splatRadius)
+    {
+        m_splatRadius = splatRadius;
+        // TODO donner au renderer
+    }
+
+    void PointyCloudSystem::setInfluenceRadius(float influenceRadius)
+    {
+        m_influenceRadius = influenceRadius;
+        // TODO donner à tous les components
+    }
+    void PointyCloudSystem::setBeta(float beta)
+    {
+        m_beta = beta;
+        // TODO donner à tous les components
+    }
+
+    void PointyCloudSystem::setThreshold(float threshold)
+    {
+        m_threshold = threshold;
+        // TODO donner à tous les components
+    }
+
+    void PointyCloudSystem::setUpsamplingMethod(UPSAMPLING_METHOD upsampler)
+    {
+        m_upsampler = upsampler;
+        // TODO donner à tous les components
+    }
+
+    void PointyCloudSystem::setProjectionMethod(PROJECTION_METHOD projector)
+    {
+        m_projector = projector;
+        // TODO donner à tous les components
+    }
+
+    void PointyCloudSystem::setOptimizationByOctree(bool octree)
+    {
+        m_octree = octree;
+        // TODO donner à tous les components
+    }
+
+    void PointyCloudSystem::setOptimizationByCUDA(bool cuda)
+    {
+        m_cuda = cuda;
+        // TODO donner à tous les components
     }
 
 } // namespace PointyCloudPlugin

@@ -26,11 +26,13 @@ namespace Ra
 namespace PointyCloudPlugin
 {
     class PointyCloudComponent;
+    enum UPSAMPLING_METHOD;
+    enum PROJECTION_METHOD;
 }
 
 namespace PointyCloudPlugin
 {
-    class PC_PLUGIN_API PointyCloudSystem : public Ra::Engine::System
+    class POINTY_PLUGIN_API PointyCloudSystem : public Ra::Engine::System
     {
     public:
         PointyCloudSystem();
@@ -39,6 +41,34 @@ namespace PointyCloudPlugin
         virtual void handleAssetLoading( Ra::Engine::Entity* entity, const Ra::Asset::FileData* fileData ) override;
 
         virtual void generateTasks( Ra::Core::TaskQueue* taskQueue, const Ra::Engine::FrameInfo& frameInfo ) override;
+
+        void setSplatRadius(float splatRadius);
+        void setInfluenceRadius(float influenceRadius);
+        void setBeta(float beta);
+        void setThreshold(float threshold);
+        void setUpsamplingMethod(UPSAMPLING_METHOD upsampler);
+        void setProjectionMethod(PROJECTION_METHOD projector);
+        void setOptimizationByOctree(bool octree);
+        void setOptimizationByCUDA(bool cuda);
+
+        float getSplatRadius() { return m_splatRadius; }
+        float getInfluenceRadius()  { return m_influenceRadius; }
+        float getBeta() { return m_beta; }
+        float getThreshold() { return m_threshold; }
+        UPSAMPLING_METHOD getUpsamplingMethod() { return m_upsampler; }
+        PROJECTION_METHOD getProjectionMethod() { return m_projector; }
+        bool isOptimizedByOctree() { return m_octree; }
+        bool isOptimizedByCUDA() { return m_cuda; }
+
+    private:
+        float m_splatRadius;
+        float m_influenceRadius;
+        float m_beta;
+        float m_threshold;
+        UPSAMPLING_METHOD m_upsampler;
+        PROJECTION_METHOD m_projector;
+        bool m_octree;
+        bool m_cuda;
     };
 
 } // namespace PointyCloudPlugin

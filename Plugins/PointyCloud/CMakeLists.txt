@@ -38,6 +38,9 @@ file( GLOB_RECURSE sources src/*.cpp )
 file( GLOB_RECURSE headers src/*.hpp )
 file( GLOB_RECURSE inlines src/*.inl )
 
+file(GLOB_RECURSE app_uis *.ui)
+qt5_wrap_ui(app_uis_moc ${app_uis})
+
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 
@@ -53,7 +56,7 @@ include_directories(
     ${ASSIMP_INC}
     )
 
-add_library( PointyCloud SHARED ${sources} ${headers} ${inlines} )
+add_library( PointyCloud SHARED ${sources} ${headers} ${inlines} ${app_uis})
 add_dependencies( PointyCloud radiumCore radiumEngine radiumGuiBase )
 
 target_compile_definitions( PointyCloud PRIVATE "-DPointyCloud_EXPORTS" )
