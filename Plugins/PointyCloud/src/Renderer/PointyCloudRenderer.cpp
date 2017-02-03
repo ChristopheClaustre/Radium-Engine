@@ -1,5 +1,5 @@
  
-#include <src/Renderer/PointyCloudRenderer.hpp>
+#include "src/Renderer/PointyCloudRenderer.hpp"
 
 #include <Engine/RadiumEngine.hpp>
 
@@ -66,6 +66,7 @@ namespace PointyCloudPlugin
         {
             m_fbo->useAsTarget(m_width, m_height);
             {
+                //TODO change glPolygonMode to handle oriented splat
                 glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
                 glPointSize(m_splatSize);
 
@@ -89,20 +90,23 @@ namespace PointyCloudPlugin
                 const Ra::Engine::ShaderProgram* shader = m_shaderMgr->getShaderProgram("Pointy");
                 shader->bind();
                 {
-                    for(const auto& ro : m_fancyRenderObjects)
+                    for(const auto& ro : m_pointyRenderObjects)
                         if( ro->isVisible() )
                         {
                             Ra::Core::Matrix4 M = ro->getTransformAsMatrix();
                             Ra::Core::Matrix4 N = M.inverse().transpose();
 
                             Ra::Engine::RenderParameters params;
-                            m_lights[0]->getRenderParameters( params );
+                            if(m_lights.size()>0)
+                                m_lights[0]->getRenderParameters( params );
+
                             params.bind(shader);
 
                             shader->setUniform( "transform.proj", renderData.projMatrix );
                             shader->setUniform( "transform.view", renderData.viewMatrix );
                             shader->setUniform( "transform.model", M );
                             shader->setUniform( "transform.worldNormal", N );
+                            shader->setUniform( "splatSize", m_splatSize );
 
                             ro->getMesh()->render();
                         }

@@ -2,6 +2,8 @@
 #ifndef POINTYCLOUDPLUGIN_POINTYCLOUDRENDERER_HPP
 #define POINTYCLOUDPLUGIN_POINTYCLOUDRENDERER_HPP
 
+#include "PointyCloudPlugin.hpp"
+
 #include <Engine/RadiumEngine.hpp>
 #include <Engine/Renderer/Renderer.hpp>
 
@@ -13,10 +15,10 @@ namespace Engine {
 
 namespace PointyCloudPlugin
 {
-        class RA_ENGINE_API PointyCloudRenderer : public Ra::Engine::Renderer
+        class POINTY_PLUGIN_API PointyCloudRenderer : public Ra::Engine::Renderer
         {
         public:
-            PointyCloudRenderer( uint width, uint height, float splatSize );
+            PointyCloudRenderer( uint width, uint height, float splatSize = 1.0);
             virtual ~PointyCloudRenderer();
             virtual std::string getRendererName() const override { return "PointyCloud Renderer"; }
 
