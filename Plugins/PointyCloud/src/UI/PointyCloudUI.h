@@ -31,6 +31,20 @@ signals:
 
 private slots:
 
+    void on_m_splatRadius_editingFinished();
+    void on_m_influenceRadius_editingFinished();
+    void on_m_beta_editingFinished();
+    void on_m_threshold_editingFinished();
+    void on_m_upsamplingMethodes_currentIndexChanged(int index);
+    void on_m_projectionMethodes_currentIndexChanged(int index);
+    void on_m_octree_clicked(bool checked);
+    void on_m_cuda_clicked(bool checked);
+
+private:
+    bool isClampValideDValue(double value,double min,double max);
+    bool isClampValideIValue(int value,int min,int max);
+    double clampDValue(double value,double min,double max);
+    int clampIValue(int value,int min,int max);
 
 private:
     Ui::PointyCloudUI *ui;
