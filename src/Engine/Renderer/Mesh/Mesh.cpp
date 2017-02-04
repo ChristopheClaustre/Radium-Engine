@@ -17,7 +17,8 @@ namespace Ra {
         {
             CORE_ASSERT( m_renderMode == GL_LINES
                       || m_renderMode == GL_LINES_ADJACENCY
-                      || m_renderMode == GL_TRIANGLES,
+                      || m_renderMode == GL_TRIANGLES
+                      || m_renderMode == GL_POINTS,
                          "Unsupported render mode" );
         }
 
@@ -86,6 +87,28 @@ namespace Ra {
 
         }
 
+        /// Use it to load an point-based geometry
+        void Mesh::loadPointyGeometry(const Core::Vector3Array &vertices, const Core::Vector3Array &normals)
+        {
+            CORE_ASSERT( m_renderMode == GL_POINTS, "This function can be used only to render points");
+
+            m_numElements = vertices.size();
+            m_mesh.m_vertices = vertices;
+            m_mesh.m_normals = normals;
+
+            for ( uint i = 0; i < vertices.size(); i = i + 3 )
+            {
+               m_mesh.m_triangles.push_back( { i, (i + 1)%m_numElements, (i + 2)%m_numElements } );
+            }
+
+            // Mark mesh as dirty.
+            for (uint i = 0; i < MAX_MESH; ++i)
+            {
+                m_dataDirty[i] = true;
+            }
+            m_isDirty = true;
+        }
+
         void Mesh::addData( const Vec3Data& type, const Core::Vector3Array& data )
         {
             m_v3Data[static_cast<uint>(type)] = data;
@@ -147,8 +170,10 @@ namespace Ra {
                 ON_DEBUG(bool dirtyTest = false; for (const auto& d : m_dataDirty) { dirtyTest = dirtyTest || d;});
                 CORE_ASSERT( dirtyTest == m_isDirty, "Dirty flags inconsistency");
 
-                CORE_ASSERT( ! ( m_mesh.m_vertices.empty()|| m_mesh.m_triangles.empty() ),
-                             "Either vertices or indices are empty arrays.");
+                CORE_ASSERT( !m_mesh.m_vertices.empty(), "Vertices is empty array.");
+
+                CORE_ASSERT( !m_mesh.m_triangles.empty() || m_renderMode == GL_POINTS,
+                             "Indices is an empty arrays and the renderMode is not GL_POINTS.");
 
                 if ( m_vao == 0 )
                 {
@@ -159,7 +184,7 @@ namespace Ra {
                 // Bind it
                 GL_ASSERT( glBindVertexArray( m_vao ) );
 
-                if (m_vbos[INDEX] == 0 )
+                if (m_vbos[INDEX] == 0)
                 {
                     GL_ASSERT( glGenBuffers( 1, &m_vbos[INDEX]) );
                     GL_ASSERT( glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_vbos[INDEX]) );
@@ -169,7 +194,6 @@ namespace Ra {
                     GL_ASSERT( glBufferData( GL_ELEMENT_ARRAY_BUFFER, m_mesh.m_triangles.size() * sizeof( Ra::Core::Triangle ),
                                              m_mesh.m_triangles.data(), GL_DYNAMIC_DRAW ) );
                     m_dataDirty[INDEX] = false;
-
                 }
 
                 // Geometry data

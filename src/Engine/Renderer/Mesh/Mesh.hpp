@@ -92,6 +92,7 @@ namespace Ra
 
             // TODO (val) : remove this function (it is used mostly in the display primitives)
             void loadGeometry( const Core::Vector3Array& vertices, const std::vector<uint>& indices);
+            void loadPointyGeometry(const Core::Vector3Array &vertices, const Core::Vector3Array &normals);
 
             /// Load additionnal vertex data.
             void addData( const Vec3Data& type, const Core::Vector3Array& data);
