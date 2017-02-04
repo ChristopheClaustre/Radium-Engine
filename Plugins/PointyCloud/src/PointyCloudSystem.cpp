@@ -28,7 +28,10 @@ namespace PointyCloudPlugin
         m_rendererIndex = m_viewer->addRenderer(m_renderer);
         m_viewer->changeRenderer(m_rendererIndex);
 
-        Ra::Engine::ShaderConfiguration config("Pointy", "../Shaders/Pointy/Pointy.vert.glsl", "../Shaders/Pointy/Pointy.frag.glsl");
+        Ra::Engine::ShaderConfiguration config("Pointy");
+        config.addShader(Ra::Engine::ShaderType_VERTEX,   "../Shaders/Pointy/PointyQuad.vert.glsl");
+        config.addShader(Ra::Engine::ShaderType_GEOMETRY, "../Shaders/Pointy/PointyQuad.geom.glsl");
+        config.addShader(Ra::Engine::ShaderType_FRAGMENT, "../Shaders/Pointy/PointyQuad.frag.glsl");
         Ra::Engine::ShaderConfigurationFactory::addConfiguration("Pointy", config);
     }
 

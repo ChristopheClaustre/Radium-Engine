@@ -13,5 +13,5 @@ layout (location = 3) in vec3 in_eye;
 
 void main()
 {
-    fragColor = vec4(computeLighting(), 1.0);
+    fragColor = vec4(computeLighting(),1);
 }
