@@ -14,7 +14,7 @@ enum class RenderObjectType
     Debug,
     /// "Fancy" render objects are the ones that should be lit and so on
     Fancy,
-    /// "Pointy" render object with a point cloud
+    /// "Pointy" render objects with a point cloud
     Pointy,
 
     Count
