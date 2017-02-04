@@ -92,15 +92,15 @@ namespace Ra
 
         m_currentRenderer = m_renderers[0].get();
 
-        auto light = Ra::Core::make_shared<Engine::DirectionalLight>();
+        m_light = Ra::Core::make_shared<Engine::DirectionalLight>();
 
         for ( auto& renderer : m_renderers )
         {
             if (renderer.get() != nullptr)
-                renderer->addLight( light );
+                renderer->addLight( m_light );
         }
 
-        m_camera->attachLight( light );
+        m_camera->attachLight( m_light );
 
         emit rendererReady();
     }
@@ -280,7 +280,29 @@ namespace Ra
             m_currentRenderer = m_renderers[index].get();
             m_currentRenderer->initialize();
             m_currentRenderer->resize( width(), height() );
+            emit rendererReady();
             m_currentRenderer->unlockRendering();
+        }
+    }
+
+    int Gui::Viewer::addRenderer( Engine::Renderer * renderer )
+    {
+        if (renderer != nullptr)
+        {
+            // NOTE(Cricri): This is probably buggy since it has not been tested.
+            LOG( logWARNING ) << "Adding renderers might be buggy since it has not been tested.";
+
+            int index = m_renderers.size();
+            m_renderers.emplace(m_renderers.end(), renderer);
+
+            renderer->addLight( m_light );
+
+            return index;
+        }
+        else
+        {
+            LOG(logWARNING) << "Impossible to add the renderer to the list of renderers.";
+            return -1;
         }
     }
 

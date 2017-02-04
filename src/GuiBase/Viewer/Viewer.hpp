@@ -130,6 +130,9 @@ namespace Ra
             /// Set the renderer
             void changeRenderer( int index );
 
+            /// Add a new renderer
+            int addRenderer( Engine::Renderer * renderer );
+
             /// Toggle the post-process effetcs
             void enablePostProcess(int enabled);
 
@@ -184,6 +187,7 @@ namespace Ra
 
             /// Owning pointer to the camera.
             std::unique_ptr<CameraInterface> m_camera;
+            std::shared_ptr<Engine::Light> m_light;
 
             /// Owning (QObject child) pointer to gizmo manager.
             GizmoManager* m_gizmoManager;
