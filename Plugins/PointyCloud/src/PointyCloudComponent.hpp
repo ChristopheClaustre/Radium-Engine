@@ -5,8 +5,10 @@
 
 #include <Core/Mesh/MeshTypes.hpp>
 #include <Core/Mesh/TriangleMesh.hpp>
+#include <Core/Containers/MakeShared.hpp>
 
 #include <Engine/Component/Component.hpp>
+#include <Engine/Renderer/Camera/Camera.hpp>
 
 namespace Ra
 {
@@ -14,6 +16,7 @@ namespace Ra
     {
         struct RenderTechnique;
         class Mesh;
+        class Camera;
     }
 
     namespace Asset
@@ -27,19 +30,19 @@ namespace PointyCloudPlugin
     class POINTY_PLUGIN_API PointyCloudComponent : public Ra::Engine::Component
     {
     public:
-        PointyCloudComponent( const std::string& name);
+        PointyCloudComponent( const std::string& name, const Ra::Engine::Camera *camera);
         virtual ~PointyCloudComponent();
 
 
         virtual void initialize() override;
 
-        void handleMeshLoading(const Ra::Asset::GeometryData* data);
+        void handlePointyCloudLoading(const Ra::Asset::GeometryData* data);
 
         /// Returns the index of the associated RO (the display mesh)
         Ra::Core::Index getRenderObjectIndex() const;
 
-        /// Returns the current display geometry.
-        const Ra::Core::TriangleMesh& getMesh() const;
+        /// Do APSS on the point cloud
+        void computePointyCloud();
 
         void setInfluenceRadius(float);
         void setBeta(float);
@@ -55,15 +58,21 @@ namespace PointyCloudPlugin
         Ra::Engine::Mesh& getDisplayMesh();
 
         // Pointy cloud accepts to give its mesh and (if deformable) to update it
-        const Ra::Core::TriangleMesh* getMeshOutput() const;
+        const Ra::Engine::Mesh* getMeshOutput() const;
         void setMeshInput(const std::shared_ptr<Ra::Engine::Mesh> meshShared );
 
         const Ra::Core::Index* roIndexRead() const;
 
+        void resetWorkingCloud();
+
     private:
         Ra::Core::Index m_meshIndex;
-        Ra::Core::Index m_aabbIndex;
         std::string m_contentName;
+
+        Ra::Engine::Mesh * m_originalCloud;
+        std::shared_ptr<Ra::Engine::Mesh> m_workingCloud;
+
+        const Ra::Engine::Camera *m_camera;
     };
 
 } // namespace PointyCloudPlugin
