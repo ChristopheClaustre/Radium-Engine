@@ -68,7 +68,7 @@ namespace PointyCloudPlugin
         void setOptimizationByCUDA(bool);
 
     private:
-        class PointyCloudSystem* m_system;
+        class PointyCloudSystem * m_system;
 
     public:
         static const std::array<std::string,MAX_UPSAMPLING_METHOD> UPSAMPLING_METHOD_STR;

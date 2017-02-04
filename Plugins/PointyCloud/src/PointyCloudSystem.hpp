@@ -4,6 +4,8 @@
 #include "PointyCloudPlugin.hpp"
 
 #include <Engine/System/System.hpp>
+#include <GuiBase/Viewer/Viewer.hpp>
+#include <Renderer/PointyCloudRenderer.hpp>
 
 namespace Ra
 {
@@ -20,8 +22,17 @@ namespace Ra
         class Entity;
         struct RenderTechnique;
         class Component;
+//        class PointyCloudRenderer;
     }
 }
+
+//namespace Ra
+//{
+//    namespace GUI
+//    {
+//        class Viewer;
+//    }
+//}
 
 namespace PointyCloudPlugin
 {
@@ -35,7 +46,7 @@ namespace PointyCloudPlugin
     class POINTY_PLUGIN_API PointyCloudSystem : public Ra::Engine::System
     {
     public:
-        PointyCloudSystem();
+        PointyCloudSystem(Ra::Gui::Viewer * viewer);
         virtual ~PointyCloudSystem();
 
         virtual void handleAssetLoading( Ra::Engine::Entity* entity, const Ra::Asset::FileData* fileData ) override;
@@ -61,6 +72,10 @@ namespace PointyCloudPlugin
         bool isOptimizedByCUDA() { return m_cuda; }
 
     private:
+        PointyCloudPlugin::PointyCloudRenderer * m_renderer;
+        int m_rendererIndex;
+        Ra::Gui::Viewer * m_viewer;
+
         float m_splatRadius;
         float m_influenceRadius;
         float m_beta;

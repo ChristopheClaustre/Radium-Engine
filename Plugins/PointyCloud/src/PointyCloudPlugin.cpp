@@ -14,7 +14,7 @@ namespace PointyCloudPlugin
     const std::array<std::string,MAX_UPSAMPLING_METHOD> PointyCloudPluginC::UPSAMPLING_METHOD_STR = {{ "Fixed", "Simple", "Complex" }};
     const std::array<std::string,MAX_PROJECTION_METHOD> PointyCloudPluginC::PROJECTION_METHOD_STR = {{ "Orthogonal", "A-Orthogonal" }};
 
-    PointyCloudPluginC::PointyCloudPluginC() :m_system(nullptr){}
+    PointyCloudPluginC::PointyCloudPluginC() : m_system(nullptr){}
 
     PointyCloudPluginC::~PointyCloudPluginC()
     {
@@ -22,7 +22,7 @@ namespace PointyCloudPlugin
 
     void PointyCloudPluginC::registerPlugin(const Ra::PluginContext& context)
     {
-        m_system = new PointyCloudSystem;
+        m_system = new PointyCloudSystem( context.m_viewer );
         context.m_engine->registerSystem( "PointyCloudSystem", m_system );
     }
 
