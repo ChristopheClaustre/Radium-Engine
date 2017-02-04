@@ -37,7 +37,6 @@ namespace PointyCloudPlugin
             virtual void postProcessInternal( const Ra::Engine::RenderData &renderData ) override {}
 
         private:
-            void initShaders();
             void initBuffers();
 
 

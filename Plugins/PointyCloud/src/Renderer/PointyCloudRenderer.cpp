@@ -42,13 +42,7 @@ namespace PointyCloudPlugin
 
         void PointyCloudRenderer::initializeInternal()
         {
-            initShaders();
             initBuffers();
-        }
-
-        void PointyCloudRenderer::initShaders()
-        {
-            m_shaderMgr->addShaderProgram("Pointy", "../Shaders/Pointy/Pointy.vert.glsl", "../Shaders/Pointy/Pointy.frag.glsl");
         }
 
         void PointyCloudRenderer::initBuffers()
