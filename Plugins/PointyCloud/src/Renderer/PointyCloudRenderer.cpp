@@ -66,8 +66,6 @@ namespace PointyCloudPlugin
         {
             m_fbo->useAsTarget(m_width, m_height);
             {
-                //TODO change glPolygonMode to handle oriented splat
-                glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
                 glPointSize(m_splatSize);
 
                 GL_ASSERT( glDepthMask( GL_TRUE ) );
@@ -87,34 +85,19 @@ namespace PointyCloudPlugin
 
                 GL_ASSERT( glDrawBuffers( 1, buffers ) );
 
-                const Ra::Engine::ShaderProgram* shader = m_shaderMgr->getShaderProgram("Pointy");
-                shader->bind();
-                {
-                    for(const auto& ro : m_pointyRenderObjects)
-                        if( ro->isVisible() )
-                        {
-                            Ra::Core::Matrix4 M = ro->getTransformAsMatrix();
-                            Ra::Core::Matrix4 N = M.inverse().transpose();
+                for(const auto& ro : m_pointyRenderObjects)
+                    if( ro->isVisible() )
+                    {
+                        Ra::Engine::RenderParameters params;
+                        if(m_lights.size()>0)
+                            m_lights[0]->getRenderParameters( params );
 
-                            Ra::Engine::RenderParameters params;
-                            if(m_lights.size()>0)
-                                m_lights[0]->getRenderParameters( params );
-
-                            params.bind(shader);
-
-                            shader->setUniform( "transform.proj", renderData.projMatrix );
-                            shader->setUniform( "transform.view", renderData.viewMatrix );
-                            shader->setUniform( "transform.model", M );
-                            shader->setUniform( "transform.worldNormal", N );
-                            shader->setUniform( "splatSize", m_splatSize );
-
-                            ro->getMesh()->render();
-                        }
-                }
-                shader->unbind();
-
-                // reset state
-                glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+                        //TODO: peut être changer cette ajout de paramètre
+                        // normalement c'est les ligthparams uniquement...
+                        // mais bon j'ai l'impression qu'il n'existe aucun autre moyen...
+                        params.addParameter("splatSize", m_splatSize);
+                        ro->render(params, renderData);
+                    }
             }
             m_fbo->unbind();
         }
