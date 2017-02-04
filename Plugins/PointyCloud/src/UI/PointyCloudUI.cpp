@@ -42,7 +42,7 @@ void PointyCloudUI::on_m_splatRadius_editingFinished()
     double splatRaduius = ui->m_splatRadius->value();
     //Clamp value
     float min = 0.0f;
-    float max = 5.0f;
+    float max = 30.0f;
     if(!isClampValideDValue(splatRaduius,min,max)){
         ui->m_splatRadius->setValue(clampDValue(splatRaduius,min,max));
     }
