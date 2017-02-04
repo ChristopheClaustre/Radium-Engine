@@ -28,9 +28,8 @@ namespace PointyCloudPlugin
         m_rendererIndex = m_viewer->addRenderer(m_renderer);
         m_viewer->changeRenderer(m_rendererIndex);
 
-        // TODO: changer nom de la ShaderConfiguration
-        Ra::Engine::ShaderConfiguration config("pointy", "../Shaders/Pointy/Pointy.vert.glsl", "../Shaders/Pointy/Pointy.frag.glsl");
-        Ra::Engine::ShaderConfigurationFactory::addConfiguration("pointy", config);
+        Ra::Engine::ShaderConfiguration config("Pointy", "../Shaders/Pointy/Pointy.vert.glsl", "../Shaders/Pointy/Pointy.frag.glsl");
+        Ra::Engine::ShaderConfigurationFactory::addConfiguration("Pointy", config);
     }
 
     PointyCloudSystem::~PointyCloudSystem()

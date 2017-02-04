@@ -81,7 +81,7 @@ namespace PointyCloudPlugin
         m_originalCloud->addData( Ra::Engine::Mesh::VERTEX_TEXCOORD,  texcoords  );
         m_originalCloud->addData( Ra::Engine::Mesh::VERTEX_COLOR,     colors     );
 
-        auto config = Ra::Engine::ShaderConfigurationFactory::getConfiguration("pointy");
+        auto config = Ra::Engine::ShaderConfigurationFactory::getConfiguration("Pointy");
 
         m_workingCloud = Ra::Core::make_shared<Ra::Engine::Mesh>( meshName, GL_POINTS );
         resetWorkingCloud();
