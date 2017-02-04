@@ -37,8 +37,8 @@ namespace PointyCloudPlugin
             virtual void postProcessInternal( const Ra::Engine::RenderData &renderData ) override {}
 
         private:
+            //NOTE(chris): ne faut-il pas fusionner cette méthode private avec intializeInternal() ?
             void initBuffers();
-
 
         private:
 

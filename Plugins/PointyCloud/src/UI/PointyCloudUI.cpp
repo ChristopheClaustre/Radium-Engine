@@ -42,8 +42,9 @@ void PointyCloudUI::on_m_splatRadius_editingFinished()
     double splatRaduius = ui->m_splatRadius->value();
     //Clamp value
     float min = 0.0f;
-    float max = 30.0f;
+    float max = 30.0f; //NOTE(chris): les cartes graphiques ont une limite haute pour ce paramètre ;) ;)
     if(!isClampValideDValue(splatRaduius,min,max)){
+        //NOTE(chris): cette fonction ne rapelle pas editingFinished après donc ca le signal n'es jamais envoyé
         ui->m_splatRadius->setValue(clampDValue(splatRaduius,min,max));
     }
     else
@@ -57,6 +58,7 @@ void PointyCloudUI::on_m_influenceRadius_editingFinished()
     float min = 0.0f;
     float max = 10.0f;
     if(!isClampValideDValue(influenceRadius,min,max))
+        //NOTE(chris): cette fonction ne rapelle pas editingFinished après donc ca le signal n'es jamais envoyé
         ui->m_influenceRadius->setValue(clampDValue(influenceRadius,min,max));
     else
         emit setInfluenceRadius(influenceRadius);
@@ -69,6 +71,7 @@ void PointyCloudUI::on_m_beta_editingFinished()
     float min = 1.0f;
     float max = 2.0f;
     if(!isClampValideDValue(beta,min,max))
+        //NOTE(chris): cette fonction ne rapelle pas editingFinished après donc ca le signal n'es jamais envoyé
         ui->m_beta->setValue(clampDValue(beta,min,max));
     else
         emit setBeta(beta);
@@ -82,6 +85,7 @@ void PointyCloudUI::on_m_threshold_editingFinished()
     int min = 0;
     int max = 5;
     if(!isClampValideIValue(threshold,min,max))
+        //NOTE(chris): cette fonction ne rapelle pas editingFinished après donc ca le signal n'es jamais envoyé
         ui->m_threshold->setValue(clampIValue(threshold,min,max));
     else
         emit setThreshold(threshold);
@@ -108,8 +112,10 @@ void PointyCloudUI::on_m_cuda_clicked(bool checked)
 }
 
 //Fonctions utilitaires (à deplacer ?)
+//NOTE(chris): nom de fonction un peut pourri non ??
 bool PointyCloudUI::isClampValideDValue(double value,double min,double max)
 {
+    //NOTE(chris): si value == min ou == max ça retourne false, est ce vraiment nécessaire ?
     return (value > min && value < max);
 }
 
