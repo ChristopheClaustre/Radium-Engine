@@ -22,7 +22,7 @@ namespace PointyCloudPlugin
             virtual ~PointyCloudRenderer();
             virtual std::string getRendererName() const override { return "PointyCloud Renderer"; }
 
-            inline void setSplatSize(float size) {m_splatSize = size;}
+            inline void setSplatSize(float size) { lockRendering(); m_splatSize = size; unlockRendering(); }
             inline const float& getSplatSize() const {return m_splatSize;}
 
         protected:
