@@ -1,3 +1,7 @@
 [submodule "3rdPartyLibraries/Assimp"]
 	path = 3rdPartyLibraries/Assimp
 	url = https://github.com/assimp/assimp.git
+[submodule "3rdPartyLibraries/Patate"]
+	path = 3rdPartyLibraries/Patate
+	url = https://gitlab.inria.fr/patate/patate.git
+	branch = apss_metric
