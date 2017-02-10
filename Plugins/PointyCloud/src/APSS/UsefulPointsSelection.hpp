@@ -3,15 +3,8 @@
 
 #include <memory>
 #include <vector>
-
-namespace Ra
-{
-namespace Engine
-{
-    class Camera;
-    class Mesh;
-} // namespace Engine
-} // namespace Ra
+#include <Engine/Renderer/Mesh/Mesh.hpp>
+#include <Engine/Renderer/Camera/Camera.hpp>
 
 namespace PointyCloudPlugin
 {
@@ -31,7 +24,6 @@ namespace PointyCloudPlugin
         const Ra::Engine::Mesh* m_cloud;
 
         const Ra::Engine::Camera* m_camera;
-
 
     }; // class UsefulPointsSelection
 

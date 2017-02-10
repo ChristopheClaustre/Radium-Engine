@@ -1,8 +1,5 @@
 #include "UsefulPointsSelection.hpp"
 
-#include <Engine/Renderer/Mesh/Mesh.hpp>
-#include <Engine/Renderer/Camera/Camera.hpp>
-
 namespace PointyCloudPlugin
 {
 
