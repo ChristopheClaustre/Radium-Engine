@@ -3,8 +3,8 @@
 namespace PointyCloudPlugin
 {
 
-    ComputePointyCloudTask::ComputePointyCloudTask(PointyCouldSystem* _system){
-        system = _system;
+    ComputePointyCloudTask::ComputePointyCloudTask(PointyCouldSystem* _system):system(_system)
+    {
     }
 
     std::string ComputePointyCloudTask::getName() const
