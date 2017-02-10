@@ -27,6 +27,8 @@ namespace Ra
 
 namespace PointyCloudPlugin
 {
+    class UsefulPointsSelection;
+
     class POINTY_PLUGIN_API PointyCloudComponent : public Ra::Engine::Component
     {
     public:
@@ -73,6 +75,9 @@ namespace PointyCloudPlugin
         std::shared_ptr<Ra::Engine::Mesh> m_workingCloud;
 
         const Ra::Engine::Camera *m_camera;
+
+        UsefulPointsSelection* m_culling;
+
     };
 
 } // namespace PointyCloudPlugin

@@ -1,5 +1,7 @@
 #include <PointyCloudComponent.hpp>
 
+#include <APSS/UsefulPointsSelection.hpp>
+
 #include <iostream>
 
 #include <Core/String/StringUtils.hpp>
@@ -33,6 +35,8 @@ namespace PointyCloudPlugin
 
     PointyCloudComponent::~PointyCloudComponent()
     {
+        delete m_originalCloud;
+        delete m_culling;
     }
 
     void PointyCloudComponent::initialize()
@@ -89,6 +93,8 @@ namespace PointyCloudPlugin
         Ra::Engine::RenderObject* ro = Ra::Engine::RenderObject::createRenderObject(roName, this, Ra::Engine::RenderObjectType::Pointy, m_workingCloud, config);
 
         m_meshIndex = addRenderObject(ro);
+
+        m_culling = new UsefulPointsSelection(m_originalCloud, m_camera);
     }
 
     void PointyCloudComponent::resetWorkingCloud() {
