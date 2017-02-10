@@ -111,7 +111,8 @@ namespace PointyCloudPlugin
 
     void PointyCloudComponent::computePointyCloud()
     {
-        //TODO: l'APSS :p
+        resetWorkingCloud();
+        //m_culling->selectUsefulPoints();
     }
 
     Ra::Core::Index PointyCloudComponent::getRenderObjectIndex() const
