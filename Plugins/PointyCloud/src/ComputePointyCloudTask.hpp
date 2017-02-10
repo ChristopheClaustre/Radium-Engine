@@ -2,6 +2,9 @@
 #define POINTYCLOUDPLUGIN_POINTYCLOUDTASK_HPP_
 
 #include <Core/Tasks/Task.hpp>
+#include "PointyCloudComponent.hpp"
+#include "PointyCloudSystem.hpp"
+
 
 namespace PointyCloudPlugin
 {
@@ -9,12 +12,12 @@ namespace PointyCloudPlugin
     class ComputePointyCloudTask: public Ra::Core::Task
     {
         public:
-            ComputePointyCloudTask(PointyCouldSystem* system);
+            ComputePointyCloudTask(PointyCloudSystem* system);
             std::string getName() const override;
             void process() override;
 
         private:
-            PointyCouldSystem* system;
+            PointyCloudSystem* system;
     };
 }
 
