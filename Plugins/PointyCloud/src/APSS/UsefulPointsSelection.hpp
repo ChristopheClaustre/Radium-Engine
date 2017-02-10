@@ -12,16 +12,14 @@ namespace PointyCloudPlugin
     class UsefulPointsSelection
     {
     public:
-        UsefulPointsSelection(const Ra::Engine::Mesh* cloud, const Ra::Engine::Camera* camera);
+        UsefulPointsSelection(std::shared_ptr<Ra::Engine::Mesh> cloud, const Ra::Engine::Camera* camera);
         ~UsefulPointsSelection();
 
-        std::vector<int> selectUsefulPoints() const;
+        void selectUsefulPoints();
 
     protected:
 
-        bool isUsefulPoint(int idx) const;
-
-        const Ra::Engine::Mesh* m_cloud;
+        std::shared_ptr<Ra::Engine::Mesh> m_cloud;
 
         const Ra::Engine::Camera* m_camera;
 
