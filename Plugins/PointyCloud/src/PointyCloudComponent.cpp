@@ -121,7 +121,7 @@ namespace PointyCloudPlugin
     void PointyCloudComponent::computePointyCloud()
     {
         resetWorkingCloud();
-        //m_culling->selectUsefulPoints();
+        m_culling->selectUsefulPoints();
     }
 
     Ra::Core::Index PointyCloudComponent::getRenderObjectIndex() const
