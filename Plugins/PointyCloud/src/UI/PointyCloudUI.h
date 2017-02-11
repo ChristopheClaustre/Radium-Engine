@@ -13,7 +13,6 @@ class PointyCloudUI : public QFrame
     Q_OBJECT
 
 public:
-    explicit PointyCloudUI(float splatRadius, float influenceRadius, float beta, float Threshold,
     explicit PointyCloudUI(float splatRadius, float influenceRadius, float beta, float Threshold, int M,
                            PointyCloudPlugin::UPSAMPLING_METHOD upsampler,
                            PointyCloudPlugin::PROJECTION_METHOD projector,
@@ -24,7 +23,6 @@ signals:
     void setSplatRadius(float);
     void setInfluenceRadius(float);
     void setBeta(float);
-    void setThreshold(float);
     void setThreshold(int);
     void setM(int);
     void setUpsamplingMethod(PointyCloudPlugin::UPSAMPLING_METHOD);
@@ -34,12 +32,11 @@ signals:
 
 private slots:
 
-    void on_m_splatRadius_editingFinished();
-    void on_m_influenceRadius_editingFinished();
-    void on_m_beta_editingFinished();
-    void on_m_threshold_editingFinished();
-    void on_m_upsamplingMethodes_currentIndexChanged(int index);
-    void on_m_projectionMethodes_currentIndexChanged(int index);
+    void on_m_splatRadius_valueChanged(double value);
+    void on_m_influenceRadius_valueChanged(double value);
+    void on_m_beta_valueChanged(double value);
+    void on_m_threshold_valueChanged(int value);
+    void on_m_M_valueChanged(int value);
     void on_m_upsamplingMethod_currentIndexChanged(int index);
     void on_m_projectionMethod_currentIndexChanged(int index);
     void on_m_octree_clicked(bool checked);
