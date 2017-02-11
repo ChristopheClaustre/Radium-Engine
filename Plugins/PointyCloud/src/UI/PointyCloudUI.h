@@ -14,6 +14,7 @@ class PointyCloudUI : public QFrame
 
 public:
     explicit PointyCloudUI(float splatRadius, float influenceRadius, float beta, float Threshold,
+    explicit PointyCloudUI(float splatRadius, float influenceRadius, float beta, float Threshold, int M,
                            PointyCloudPlugin::UPSAMPLING_METHOD upsampler,
                            PointyCloudPlugin::PROJECTION_METHOD projector,
                            bool cuda, bool octree, QWidget *parent = 0);
@@ -24,6 +25,8 @@ signals:
     void setInfluenceRadius(float);
     void setBeta(float);
     void setThreshold(float);
+    void setThreshold(int);
+    void setM(int);
     void setUpsamplingMethod(PointyCloudPlugin::UPSAMPLING_METHOD);
     void setProjectionMethod(PointyCloudPlugin::PROJECTION_METHOD);
     void setOptimizationByOctree(bool);

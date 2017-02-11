@@ -36,6 +36,14 @@ namespace PointyCloudPlugin
         MAX_PROJECTION_METHOD
     };
 
+    struct QDoubleSpinBoxInit {
+        float min, max, step;
+    };
+
+    struct QSpinBoxInit {
+        int min, max, step;
+    };
+
     class PointyCloudPluginC : public QObject, Ra::Plugins::RadiumPluginInterface
     {
         Q_OBJECT
@@ -61,7 +69,8 @@ namespace PointyCloudPlugin
         void setSplatRadius(float);
         void setInfluenceRadius(float);
         void setBeta(float);
-        void setThreshold(float);
+        void setThreshold(int);
+        void setM(int);
         void setUpsamplingMethod(UPSAMPLING_METHOD);
         void setProjectionMethod(PROJECTION_METHOD);
         void setOptimizationByOctree(bool);
@@ -73,6 +82,11 @@ namespace PointyCloudPlugin
     public:
         static const std::array<std::string,MAX_UPSAMPLING_METHOD> UPSAMPLING_METHOD_STR;
         static const std::array<std::string,MAX_PROJECTION_METHOD> PROJECTION_METHOD_STR;
+        static constexpr QDoubleSpinBoxInit splatRadiusInit {0.01f,5.0f,0.01f};
+        static constexpr QDoubleSpinBoxInit influenceInit   {0.01f,30.0f,0.01f};
+        static constexpr QDoubleSpinBoxInit betaInit        {-8,8,0.5f};
+        static constexpr QSpinBoxInit thresholdInit {1,5,1};
+        static constexpr QSpinBoxInit mInit         {10,100,10};
     };
 
 } // namespace

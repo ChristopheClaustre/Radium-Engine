@@ -48,7 +48,8 @@ namespace PointyCloudPlugin
 
         void setInfluenceRadius(float);
         void setBeta(float);
-        void setThreshold(float);
+        void setThreshold(int);
+        void setM(int);
         void setUpsamplingMethod(UPSAMPLING_METHOD);
         void setProjectionMethod(PROJECTION_METHOD);
         void setOptimizationByOctree(bool);

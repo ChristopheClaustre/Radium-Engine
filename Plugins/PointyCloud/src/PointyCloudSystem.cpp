@@ -15,13 +15,19 @@
 #include <GuiBase/Viewer/CameraInterface.hpp>
 
 #include <PointyCloudComponent.hpp>
+#include <PointyCloudPlugin.hpp>
 
 namespace PointyCloudPlugin
 {
 
     PointyCloudSystem::PointyCloudSystem(Ra::Gui::Viewer *viewer)
-        : Ra::Engine::System(), m_viewer(viewer), m_splatRadius(1), m_influenceRadius(1),
-          m_beta(1), m_threshold(1), m_upsampler(FIXED_METHOD), m_projector(ORTHOGONAL_METHOD),
+        : Ra::Engine::System(), m_viewer(viewer),
+          m_splatRadius(PointyCloudPluginC::splatRadiusInit.min),
+          m_influenceRadius(PointyCloudPluginC::influenceInit.min),
+          m_beta(PointyCloudPluginC::betaInit.min),
+          m_threshold(PointyCloudPluginC::thresholdInit.min),
+          m_M(PointyCloudPluginC::mInit.min),
+          m_upsampler(FIXED_METHOD), m_projector(ORTHOGONAL_METHOD),
           m_octree(false), m_cuda(false)
     {
         m_renderer = new PointyCloudPlugin::PointyCloudRenderer(m_viewer->width(), m_viewer->height(), m_splatRadius);
@@ -77,34 +83,40 @@ namespace PointyCloudPlugin
         // TODO donner à tous les components
     }
 
-    void PointyCloudSystem::setThreshold(float threshold)
+    void PointyCloudSystem::setThreshold(int threshold)
     {
         m_threshold = threshold;
-        // TODO donner à tous les components
+        // TODO donner à tout les components
+    }
+
+    void PointyCloudSystem::setM(int M)
+    {
+        m_M = M;
+        // TODO donner à tout les components
     }
 
     void PointyCloudSystem::setUpsamplingMethod(UPSAMPLING_METHOD upsampler)
     {
         m_upsampler = upsampler;
-        // TODO donner à tous les components
+        // TODO donner à tout les components
     }
 
     void PointyCloudSystem::setProjectionMethod(PROJECTION_METHOD projector)
     {
         m_projector = projector;
-        // TODO donner à tous les components
+        // TODO donner à tout les components
     }
 
     void PointyCloudSystem::setOptimizationByOctree(bool octree)
     {
         m_octree = octree;
-        // TODO donner à tous les components
+        // TODO donner à tout les components
     }
 
     void PointyCloudSystem::setOptimizationByCUDA(bool cuda)
     {
         m_cuda = cuda;
-        // TODO donner à tous les components
+        // TODO donner à tout les components
     }
 
 } // namespace PointyCloudPlugin

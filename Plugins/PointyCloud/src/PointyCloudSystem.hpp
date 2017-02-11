@@ -56,20 +56,22 @@ namespace PointyCloudPlugin
         void setSplatRadius(float splatRadius);
         void setInfluenceRadius(float influenceRadius);
         void setBeta(float beta);
-        void setThreshold(float threshold);
+        void setThreshold(int threshold);
+        void setM(int M);
         void setUpsamplingMethod(UPSAMPLING_METHOD upsampler);
         void setProjectionMethod(PROJECTION_METHOD projector);
         void setOptimizationByOctree(bool octree);
         void setOptimizationByCUDA(bool cuda);
 
-        float getSplatRadius() { return m_splatRadius; }
-        float getInfluenceRadius()  { return m_influenceRadius; }
-        float getBeta() { return m_beta; }
-        float getThreshold() { return m_threshold; }
-        UPSAMPLING_METHOD getUpsamplingMethod() { return m_upsampler; }
-        PROJECTION_METHOD getProjectionMethod() { return m_projector; }
-        bool isOptimizedByOctree() { return m_octree; }
-        bool isOptimizedByCUDA() { return m_cuda; }
+        inline float getSplatRadius() { return m_splatRadius; }
+        inline float getInfluenceRadius()  { return m_influenceRadius; }
+        inline float getBeta() { return m_beta; }
+        inline int getThreshold() { return m_threshold; }
+        inline int getM() { return m_M; }
+        inline UPSAMPLING_METHOD getUpsamplingMethod() { return m_upsampler; }
+        inline PROJECTION_METHOD getProjectionMethod() { return m_projector; }
+        inline bool isOptimizedByOctree() { return m_octree; }
+        inline bool isOptimizedByCUDA() { return m_cuda; }
 
     private:
         PointyCloudPlugin::PointyCloudRenderer * m_renderer;
@@ -79,7 +81,8 @@ namespace PointyCloudPlugin
         float m_splatRadius;
         float m_influenceRadius;
         float m_beta;
-        float m_threshold;
+        int m_threshold;
+        int m_M;
         UPSAMPLING_METHOD m_upsampler;
         PROJECTION_METHOD m_projector;
         bool m_octree;

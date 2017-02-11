@@ -36,13 +36,14 @@ namespace PointyCloudPlugin
     {
         PointyCloudUI* widget = new PointyCloudUI(
                     m_system->getSplatRadius(), m_system->getInfluenceRadius(), m_system->getBeta(),
-                    m_system->getThreshold(), m_system->getUpsamplingMethod(), m_system->getProjectionMethod(),
-                    m_system->isOptimizedByOctree(), m_system->isOptimizedByCUDA());
+                    m_system->getThreshold(), m_system->getM(), m_system->getUpsamplingMethod(),
+                    m_system->getProjectionMethod(), m_system->isOptimizedByOctree(), m_system->isOptimizedByCUDA());
 
         connect( widget, &PointyCloudUI::setSplatRadius,        this, &PointyCloudPluginC::setSplatRadius );
         connect( widget, &PointyCloudUI::setInfluenceRadius,    this, &PointyCloudPluginC::setInfluenceRadius );
         connect( widget, &PointyCloudUI::setBeta,               this, &PointyCloudPluginC::setBeta );
         connect( widget, &PointyCloudUI::setThreshold,          this, &PointyCloudPluginC::setThreshold );
+        connect( widget, &PointyCloudUI::setM,                  this, &PointyCloudPluginC::setM );
         connect( widget, &PointyCloudUI::setUpsamplingMethod,   this, &PointyCloudPluginC::setUpsamplingMethod );
         connect( widget, &PointyCloudUI::setProjectionMethod,   this, &PointyCloudPluginC::setProjectionMethod );
         connect( widget, &PointyCloudUI::setOptimizationByOctree,   this, &PointyCloudPluginC::setOptimizationByOctree );
@@ -79,10 +80,16 @@ namespace PointyCloudPlugin
         m_system->setBeta(beta);
     }
 
-    void PointyCloudPluginC::setThreshold(float threshold)
+    void PointyCloudPluginC::setThreshold(int threshold)
     {
         CORE_ASSERT(m_system, "System should be there ");
         m_system->setSplatRadius(threshold);
+    }
+
+    void PointyCloudPluginC::setM(int M)
+    {
+        CORE_ASSERT(m_system, "System should be there ");
+        m_system->setM(M);
     }
 
     void PointyCloudPluginC::setUpsamplingMethod(UPSAMPLING_METHOD method)

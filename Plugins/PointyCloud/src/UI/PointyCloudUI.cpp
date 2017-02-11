@@ -5,6 +5,7 @@
 #include <iostream>
 
 PointyCloudUI::PointyCloudUI(float splatRadius, float influenceRadius, float beta, float Threshold,
+PointyCloudUI::PointyCloudUI(float splatRadius, float influenceRadius, float beta, float Threshold, int M,
                              PointyCloudPlugin::UPSAMPLING_METHOD upsampler,
                              PointyCloudPlugin::PROJECTION_METHOD projector,
                              bool cuda, bool octree, QWidget *parent) :
