@@ -139,4 +139,36 @@ namespace PointyCloudPlugin
         return &m_meshIndex;
     }
 
+    void PointyCloudComponent::setInfluenceRadius(float influenceRadius) {
+        // TODO donner l'influence Radius à la selection des voisins
+    }
+
+    void PointyCloudComponent::setBeta(float beta) {
+        // TODO donner beta à la projection
+    }
+
+    void PointyCloudComponent::setThreshold(int threshold) {
+        // TODO donner le treshold au ré-echantillonage il me semble
+    }
+
+    void PointyCloudComponent::setM(int M) {
+        // TODO donner au ré-echantillonnage
+    }
+
+    void PointyCloudComponent::setUpsamplingMethod(UPSAMPLING_METHOD method) {
+        // TODO donner au ré-echantillonnage
+    }
+
+    void PointyCloudComponent::setProjectionMethod(PROJECTION_METHOD method) {
+        // TODO donner à la projection
+    }
+
+    void PointyCloudComponent::setOptimizationByOctree(bool octree) {
+        // TODO donner à la selection des voisins
+    }
+
+    void PointyCloudComponent::setOptimizationByCUDA(bool cuda) {
+        // TODO donner à tout le monde ???
+    }
+
 } // namespace PointyCloudPlugin
