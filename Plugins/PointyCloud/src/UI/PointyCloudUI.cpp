@@ -21,13 +21,17 @@ PointyCloudUI::PointyCloudUI(float splatRadius, float influenceRadius, float bet
     //Load list upsampler methods
     for(std::string method : PointyCloudPlugin::PointyCloudPluginC::UPSAMPLING_METHOD_STR){
         ui->m_upsamplingMethodes->addItem(QString::fromStdString(method));
+        ui->m_upsamplingMethod->addItem(QString::fromStdString(method));
     }
     ui->m_upsamplingMethodes->setCurrentIndex(upsampler);
+    ui->m_upsamplingMethod->setCurrentIndex(upsampler);
     //Load list projection methods
     for(std::string method : PointyCloudPlugin::PointyCloudPluginC::PROJECTION_METHOD_STR){
         ui->m_projectionMethodes->addItem(QString::fromStdString(method));
+        ui->m_projectionMethod->addItem(QString::fromStdString(method));
     }
     ui->m_projectionMethodes->setCurrentIndex(projector);
+    ui->m_projectionMethod->setCurrentIndex(projector);
     ui->m_cuda->setChecked(cuda);
     ui->m_octree->setChecked(octree);
 }
