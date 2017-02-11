@@ -2,6 +2,7 @@
 #define POINTYCLOUDPLUGIN_POINTYCLOUDSYSTEM_HPP
 
 #include "PointyCloudPlugin.hpp"
+#include "ComputePointyCloudTask.hpp"
 
 #include <Engine/System/System.hpp>
 #include <GuiBase/Viewer/Viewer.hpp>
@@ -53,6 +54,8 @@ namespace PointyCloudPlugin
 
         virtual void generateTasks( Ra::Core::TaskQueue* taskQueue, const Ra::Engine::FrameInfo& frameInfo ) override;
 
+        std::vector<PointyCloudComponent*> getComponents();
+
         void setSplatRadius(float splatRadius);
         void setInfluenceRadius(float influenceRadius);
         void setBeta(float beta);
@@ -77,6 +80,7 @@ namespace PointyCloudPlugin
         PointyCloudPlugin::PointyCloudRenderer * m_renderer;
         int m_rendererIndex;
         Ra::Gui::Viewer * m_viewer;
+        std::vector<PointyCloudComponent*> pointyCloudComponentList;
 
         float m_splatRadius;
         float m_influenceRadius;

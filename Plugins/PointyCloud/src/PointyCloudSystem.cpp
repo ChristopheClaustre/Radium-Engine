@@ -58,12 +58,21 @@ namespace PointyCloudPlugin
             entity->addComponent( comp );
             comp->handlePointyCloudLoading(data);
             registerComponent( entity, comp );
+            //(xavier) Ajout du nouveau component dans la liste des components
+            pointyCloudComponentList.push_back(comp);
         }
+
+    }
+
+    std::vector<PointyCloudComponent*> PointyCloudSystem::getComponents()
+    {
+        return pointyCloudComponentList;
     }
 
     void PointyCloudSystem::generateTasks( Ra::Core::TaskQueue* taskQueue, const Ra::Engine::FrameInfo& frameInfo )
     {
-        // TODO générer la computePointyCloudTask ;) ;) ;) #YOLO #SWAG
+        ComputePointyCloudTask* task = new ComputePointyCloudTask(this);
+        taskQueue->registerTask(task);
     }
 
     void PointyCloudSystem::setSplatRadius(float splatRadius)

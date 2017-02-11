@@ -80,6 +80,14 @@ namespace PointyCloudPlugin
         for ( const auto& v : data->getTexCoords() )  texcoords.push_back( v );
         for ( const auto& v : data->getColors() )     colors.push_back( v );
 
+        // colors required
+        if(colors.size()!=vertices.size())
+        {
+            Ra::Core::Color white;
+            white << 1.0, 1.0, 1.0, 1.0;
+            colors.resize(vertices.size(), white);
+        }
+
         m_originalCloud->addData( Ra::Engine::Mesh::VERTEX_TANGENT,   tangents   );
         m_originalCloud->addData( Ra::Engine::Mesh::VERTEX_BITANGENT, bitangents );
         m_originalCloud->addData( Ra::Engine::Mesh::VERTEX_TEXCOORD,  texcoords  );
@@ -94,7 +102,8 @@ namespace PointyCloudPlugin
 
         m_meshIndex = addRenderObject(ro);
 
-        m_culling = new UsefulPointsSelection(m_originalCloud, m_camera);
+        m_culling = new UsefulPointsSelection(m_workingCloud, m_camera);
+
     }
 
     void PointyCloudComponent::resetWorkingCloud() {
@@ -111,7 +120,8 @@ namespace PointyCloudPlugin
 
     void PointyCloudComponent::computePointyCloud()
     {
-        //TODO: l'APSS :p
+        resetWorkingCloud();
+        m_culling->selectUsefulPoints();
     }
 
     Ra::Core::Index PointyCloudComponent::getRenderObjectIndex() const

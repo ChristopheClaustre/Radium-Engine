@@ -3,7 +3,7 @@
 namespace PointyCloudPlugin
 {
 
-UsefulPointsSelection::UsefulPointsSelection(const Ra::Engine::Mesh* cloud, const Ra::Engine::Camera* camera) :
+UsefulPointsSelection::UsefulPointsSelection(std::shared_ptr<Ra::Engine::Mesh> cloud, const Ra::Engine::Camera* camera) :
     m_cloud(cloud),
     m_camera(camera)
 {
@@ -13,23 +13,29 @@ UsefulPointsSelection::~UsefulPointsSelection()
 {
 }
 
-std::vector<int> UsefulPointsSelection::selectUsefulPoints() const
+void UsefulPointsSelection::selectUsefulPoints()
 {
-    std::vector<int> useful(0);
-
-    for(int idx = 0; idx < m_cloud->getGeometry().m_normals.size(); ++idx)
-        if(isUsefulPoint(idx))
-            useful.push_back(idx);
-
-    return useful;
-}
-
-bool UsefulPointsSelection::isUsefulPoint(int idx) const
-{
-    Ra::Core::Vector3 normal = m_cloud->getGeometry().m_normals[idx];
     Ra::Core::Vector3 view = m_camera->getDirection();
 
-    return view.dot(normal)<0;
+    auto normalIt   = m_cloud->getGeometry().m_normals.begin();
+    auto verticesIt = m_cloud->getGeometry().m_vertices.begin();
+    auto colorsIt   = m_cloud->getData(Ra::Engine::Mesh::VERTEX_COLOR).begin();
+
+    while(normalIt != m_cloud->getGeometry().m_normals.end())
+    {
+        if(view.dot(*normalIt)>0)
+        {
+            normalIt = m_cloud->getGeometry().m_normals.erase(normalIt);
+            verticesIt = m_cloud->getGeometry().m_vertices.erase(verticesIt);
+            colorsIt = m_cloud->getData(Ra::Engine::Mesh::VERTEX_COLOR).erase(colorsIt);
+        }
+        else
+        {
+            ++normalIt;
+            ++verticesIt;
+            ++colorsIt;
+        }
+    }
 }
 
 } // namespace PointyCloudPlugin
