@@ -93,11 +93,13 @@ void PointyCloudUI::on_m_threshold_editingFinished()
 }
 
 void PointyCloudUI::on_m_upsamplingMethodes_currentIndexChanged(int index)
+void PointyCloudUI::on_m_upsamplingMethod_currentIndexChanged(int index)
 {
     emit setUpsamplingMethod(PointyCloudPlugin::UPSAMPLING_METHOD(index));
 }
 
 void PointyCloudUI::on_m_projectionMethodes_currentIndexChanged(int index)
+void PointyCloudUI::on_m_projectionMethod_currentIndexChanged(int index)
 {
     emit setProjectionMethod(PointyCloudPlugin::PROJECTION_METHOD(index));
 }

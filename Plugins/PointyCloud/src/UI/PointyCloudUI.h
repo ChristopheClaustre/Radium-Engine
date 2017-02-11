@@ -40,6 +40,8 @@ private slots:
     void on_m_threshold_editingFinished();
     void on_m_upsamplingMethodes_currentIndexChanged(int index);
     void on_m_projectionMethodes_currentIndexChanged(int index);
+    void on_m_upsamplingMethod_currentIndexChanged(int index);
+    void on_m_projectionMethod_currentIndexChanged(int index);
     void on_m_octree_clicked(bool checked);
     void on_m_cuda_clicked(bool checked);
 
