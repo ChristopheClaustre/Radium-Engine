@@ -23,6 +23,7 @@ endif (MSVC OR MSVC_IDE OR MINGW)
 include_directories(
     .
     ${EIGEN_INC}
+    ${PATATE_INC}
     ${ASSIMP_INC}
 )
 
