@@ -53,6 +53,7 @@ include_directories(
     ${CMAKE_CURRENT_BINARY_DIR} # MOC
     ${RADIUM_INCLUDE_DIR}
     ${EIGEN_INC}
+    ${PATATE_INC}
     ${ASSIMP_INC}
     )
 

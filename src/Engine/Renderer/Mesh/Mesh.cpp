@@ -84,7 +84,6 @@ namespace Ra {
                 m_dataDirty[i] = true;
             }
             m_isDirty = true;
-
         }
 
         /// Use it to load an point-based geometry
@@ -96,9 +95,10 @@ namespace Ra {
             m_mesh.m_vertices = vertices;
             m_mesh.m_normals = normals;
 
-            for ( uint i = 0; i < vertices.size(); i = i + 3 )
+            m_mesh.m_triangles.clear();
+            for ( uint i = 0; i < vertices.size(); i += 3 )
             {
-               m_mesh.m_triangles.push_back( { i, (i + 1)%m_numElements, (i + 2)%m_numElements } );
+                m_mesh.m_triangles.push_back( { i, (i + 1)%m_numElements, (i + 2)%m_numElements } );
             }
 
             // Mark mesh as dirty.
