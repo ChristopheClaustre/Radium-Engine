@@ -70,14 +70,8 @@ namespace PointyCloudPlugin
 
         m_originalCloud->loadPointyGeometry( vertices, normals );
 
-        Ra::Core::Vector3Array tangents;
-        Ra::Core::Vector3Array bitangents;
-        Ra::Core::Vector3Array texcoords;
         Ra::Core::Vector4Array colors;
 
-        for ( const auto& v : data->getTangents() )   tangents.push_back( v );
-        for ( const auto& v : data->getBiTangents() ) bitangents.push_back( v );
-        for ( const auto& v : data->getTexCoords() )  texcoords.push_back( v );
         for ( const auto& v : data->getColors() )     colors.push_back( v );
 
         // colors required
@@ -88,9 +82,6 @@ namespace PointyCloudPlugin
             colors.resize(vertices.size(), white);
         }
 
-        m_originalCloud->addData( Ra::Engine::Mesh::VERTEX_TANGENT,   tangents   );
-        m_originalCloud->addData( Ra::Engine::Mesh::VERTEX_BITANGENT, bitangents );
-        m_originalCloud->addData( Ra::Engine::Mesh::VERTEX_TEXCOORD,  texcoords  );
         m_originalCloud->addData( Ra::Engine::Mesh::VERTEX_COLOR,     colors     );
 
         auto config = Ra::Engine::ShaderConfigurationFactory::getConfiguration("Pointy");
@@ -103,25 +94,22 @@ namespace PointyCloudPlugin
         m_meshIndex = addRenderObject(ro);
 
         m_culling = new UsefulPointsSelection(m_workingCloud, m_camera);
-
     }
 
     void PointyCloudComponent::resetWorkingCloud() {
         m_workingCloud->loadPointyGeometry(
-                                m_originalCloud->getGeometry().m_vertices,
-                                m_originalCloud->getGeometry().m_normals
+                        m_originalCloud->getGeometry().m_vertices,
+                        m_originalCloud->getGeometry().m_normals
                     );
 
-        m_workingCloud->addData( Ra::Engine::Mesh::VERTEX_TANGENT,   m_originalCloud->getData(Ra::Engine::Mesh::VERTEX_TANGENT));
-        m_workingCloud->addData( Ra::Engine::Mesh::VERTEX_BITANGENT, m_originalCloud->getData(Ra::Engine::Mesh::VERTEX_BITANGENT));
-        m_workingCloud->addData( Ra::Engine::Mesh::VERTEX_TEXCOORD,  m_originalCloud->getData(Ra::Engine::Mesh::VERTEX_TEXCOORD));
-        m_workingCloud->addData( Ra::Engine::Mesh::VERTEX_COLOR,     m_originalCloud->getData(Ra::Engine::Mesh::VERTEX_COLOR));
+        m_workingCloud->addData( Ra::Engine::Mesh::VERTEX_COLOR, m_originalCloud->getData(Ra::Engine::Mesh::VERTEX_COLOR));
     }
 
     void PointyCloudComponent::computePointyCloud()
     {
         resetWorkingCloud();
         m_culling->selectUsefulPoints();
+
     }
 
     Ra::Core::Index PointyCloudComponent::getRenderObjectIndex() const
