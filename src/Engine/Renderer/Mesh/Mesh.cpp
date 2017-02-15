@@ -172,8 +172,7 @@ namespace Ra {
 
                 CORE_ASSERT( !m_mesh.m_vertices.empty(), "Vertices is empty array.");
 
-                CORE_ASSERT( !m_mesh.m_triangles.empty() || m_renderMode == GL_POINTS,
-                             "Indices is an empty arrays and the renderMode is not GL_POINTS.");
+                CORE_ASSERT( !m_mesh.m_triangles.empty(), "Indices is an empty arrays.");
 
                 if ( m_vao == 0 )
                 {
