@@ -12,6 +12,10 @@ namespace PointyCloudPlugin {
 class APoint
 {
 public:
+    // required by Patate
+    typedef float Scalar; //TODO use Radium's Scalar, in case 'double' would be used
+    typedef Ra::Core::Vector3 VectorType;
+
     inline APoint(  const Ra::Core::Vector3& _pos =    Ra::Core::Vector3::Zero(),
                     const Ra::Core::Vector3& _normal = Ra::Core::Vector3::Zero(),
                     const Ra::Core::Vector4& _color =  Ra::Core::Vector3::Zero()
