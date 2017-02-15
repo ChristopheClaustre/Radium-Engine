@@ -1,5 +1,5 @@
-#ifndef POINTCLOUD_H
-#define POINTCLOUD_H
+#ifndef POINTYCLOUD_POINTYCLOUD_H
+#define POINTYCLOUD_POINTYCLOUD_H
 
 #include <Core/RaCore.hpp>
 #include <Core/Math/LinearAlgebra.hpp>
@@ -8,6 +8,28 @@
 #include <Engine/Renderer/Mesh/Mesh.hpp>
 
 namespace PointyCloudPlugin {
+
+class APoint
+{
+public:
+    inline APoint(  const Ra::Core::Vector3& _pos =    Ra::Core::Vector3::Zero(),
+                    const Ra::Core::Vector3& _normal = Ra::Core::Vector3::Zero(),
+                    const Ra::Core::Vector4& _color =  Ra::Core::Vector3::Zero()
+                    )
+        : m_pos(_pos), m_normal(_normal), m_color(_color) {}
+
+    inline const Ra::Core::Vector3& pos()    const { return m_pos; }
+    inline const Ra::Core::Vector3& normal() const { return m_normal; }
+    inline const Ra::Core::Vector4& color() const  { return m_color; }
+
+    inline Ra::Core::Vector3& pos()    { return m_pos; }
+    inline Ra::Core::Vector3& normal() { return m_normal; }
+    inline Ra::Core::Vector4& color()  { return m_color; }
+
+private:
+    Ra::Core::Vector3 m_pos, m_normal;
+    Ra::Core::Vector4 m_color;
+};
 
 class PointyCloud
 {
@@ -29,11 +51,11 @@ public:
     inline void loadToMesh(Ra::Engine::Mesh *);
 
 public:
-    Ra::Core::Vector3Array m_vertices;
-    Ra::Core::Vector3Array m_normals;
-    Ra::Core::Vector4Array m_colors;
+    std::vector<APoint> m_points;
 };
 
 } // namespace PointyCloudPlugin
 
-#endif // POINTCLOUD_H
+#include <APSS/PointyCloud.inl>
+
+#endif // POINTYCLOUD_POINTYCLOUD_H
