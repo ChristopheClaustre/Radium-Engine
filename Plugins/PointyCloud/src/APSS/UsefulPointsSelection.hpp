@@ -1,26 +1,24 @@
 #ifndef POINTYCLOUDPLUGIN_USEFULPOINTSSELECTION_HPP
 #define POINTYCLOUDPLUGIN_USEFULPOINTSSELECTION_HPP
 
-#include <memory>
+//#include <memory>
 #include <vector>
-#include <Engine/Renderer/Mesh/Mesh.hpp>
 #include <Engine/Renderer/Camera/Camera.hpp>
+
+#include <APSS/PointyCloud.hpp>
 
 namespace PointyCloudPlugin
 {
-
     class UsefulPointsSelection
     {
     public:
-        UsefulPointsSelection(std::shared_ptr<Ra::Engine::Mesh> cloud, const Ra::Engine::Camera* camera);
+        UsefulPointsSelection(PointyCloud cloud, const Ra::Engine::Camera* camera);
         ~UsefulPointsSelection();
 
-        void selectUsefulPoints();
+        PointyCloud selectUsefulPoints();
 
     protected:
-
-        std::shared_ptr<Ra::Engine::Mesh> m_cloud;
-
+        const PointyCloud m_cloud;
         const Ra::Engine::Camera* m_camera;
 
     }; // class UsefulPointsSelection
