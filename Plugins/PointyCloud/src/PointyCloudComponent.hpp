@@ -10,6 +10,8 @@
 #include <Engine/Component/Component.hpp>
 #include <Engine/Renderer/Camera/Camera.hpp>
 
+#include <APSS/PointyCloud.hpp>
+
 namespace Ra
 {
     namespace Engine
@@ -66,13 +68,11 @@ namespace PointyCloudPlugin
 
         const Ra::Core::Index* roIndexRead() const;
 
-        void resetWorkingCloud();
-
     private:
         Ra::Core::Index m_meshIndex;
         std::string m_contentName;
 
-        Ra::Engine::Mesh * m_originalCloud;
+        PointyCloud m_originalCloud;
         std::shared_ptr<Ra::Engine::Mesh> m_workingCloud;
 
         const Ra::Engine::Camera *m_camera;

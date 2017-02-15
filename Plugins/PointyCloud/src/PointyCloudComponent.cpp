@@ -1,7 +1,5 @@
 #include <PointyCloudComponent.hpp>
 
-#include <APSS/UsefulPointsSelection.hpp>
-
 #include <iostream>
 
 #include <Core/String/StringUtils.hpp>
@@ -24,6 +22,9 @@
 #include <Engine/Assets/FileData.hpp>
 #include <Engine/Assets/GeometryData.hpp>
 
+#include <APSS/UsefulPointsSelection.hpp>
+#include <APSS/PointyCloud.hpp>
+
 using Ra::Engine::ComponentMessenger;
 
 namespace PointyCloudPlugin
@@ -35,7 +36,6 @@ namespace PointyCloudPlugin
 
     PointyCloudComponent::~PointyCloudComponent()
     {
-        delete m_originalCloud;
         delete m_culling;
     }
 
@@ -56,7 +56,7 @@ namespace PointyCloudPlugin
 
         m_contentName = data->getName();
 
-        m_originalCloud = new Ra::Engine::Mesh( meshName, GL_POINTS );
+        m_workingCloud = Ra::Core::make_shared<Ra::Engine::Mesh>( meshName, GL_POINTS );
 
         Ra::Core::Transform T = data->getFrame();
         Ra::Core::Transform N;
@@ -68,7 +68,7 @@ namespace PointyCloudPlugin
         for ( const auto& v : data->getVertices() ) vertices.push_back( T * v );
         for ( const auto& v : data->getNormals() )  normals.push_back( (N * v).normalized() );
 
-        m_originalCloud->loadPointyGeometry( vertices, normals );
+        m_workingCloud->loadPointyGeometry( vertices, normals );
 
         Ra::Core::Vector4Array colors;
 
@@ -82,34 +82,23 @@ namespace PointyCloudPlugin
             colors.resize(vertices.size(), white);
         }
 
-        m_originalCloud->addData( Ra::Engine::Mesh::VERTEX_COLOR,     colors     );
+        m_workingCloud->addData( Ra::Engine::Mesh::VERTEX_COLOR,     colors     );
 
         auto config = Ra::Engine::ShaderConfigurationFactory::getConfiguration("Pointy");
 
-        m_workingCloud = Ra::Core::make_shared<Ra::Engine::Mesh>( meshName, GL_POINTS );
-        resetWorkingCloud();
-
         Ra::Engine::RenderObject* ro = Ra::Engine::RenderObject::createRenderObject(roName, this, Ra::Engine::RenderObjectType::Pointy, m_workingCloud, config);
+
+        m_originalCloud = PointyCloud(m_workingCloud.get());
 
         m_meshIndex = addRenderObject(ro);
 
-        m_culling = new UsefulPointsSelection(m_workingCloud, m_camera);
-    }
-
-    void PointyCloudComponent::resetWorkingCloud() {
-        m_workingCloud->loadPointyGeometry(
-                        m_originalCloud->getGeometry().m_vertices,
-                        m_originalCloud->getGeometry().m_normals
-                    );
-
-        m_workingCloud->addData( Ra::Engine::Mesh::VERTEX_COLOR, m_originalCloud->getData(Ra::Engine::Mesh::VERTEX_COLOR));
+        m_culling = new UsefulPointsSelection(m_originalCloud, m_camera);
     }
 
     void PointyCloudComponent::computePointyCloud()
     {
-        resetWorkingCloud();
-        m_culling->selectUsefulPoints();
-
+        PointyCloud points = m_culling->selectUsefulPoints();
+        points.loadToMesh(m_workingCloud.get());
     }
 
     Ra::Core::Index PointyCloudComponent::getRenderObjectIndex() const
