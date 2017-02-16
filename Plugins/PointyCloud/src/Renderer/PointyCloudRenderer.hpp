@@ -18,12 +18,12 @@ namespace PointyCloudPlugin
         class POINTY_PLUGIN_API PointyCloudRenderer : public Ra::Engine::Renderer
         {
         public:
-            PointyCloudRenderer( uint width, uint height, float splatSize = 1.0);
+            PointyCloudRenderer(uint width, uint height, Scalar splatSize = 1.0);
             virtual ~PointyCloudRenderer();
             virtual std::string getRendererName() const override { return "PointyCloud Renderer"; }
 
-            inline void setSplatSize(float size) { lockRendering(); m_splatSize = size; unlockRendering(); }
-            inline const float& getSplatSize() const {return m_splatSize;}
+            inline void setSplatSize(Scalar size) { lockRendering(); m_splatSize = size; unlockRendering(); }
+            inline const Scalar& getSplatSize() const {return m_splatSize;}
 
         protected:
 
@@ -42,7 +42,7 @@ namespace PointyCloudPlugin
 
         private:
 
-            float m_splatSize;
+            Scalar m_splatSize;
 
             std::unique_ptr<Ra::Engine::FBO> m_fbo;
             std::unique_ptr<Ra::Engine::Texture> m_texture;

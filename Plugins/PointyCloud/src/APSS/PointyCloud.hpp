@@ -16,7 +16,6 @@ namespace ForPatate {
 
 class APoint
 {
-
 public:
     // required by Patate
     typedef ForPatate::_Scalar Scalar;

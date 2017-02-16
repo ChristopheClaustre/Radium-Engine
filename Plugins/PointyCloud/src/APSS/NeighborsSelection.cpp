@@ -3,7 +3,7 @@
 namespace PointyCloudPlugin
 {
 
-NeighborsSelection::NeighborsSelection(std::shared_ptr<PointyCloud> cloud, const float influenceRadius) :
+NeighborsSelection::NeighborsSelection(std::shared_ptr<PointyCloud> cloud, const Scalar influenceRadius) :
     m_cloud(cloud),
     m_influenceRadius(influenceRadius)
 {

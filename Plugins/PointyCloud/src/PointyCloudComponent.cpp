@@ -85,6 +85,7 @@ namespace PointyCloudPlugin
         }
 
         m_workingCloud->addData( Ra::Engine::Mesh::VERTEX_COLOR,     colors     );
+        m_workingCloud->addData( Ra::Engine::Mesh::VERTEX_COLOR, colors);
 
         auto config = Ra::Engine::ShaderConfigurationFactory::getConfiguration("Pointy");
 
@@ -111,10 +112,13 @@ namespace PointyCloudPlugin
 
     void PointyCloudComponent::setInfluenceRadius(float influenceRadius) {
         // TODO donner l'influence Radius à la selection des voisins
+    void PointyCloudComponent::setInfluenceRadius(Scalar influenceRadius) {
         m_projection->setInfluenceRadius(influenceRadius);
+        m_selector->setInfluenceRadius(influenceRadius);
     }
 
     void PointyCloudComponent::setBeta(float beta) {
+    void PointyCloudComponent::setBeta(Scalar beta) {
         // TODO donner beta à la projection
     }
 

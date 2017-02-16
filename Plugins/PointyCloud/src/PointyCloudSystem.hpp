@@ -47,9 +47,9 @@ namespace PointyCloudPlugin
 
         std::vector<PointyCloudComponent*> getComponents();
 
-        void setSplatRadius(float splatRadius);
-        void setInfluenceRadius(float influenceRadius);
-        void setBeta(float beta);
+        void setSplatRadius(Scalar splatRadius);
+        void setInfluenceRadius(Scalar influenceRadius);
+        void setBeta(Scalar beta);
         void setThreshold(int threshold);
         void setM(int M);
         void setUpsamplingMethod(UPSAMPLING_METHOD upsampler);
@@ -57,9 +57,9 @@ namespace PointyCloudPlugin
         void setOptimizationByOctree(bool octree);
         void setOptimizationByCUDA(bool cuda);
 
-        inline float getSplatRadius() { return m_splatRadius; }
-        inline float getInfluenceRadius()  { return m_influenceRadius; }
-        inline float getBeta() { return m_beta; }
+        inline Scalar getSplatRadius() { return m_splatRadius; }
+        inline Scalar getInfluenceRadius()  { return m_influenceRadius; }
+        inline Scalar getBeta() { return m_beta; }
         inline int getThreshold() { return m_threshold; }
         inline int getM() { return m_M; }
         inline UPSAMPLING_METHOD getUpsamplingMethod() { return m_upsampler; }
@@ -73,9 +73,9 @@ namespace PointyCloudPlugin
         Ra::Gui::Viewer * m_viewer;
         std::vector<PointyCloudComponent*> pointyCloudComponentList;
 
-        float m_splatRadius;
-        float m_influenceRadius;
-        float m_beta;
+        Scalar m_splatRadius;
+        Scalar m_influenceRadius;
+        Scalar m_beta;
         int m_threshold;
         int m_M;
         UPSAMPLING_METHOD m_upsampler;

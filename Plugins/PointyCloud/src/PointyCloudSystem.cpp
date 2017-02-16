@@ -75,18 +75,18 @@ namespace PointyCloudPlugin
         taskQueue->registerTask(task);
     }
 
-    void PointyCloudSystem::setSplatRadius(float splatRadius)
+    void PointyCloudSystem::setSplatRadius(Scalar splatRadius)
     {
         m_splatRadius = splatRadius;
         m_renderer->setSplatSize(splatRadius);
     }
 
-    void PointyCloudSystem::setInfluenceRadius(float influenceRadius)
+    void PointyCloudSystem::setInfluenceRadius(Scalar influenceRadius)
     {
         m_influenceRadius = influenceRadius;
         // TODO donner à tous les components
     }
-    void PointyCloudSystem::setBeta(float beta)
+    void PointyCloudSystem::setBeta(Scalar beta)
     {
         m_beta = beta;
         // TODO donner à tous les components

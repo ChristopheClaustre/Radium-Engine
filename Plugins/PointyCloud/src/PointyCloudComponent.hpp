@@ -51,8 +51,8 @@ namespace PointyCloudPlugin
         /// Do APSS on the point cloud
         void computePointyCloud();
 
-        void setInfluenceRadius(float);
-        void setBeta(float);
+        void setInfluenceRadius(Scalar);
+        void setBeta(Scalar);
         void setThreshold(int);
         void setM(int);
         void setUpsamplingMethod(UPSAMPLING_METHOD);

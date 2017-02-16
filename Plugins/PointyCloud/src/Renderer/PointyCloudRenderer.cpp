@@ -28,7 +28,7 @@ namespace PointyCloudPlugin
             };
         }
 
-        PointyCloudRenderer::PointyCloudRenderer(uint width, uint height , float splatSize) :
+        PointyCloudRenderer::PointyCloudRenderer(uint width, uint height , Scalar splatSize) :
             Ra::Engine::Renderer(width, height),
             m_splatSize(splatSize)
         {
