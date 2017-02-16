@@ -24,6 +24,8 @@
 
 #include <APSS/UsefulPointsSelection.hpp>
 #include <APSS/PointyCloud.hpp>
+#include <APSS/OrthogonalProjection.hpp>
+#include <APSS/NeighborsSelection.hpp>
 
 using Ra::Engine::ComponentMessenger;
 
@@ -36,7 +38,6 @@ namespace PointyCloudPlugin
 
     PointyCloudComponent::~PointyCloudComponent()
     {
-        delete m_culling;
     }
 
     void PointyCloudComponent::initialize()
@@ -88,42 +89,20 @@ namespace PointyCloudPlugin
 
         Ra::Engine::RenderObject* ro = Ra::Engine::RenderObject::createRenderObject(roName, this, Ra::Engine::RenderObjectType::Pointy, m_workingCloud, config);
 
-        m_originalCloud = PointyCloud(m_workingCloud.get());
+        m_originalCloud = std::make_shared<PointyCloud>(m_workingCloud.get());
 
         m_meshIndex = addRenderObject(ro);
 
         m_culling = new UsefulPointsSelection(m_originalCloud, m_camera);
+//        m_selector = new NeighborsSelection(m_originalCloud, 1.0);
+        m_projection = new OrthogonalProjection(m_selector, m_originalCloud, 1.0);
     }
 
     void PointyCloudComponent::computePointyCloud()
     {
         PointyCloud points = m_culling->selectUsefulPoints();
+//        m_projection->project(points);
         points.loadToMesh(m_workingCloud.get());
-    }
-
-    Ra::Core::Index PointyCloudComponent::getRenderObjectIndex() const
-    {
-        return m_meshIndex;
-    }
-
-    const Ra::Engine::Mesh& PointyCloudComponent::getDisplayMesh() const
-    {
-        return *(getRoMgr()->getRenderObject(getRenderObjectIndex())->getMesh());
-    }
-
-    Ra::Engine::Mesh& PointyCloudComponent::getDisplayMesh()
-    {
-        return *(getRoMgr()->getRenderObject(getRenderObjectIndex())->getMesh());
-    }
-
-    void PointyCloudComponent::setMeshInput(const std::shared_ptr<Ra::Engine::Mesh> meshShared)
-    {
-        getRoMgr()->getRenderObject(getRenderObjectIndex())->setMesh(meshShared);
-    }
-
-    const Ra::Core::Index* PointyCloudComponent::roIndexRead() const
-    {
-        return &m_meshIndex;
     }
 
     void PointyCloudComponent::setInfluenceRadius(float influenceRadius) {
