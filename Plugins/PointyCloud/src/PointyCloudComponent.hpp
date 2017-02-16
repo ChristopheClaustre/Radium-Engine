@@ -32,6 +32,7 @@ namespace PointyCloudPlugin
     class UsefulPointsSelection;
     class OrthogonalProjection;
     class NeighborsSelection;
+    class UpSampler;
 
     class POINTY_PLUGIN_API PointyCloudComponent : public Ra::Engine::Component
     {
@@ -69,6 +70,7 @@ namespace PointyCloudPlugin
         const Ra::Engine::Camera *m_camera;
 
         UsefulPointsSelection* m_culling;
+        UpSampler* m_upsampler;
         OrthogonalProjection* m_projection;
         NeighborsSelection* m_selector;
 
