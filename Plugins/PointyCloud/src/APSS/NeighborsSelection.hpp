@@ -13,7 +13,7 @@ namespace PointyCloudPlugin
         NeighborsSelection(std::shared_ptr<PointyCloud> cloud, const Scalar influenceRadius);
         ~NeighborsSelection();
 
-        std::vector<int> getNeighbors(APoint point);
+        virtual std::vector<int> getNeighbors(const APoint& point) const;
 
         void setInfluenceRadius(Scalar influenceRadius) { m_influenceRadius = influenceRadius; }
     protected:
