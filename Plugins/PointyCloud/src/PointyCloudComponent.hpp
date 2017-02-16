@@ -72,7 +72,7 @@ namespace PointyCloudPlugin
         Ra::Core::Index m_meshIndex;
         std::string m_contentName;
 
-        PointyCloud m_originalCloud;
+        std::shared_ptr<PointyCloud> m_originalCloud;
         std::shared_ptr<Ra::Engine::Mesh> m_workingCloud;
 
         const Ra::Engine::Camera *m_camera;

@@ -12,13 +12,13 @@ namespace PointyCloudPlugin
     class UsefulPointsSelection
     {
     public:
-        UsefulPointsSelection(PointyCloud cloud, const Ra::Engine::Camera* camera);
+        UsefulPointsSelection(std::shared_ptr<PointyCloud> originalCloud, const Ra::Engine::Camera* camera);
         ~UsefulPointsSelection();
 
         PointyCloud selectUsefulPoints();
 
     protected:
-        const PointyCloud m_cloud;
+        std::shared_ptr<PointyCloud> m_originalCloud;
         const Ra::Engine::Camera* m_camera;
 
     }; // class UsefulPointsSelection
