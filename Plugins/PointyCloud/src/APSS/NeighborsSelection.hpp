@@ -2,6 +2,7 @@
 #define POINTYCLOUDPLUGIN_NEIGHBORSSELECTION_HPP
 
 #include <Engine/Renderer/Mesh/Mesh.hpp>
+#include <APSS/PointyCloud.hpp>
 
 namespace PointyCloudPlugin
 {
@@ -9,13 +10,14 @@ namespace PointyCloudPlugin
     class NeighborsSelection
     {
     public:
-        NeighborsSelection(std::shared_ptr<Ra::Engine::Mesh> cloud,const float influenceRadius);
+        NeighborsSelection(std::shared_ptr<PointyCloud> cloud, const float influenceRadius);
         ~NeighborsSelection();
 
-        std::vector<int> getNeighbors(Ra::Core::Vector3 vertexPosition);
+        virtual std::vector<int> getNeighbors(const APoint& point) const;
+
     protected:
 
-        std::shared_ptr<Ra::Engine::Mesh> m_cloud;
+        std::shared_ptr<PointyCloud> m_cloud;
         float m_influenceRadius;
 
     }; // class NeighborsSelection
