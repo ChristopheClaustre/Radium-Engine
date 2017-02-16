@@ -21,7 +21,7 @@ class NeighborsSelection;
 class OrthogonalProjection
 {
 public:
-    OrthogonalProjection(std::shared_ptr<NeighborsSelection> neighborsSelection,
+    OrthogonalProjection(NeighborsSelection* neighborsSelection,
                          std::shared_ptr<PointyCloud> originalCloud,
                          double influenceRadius);
     ~OrthogonalProjection();
@@ -32,7 +32,7 @@ public:
 
 protected:
 
-    std::shared_ptr<NeighborsSelection> m_selector;
+    NeighborsSelection* m_selector;
     std::shared_ptr<PointyCloud> m_originalCloud;
 
     double m_influenceRadius;

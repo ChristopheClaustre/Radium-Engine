@@ -30,6 +30,8 @@ namespace Ra
 namespace PointyCloudPlugin
 {
     class UsefulPointsSelection;
+    class OrthogonalProjection;
+    class NeighborsSelection;
 
     class POINTY_PLUGIN_API PointyCloudComponent : public Ra::Engine::Component
     {
@@ -58,17 +60,6 @@ namespace PointyCloudPlugin
         void setOptimizationByCUDA(bool);
 
     private:
-
-        const Ra::Engine::Mesh& getDisplayMesh() const;
-        Ra::Engine::Mesh& getDisplayMesh();
-
-        // Pointy cloud accepts to give its mesh and (if deformable) to update it
-        const Ra::Engine::Mesh* getMeshOutput() const;
-        void setMeshInput(const std::shared_ptr<Ra::Engine::Mesh> meshShared );
-
-        const Ra::Core::Index* roIndexRead() const;
-
-    private:
         Ra::Core::Index m_meshIndex;
         std::string m_contentName;
 
@@ -78,6 +69,8 @@ namespace PointyCloudPlugin
         const Ra::Engine::Camera *m_camera;
 
         UsefulPointsSelection* m_culling;
+        OrthogonalProjection* m_projection;
+        NeighborsSelection* m_selector;
 
     };
 

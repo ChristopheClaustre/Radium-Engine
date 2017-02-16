@@ -5,7 +5,7 @@
 
 namespace PointyCloudPlugin {
 
-OrthogonalProjection::OrthogonalProjection(std::shared_ptr<NeighborsSelection> neighborsSelection,
+OrthogonalProjection::OrthogonalProjection(NeighborsSelection* neighborsSelection,
                                            std::shared_ptr<PointyCloud> originalCloud,
                                             double influenceRadius) :
     m_selector(neighborsSelection),
