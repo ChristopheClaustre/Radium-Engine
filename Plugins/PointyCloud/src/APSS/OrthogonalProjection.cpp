@@ -1,11 +1,11 @@
 #include "OrthogonalProjection.hpp"
-#include "PointyCloud.hpp"
+//#include "PointyCloud.hpp"
 #include "NeighborsSelection.hpp"
 
 
 namespace PointyCloudPlugin {
 
-OrthogonalProjection::OrthogonalProjection(NeighborsSelection* neighborsSelection,
+OrthogonalProjection::OrthogonalProjection(std::shared_ptr<NeighborsSelection> neighborsSelection,
                                            std::shared_ptr<PointyCloud> originalCloud,
                                             double influenceRadius) :
     m_selector(neighborsSelection),
@@ -27,16 +27,18 @@ void OrthogonalProjection::project(PointyCloud &upSampledCloud)
     {
         fit.init(p.pos());
 
-        std::vector<int> neighbors = m_selector->getNeighbors(p.pos());
+        std::vector<int> neighbors = m_selector->getNeighbors(p);
 
         for(auto &idx : neighbors)
             fit.addNeighbor(m_originalCloud->m_points[idx]);
 
         int i = 0;
-
         while(fit.finalize()==Grenaille::NEED_OTHER_PASS && ++i<MAX_FITTING_ITERATION)
             for(auto &idx : neighbors)
                 fit.addNeighbor(m_originalCloud->m_points[idx]);
+
+        p.pos() = fit.project(p.pos());
+        p.normal() = fit.primitiveGradient(p.pos());
     }
 }
 
