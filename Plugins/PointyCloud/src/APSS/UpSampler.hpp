@@ -6,8 +6,9 @@
 #include <Eigen/Geometry>
 #include <PointyCloudSystem.hpp>
 
-namespace PointyCloudPlugin{
+#include "PointyCloud.hpp"
 
+namespace PointyCloudPlugin{
 
 class UpSampler
 {
@@ -19,18 +20,17 @@ public :
 
     UpSampler(float rayon) ;
     ~UpSampler();
-    void upSampleCloud(PointyCloud cloud);
+    void upSampleCloud(PointyCloud* cloud);
 
 private :
 
     float m_rayon;
-    std::vector<APoint> m_points;
-    PointyCloud m_cloud;
+    std::vector<APoint> m_newpoints;
+    PointyCloud* m_cloud;
 
     void upSamplePoint(const int& m, const int& indice );
     Ra::Core::Vector3 calculU(const Ra::Core::Vector3& normal);
     Ra::Core::Vector3 calculV(const Ra::Core::Vector3& normal,const Ra::Core::Vector3& u);
-
 
 };
 }

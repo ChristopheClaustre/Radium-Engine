@@ -1,70 +1,70 @@
 #include "UpSampler.hpp"
 
-
 namespace PointyCloudPlugin
 {
 
 
-UpSampler::UpSampler(float rayon) : m_rayon(rayon), m_cloud( nullptr){
+UpSampler::UpSampler(float rayon) : m_rayon(rayon), m_cloud( nullptr)
+{
 }
 
-UpSampler::~UpSampler(){
-
+UpSampler::~UpSampler()
+{
 }
 
-void UpSampler::upSampleCloud(PointyCloud cloud){
+void UpSampler::upSampleCloud(PointyCloud* cloud)
+{
 
     m_cloud = cloud;
-    m_points.clear();
+    m_newpoints.clear();
     const int &n = m_cloud->m_points.size() ;
 
     for ( uint i = 0 ; i < n ; i++ )
     {
         this->upSamplePoint( getM(i), i);
     }
-    m_cloud->m_points = m_points;
+    m_cloud->m_points = m_newpoints;
 }
 
 
 // m x m = nb de splats
-void UpSampler::upSamplePoint(const int &m, const int& indice ){
+void UpSampler::upSamplePoint(const int &m, const int& indice )
+{
 
-    const Ra::Core::Vector3 &normal = m_cloud->normal()[indice];
+    const Ra::Core::Vector3 &normal = m_cloud->m_points[indice].normal();
     const Ra::Core::Vector3 &u = this->calculU(normal);
     const Ra::Core::Vector3 &v = this->calculV(normal, u);
 
-    const Ra::Core::Vector3 &u_rayon =  u * m_rayon  / m;
-    const Ra::Core::Vector3 &v_rayon =  v * m_rayon  / m;
-    const Ra::Core::Vector3 &centerVertice = m_cloud->pos()[indice];
+    const Ra::Core::Vector3 &u_pas =  u * m_rayon  / m;
+    const Ra::Core::Vector3 &v_pas =  v * m_rayon  / m;
+    const Ra::Core::Vector3 &centerVertice = m_cloud->m_points[indice].pos();
 
-    const Ra::Core::Vector4 &color = m_cloud->color()[indice];
+    const Ra::Core::Vector4 &color = m_cloud->m_points[indice].color();
 
     if ( m % 2 == 1 )
     {
-        for (int i = -(m -1 )  / 2 ; i <= (m-1) /2 ; i ++ )
+        int offset = (m-1)/2 ;
+        for (int i = -offset; i <= offset ; i ++ )
         {
-            for (int j = - (m -1 ) / 2 ; j <= (m-1) / 2 ; j ++ )
+            for (int j = - offset; j <= offset; j ++ )
             {
-                APoint newPoint(Ra::Core::Vector3( 2  * i * u_rayon + 2 * j * v_rayon ) + centerVertice,normal,color);
-                m_points.push_back(newPoint);
-//                m_cloud->addData(Ra::Engine::Mesh::Vec4Data::VERTEX_COLOR, m_cloud->getData(Ra::Engine::Mesh::Vec4Data::VERTEX_COLOR));
+                APoint newPoint(Ra::Core::Vector3( 2  * i * u_pas + 2 * j * v_pas ) + centerVertice,normal,color);
+                m_newpoints.push_back(newPoint);
             }
         }
     }
     else
     {
-        const Ra::Core::Vector3 &topLeftVertice = (m /2 - 1) * 2 * (-u_rayon) + (m /2 - 1) * 2 * v_rayon + - u_rayon + v_rayon + centerVertice;
+        const Ra::Core::Vector3 &topLeftVertice = (m /2 - 1) * 2 * (-u_pas) + (m /2 - 1) * 2 * v_pas + - u_pas + v_pas + centerVertice;
         for (int i = 0 ; i < m ; i ++ )
         {
             for (int j = 0 ; j < m ; j ++ )
             {
-                APoint newPoint(Ra::Core::Vector3( 2  * i * u_rayon + 2 * j * -v_rayon + topLeftVertice ),normal,color);
-                m_points.push_back(newPoint);
-//                m_cloud->addData(Ra::Engine::Mesh::Vec4Data::VERTEX_COLOR, m_cloud->getData(Ra::Engine::Mesh::Vec4Data::VERTEX_COLOR));
+                APoint newPoint(Ra::Core::Vector3( 2  * i * u_pas + 2 * j * -v_pas + topLeftVertice ),normal,color);
+                m_newpoints.push_back(newPoint);
             }
         }
     }
-    // TODO actualiser le rayon
 
 }
 
