@@ -9,31 +9,39 @@
 
 namespace PointyCloudPlugin {
 
+namespace ForPatate {
+    typedef Scalar _Scalar;
+    typedef Ra::Core::Vector3 _VectorType;
+}
+
 class APoint
 {
+
 public:
     // required by Patate
-    typedef float Scalar; //TODO use Radium's Scalar, in case 'double' would be used
-    typedef Ra::Core::Vector3 VectorType;
+    typedef ForPatate::_Scalar Scalar;
+    typedef ForPatate::_VectorType VectorType;
 
-    inline APoint(  const Ra::Core::Vector3& _pos =    Ra::Core::Vector3::Zero(),
-                    const Ra::Core::Vector3& _normal = Ra::Core::Vector3::Zero(),
-                    const Ra::Core::Vector4& _color =  Ra::Core::Vector3::Zero()
+    inline APoint(  const VectorType& _pos =            VectorType::Zero(),
+                    const VectorType& _normal =         VectorType::Zero(),
+                    const Ra::Core::Vector4& _color =   VectorType::Zero()
                     )
         : m_pos(_pos), m_normal(_normal), m_color(_color) {}
 
-    inline const Ra::Core::Vector3& pos()    const { return m_pos; }
-    inline const Ra::Core::Vector3& normal() const { return m_normal; }
-    inline const Ra::Core::Vector4& color() const  { return m_color; }
+    inline const VectorType& pos()    const { return m_pos; }
+    inline const VectorType& normal() const { return m_normal; }
+    inline const Ra::Core::Vector4& color()  const  { return m_color; }
 
-    inline Ra::Core::Vector3& pos()    { return m_pos; }
-    inline Ra::Core::Vector3& normal() { return m_normal; }
+    inline VectorType& pos()    { return m_pos; }
+    inline VectorType& normal() { return m_normal; }
     inline Ra::Core::Vector4& color()  { return m_color; }
 
 private:
-    Ra::Core::Vector3 m_pos, m_normal;
+    VectorType m_pos, m_normal;
     Ra::Core::Vector4 m_color;
 };
+
+//typedef _APoint<Scalar> APoint;
 
 class PointyCloud
 {
