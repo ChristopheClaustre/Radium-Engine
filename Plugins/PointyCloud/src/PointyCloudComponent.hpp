@@ -70,7 +70,7 @@ namespace PointyCloudPlugin
 
         UsefulPointsSelection* m_culling;
         OrthogonalProjection* m_projection;
-        NeighborsSelection* m_selector;
+        std::shared_ptr<NeighborsSelection> m_selector;
 
     };
 

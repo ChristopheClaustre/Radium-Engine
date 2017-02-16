@@ -89,12 +89,11 @@ namespace PointyCloudPlugin
 
         Ra::Engine::RenderObject* ro = Ra::Engine::RenderObject::createRenderObject(roName, this, Ra::Engine::RenderObjectType::Pointy, m_workingCloud, config);
 
-        m_originalCloud = std::make_shared<PointyCloud>(m_workingCloud.get());
-
         m_meshIndex = addRenderObject(ro);
 
+        m_originalCloud = std::make_shared<PointyCloud>(m_workingCloud.get());
+        m_selector = std::make_shared<NeighborsSelection>(m_originalCloud, 1.0);
         m_culling = new UsefulPointsSelection(m_originalCloud, m_camera);
-//        m_selector = new NeighborsSelection(m_originalCloud, 1.0);
         m_projection = new OrthogonalProjection(m_selector, m_originalCloud, 1.0);
     }
 
