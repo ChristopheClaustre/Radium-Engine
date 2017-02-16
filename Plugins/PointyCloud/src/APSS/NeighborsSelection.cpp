@@ -20,7 +20,7 @@ std::vector<int> NeighborsSelection::getNeighbors(const APoint& point) const
 
    for (auto currentIt = beginIt; currentIt != m_cloud->m_points.end(); ++currentIt)
    {
-       if((currentIt->pos() - point.pos()).norm() >= m_influenceRadius)
+       if ((currentIt->pos() - point.pos()).norm() <= m_influenceRadius)
        {
            indexSelected.push_back(currentIt-beginIt);
        }
