@@ -13,14 +13,14 @@ NeighborsSelection::~NeighborsSelection()
 {
 }
 
-std::vector<int>  NeighborsSelection::getNeighbors(APoint point)
+std::vector<int> NeighborsSelection::getNeighbors(APoint point)
 {
    std::vector<int> indexSelected;
    auto beginIt = m_cloud->m_points.begin();
 
    for (auto currentIt = beginIt; currentIt != m_cloud->m_points.end(); ++currentIt)
    {
-       if((currentIt->pos() - point.pos()).norm() >= m_influenceRadius)
+       if ((currentIt->pos() - point.pos()).norm() <= m_influenceRadius)
        {
            indexSelected.push_back(currentIt-beginIt);
        }
