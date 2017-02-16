@@ -3,6 +3,8 @@
 
 #include <grenaille.h>
 
+#include <memory>
+
 namespace PointyCloudPlugin {
 
 class APoint;
@@ -19,21 +21,19 @@ class NeighborsSelection;
 class OrthogonalProjection
 {
 public:
-    OrthogonalProjection(NeighborsSelection* neighborsSelection,
-                         PointyCloud* originalCloud,
-                         PointyCloud* upSampledCloud,
+    OrthogonalProjection(std::shared_ptr<NeighborsSelection> neighborsSelection,
+                         std::shared_ptr<PointyCloud> originalCloud,
                          double influenceRadius);
     ~OrthogonalProjection();
 
     inline void setInfluenceRadius(double influenceRadius){m_influenceRadius=influenceRadius;}
 
-    void project();
+    void project(PointyCloud& upSampledCloud);
 
 protected:
 
-    NeighborsSelection* m_selector;
-    PointyCloud* m_originalCloud;
-    PointyCloud* m_upSampledCloud;
+    std::shared_ptr<NeighborsSelection> m_selector;
+    std::shared_ptr<PointyCloud> m_originalCloud;
 
     double m_influenceRadius;
 };

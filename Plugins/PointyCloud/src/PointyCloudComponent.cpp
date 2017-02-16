@@ -88,7 +88,7 @@ namespace PointyCloudPlugin
 
         Ra::Engine::RenderObject* ro = Ra::Engine::RenderObject::createRenderObject(roName, this, Ra::Engine::RenderObjectType::Pointy, m_workingCloud, config);
 
-        m_originalCloud = PointyCloud(m_workingCloud.get());
+        m_originalCloud = std::make_shared<PointyCloud>(m_workingCloud.get());
 
         m_meshIndex = addRenderObject(ro);
 

@@ -5,8 +5,8 @@
 namespace PointyCloudPlugin
 {
 
-UsefulPointsSelection::UsefulPointsSelection(PointyCloud cloud, const Ra::Engine::Camera* camera) :
-    m_cloud(cloud),
+UsefulPointsSelection::UsefulPointsSelection(std::shared_ptr<PointyCloud> originalCloud, const Ra::Engine::Camera* camera) :
+    m_originalCloud(originalCloud),
     m_camera(camera)
 {
 }
@@ -18,7 +18,7 @@ UsefulPointsSelection::~UsefulPointsSelection()
 PointyCloud UsefulPointsSelection::selectUsefulPoints()
 {
     Ra::Core::Vector3 view = m_camera->getDirection();
-    PointyCloud pc = m_cloud;
+    PointyCloud pc(*m_originalCloud.get());
 
     auto pointsFirst = pc.m_points.begin();
     auto pointsEnd = pc.m_points.end();

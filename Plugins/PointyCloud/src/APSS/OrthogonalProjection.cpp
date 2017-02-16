@@ -5,13 +5,11 @@
 
 namespace PointyCloudPlugin {
 
-OrthogonalProjection::OrthogonalProjection(NeighborsSelection* neighborsSelection,
-                     PointyCloud* originalCloud,
-                     PointyCloud* upSampledCloud,
-                     double influenceRadius) :
+OrthogonalProjection::OrthogonalProjection(std::shared_ptr<NeighborsSelection> neighborsSelection,
+                                           std::shared_ptr<PointyCloud> originalCloud,
+                                            double influenceRadius) :
     m_selector(neighborsSelection),
     m_originalCloud(originalCloud),
-    m_upSampledCloud(upSampledCloud),
     m_influenceRadius(influenceRadius)
 {
 }
@@ -20,12 +18,12 @@ OrthogonalProjection::~OrthogonalProjection()
 {
 }
 
-void OrthogonalProjection::project()
+void OrthogonalProjection::project(PointyCloud &upSampledCloud)
 {
     Fit fit;
     fit.setWeightFunc(WeightFunc(m_influenceRadius));
 
-    for(auto &p : m_upSampledCloud->m_points)
+    for(auto &p : upSampledCloud.m_points)
     {
         fit.init(p.pos());
 
