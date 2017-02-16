@@ -23,17 +23,8 @@ namespace Ra
         class Entity;
         struct RenderTechnique;
         class Component;
-//        class PointyCloudRenderer;
     }
 }
-
-//namespace Ra
-//{
-//    namespace GUI
-//    {
-//        class Viewer;
-//    }
-//}
 
 namespace PointyCloudPlugin
 {
