@@ -1,5 +1,5 @@
-#ifndef POINTYCLOUD_POINTYCLOUD_H
-#define POINTYCLOUD_POINTYCLOUD_H
+#ifndef POINTYCLOUDPLUGIN_POINTYCLOUD_H
+#define POINTYCLOUDPLUGIN_POINTYCLOUD_H
 
 #include <Core/RaCore.hpp>
 #include <Core/Math/LinearAlgebra.hpp>

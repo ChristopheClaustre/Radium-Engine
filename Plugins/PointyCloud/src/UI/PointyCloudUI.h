@@ -1,5 +1,5 @@
-#ifndef POINTYCLOUDUI_H
-#define POINTYCLOUDUI_H
+#ifndef POINTYCLOUDPLUGIN_POINTYCLOUDUI_H
+#define POINTYCLOUDPLUGIN_POINTYCLOUDUI_H
 
 #include <PointyCloudPlugin.hpp>
 #include <QFrame>
