@@ -14,17 +14,18 @@ inline PointyCloud::PointyCloud(Ra::Engine::Mesh * mesh)
 }
 
 inline void PointyCloud::loadToMesh(Ra::Engine::Mesh * mesh) {
-    Ra::Core::Vector3Array vertices;
-    Ra::Core::Vector3Array normals;
-    Ra::Core::Vector4Array colors;
 
-    for (int i = 0; i < m_points.size(); ++i)
+    size_t size = m_points.size();
+
+    Ra::Core::Vector3Array vertices(size);
+    Ra::Core::Vector3Array normals(size);
+    Ra::Core::Vector4Array colors(size);
+
+    for (int i = 0; i < size; ++i)
     {
-        APoint point = m_points[i];
-
-        vertices.push_back(point.pos());
-        normals.push_back(point.normal());
-        colors.push_back(point.color());
+        vertices[i] = m_points[i].pos();
+        normals[i] = m_points[i].normal();
+        colors[i] = m_points[i].color();
     }
 
     mesh->loadPointyGeometry(vertices, normals);
