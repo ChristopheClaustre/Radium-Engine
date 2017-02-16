@@ -14,6 +14,8 @@ namespace PointyCloudPlugin
         ~NeighborsSelection();
 
         std::vector<int> getNeighbors(APoint point);
+
+        void setInfluenceRadius(Scalar influenceRadius) { m_influenceRadius = influenceRadius; }
     protected:
 
         std::shared_ptr<PointyCloud> m_cloud;
