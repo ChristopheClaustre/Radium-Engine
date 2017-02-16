@@ -107,6 +107,7 @@ namespace PointyCloudPlugin
 
     void PointyCloudComponent::setInfluenceRadius(float influenceRadius) {
         // TODO donner l'influence Radius à la selection des voisins
+        m_projection->setInfluenceRadius(influenceRadius);
     }
 
     void PointyCloudComponent::setBeta(float beta) {
