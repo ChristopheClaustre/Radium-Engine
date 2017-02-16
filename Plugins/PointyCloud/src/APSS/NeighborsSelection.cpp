@@ -13,7 +13,7 @@ NeighborsSelection::~NeighborsSelection()
 {
 }
 
-std::vector<int>  NeighborsSelection::getNeighbors(APoint point)
+std::vector<int> NeighborsSelection::getNeighbors(const APoint& point) const
 {
    std::vector<int> indexSelected;
    auto beginIt = m_cloud->m_points.begin();

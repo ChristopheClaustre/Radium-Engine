@@ -10,8 +10,10 @@ namespace PointyCloudPlugin {
     class NeighborsSelectionWithRegularGrid : public NeighborsSelection
     {
     public:
-        NeighborsSelectionWithRegularGrid(std::shared_ptr<Ra::Engine::Mesh> cloud, float influenceRadius);
+        NeighborsSelectionWithRegularGrid(std::shared_ptr<PointyCloud> cloud, float influenceRadius);
         ~NeighborsSelectionWithRegularGrid();
+
+        virtual std::vector<int> getNeighbors(const APoint &point) const;
 
     protected:
 

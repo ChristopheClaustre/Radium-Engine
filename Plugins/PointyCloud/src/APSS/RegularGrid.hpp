@@ -22,6 +22,8 @@ namespace PointyCloudPlugin {
     public:
         ~RegularGrid();
 
+        std::vector<int> query(const Ra::Core::Vector3& p) const;
+
     protected:
         RegularGrid();
 
