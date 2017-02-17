@@ -85,47 +85,71 @@ namespace PointyCloudPlugin
     {
         m_influenceRadius = influenceRadius;
         // TODO donner à tous les components
+        for (auto comp : pointyCloudComponentList) {
+            comp->setInfluenceRadius(influenceRadius);
+        }
     }
     void PointyCloudSystem::setBeta(Scalar beta)
     {
         m_beta = beta;
         // TODO donner à tous les components
+        for (auto comp : pointyCloudComponentList) {
+            comp->setBeta(beta);
+        }
     }
 
     void PointyCloudSystem::setThreshold(int threshold)
     {
         m_threshold = threshold;
         // TODO donner à tout les components
+        for (auto comp : pointyCloudComponentList) {
+            comp->setThreshold(threshold);
+        }
     }
 
     void PointyCloudSystem::setM(int M)
     {
         m_M = M;
         // TODO donner à tout les components
+        for (auto comp : pointyCloudComponentList) {
+            comp->setM(M);
+        }
     }
 
     void PointyCloudSystem::setUpsamplingMethod(UPSAMPLING_METHOD upsampler)
     {
         m_upsampler = upsampler;
         // TODO donner à tout les components
+        for (auto comp : pointyCloudComponentList) {
+            comp->setUpsamplingMethod(upsampler);
+        }
     }
 
     void PointyCloudSystem::setProjectionMethod(PROJECTION_METHOD projector)
     {
         m_projector = projector;
         // TODO donner à tout les components
+        for (auto comp : pointyCloudComponentList) {
+            comp->setProjectionMethod(projector);
+        }
     }
 
     void PointyCloudSystem::setOptimizationByOctree(bool octree)
     {
         m_octree = octree;
         // TODO donner à tout les components
+        for (auto comp : pointyCloudComponentList) {
+            comp->setOptimizationByOctree(octree);
+        }
     }
 
     void PointyCloudSystem::setOptimizationByCUDA(bool cuda)
     {
         m_cuda = cuda;
         // TODO donner à tout les components
+        for (auto comp : pointyCloudComponentList) {
+            comp->setOptimizationByCUDA(cuda);
+        }
     }
 
 } // namespace PointyCloudPlugin
