@@ -19,7 +19,7 @@ std::vector<int> NeighborsSelectionWithRegularGrid::getNeighbors(const APoint &p
 {
     std::vector<int> indices = m_grid->query(point.pos(), m_influenceRadius);
 
-    //TODO : remove indices far from more then radius
+    //TODO : remove indices far from more than radius
 
     return indices;
 }
