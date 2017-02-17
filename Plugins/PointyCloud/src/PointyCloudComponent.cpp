@@ -26,6 +26,7 @@
 #include <APSS/PointyCloud.hpp>
 #include <APSS/OrthogonalProjection.hpp>
 #include <APSS/NeighborsSelection.hpp>
+#include <APSS/NeighborsSelectionWithRegularGrid.hpp>
 #include <APSS/UpSamplerUnshaken.hpp>
 
 using Ra::Engine::ComponentMessenger;

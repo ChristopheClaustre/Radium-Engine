@@ -23,7 +23,7 @@ public:
 
     inline APoint(  const VectorType& _pos =            VectorType::Zero(),
                     const VectorType& _normal =         VectorType::Zero(),
-                    const Ra::Core::Vector4& _color =   VectorType::Zero()
+                    const Ra::Core::Vector4& _color =   Ra::Core::Vector4::Zero()
                     )
         : m_pos(_pos), m_normal(_normal), m_color(_color) {}
 
