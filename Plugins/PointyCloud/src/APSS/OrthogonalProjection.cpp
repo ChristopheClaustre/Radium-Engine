@@ -28,16 +28,23 @@ void OrthogonalProjection::project(PointyCloud &upSampledCloud)
 
         std::vector<int> neighbors = m_selector->getNeighbors(p);
 
-        for(auto &idx : neighbors)
-            fit.addNeighbor(m_originalCloud->m_points[idx]);
-
         int i = 0;
-        while(fit.finalize()==Grenaille::NEED_OTHER_PASS && ++i<MAX_FITTING_ITERATION)
+        int res;
+        do
+        {
             for(auto &idx : neighbors)
                 fit.addNeighbor(m_originalCloud->m_points[idx]);
 
-        p.pos() = fit.project(p.pos());
-        p.normal() = fit.primitiveGradient(p.pos());
+            res = fit.finalize();
+//            std::cout << "finalize() -> " << res << std::endl << std::flush;
+            i++;
+        } while(res!=Grenaille::STABLE/*Grenaille::NEED_OTHER_PASS*/ && i<MAX_FITTING_ITERATION);
+
+//        std::cout << "nombre de fitting : " << i << std::endl << std::flush;
+//        std::cout << "avant : " << p.pos().transpose() << " après : " << fit.project(p.pos()).transpose() << std::endl << std::flush;
+
+        APoint _p(fit.project(p.pos()), fit.primitiveGradient(p.pos()), p.color());
+        p = _p;
     }
 }
 
