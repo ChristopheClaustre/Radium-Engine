@@ -22,11 +22,11 @@ namespace PointyCloudPlugin
 
     PointyCloudSystem::PointyCloudSystem(Ra::Gui::Viewer *viewer)
         : Ra::Engine::System(), m_viewer(viewer),
-          m_splatRadius(PointyCloudPluginC::splatRadiusInit.min),
-          m_influenceRadius(PointyCloudPluginC::influenceInit.min),
-          m_beta(PointyCloudPluginC::betaInit.min),
-          m_threshold(PointyCloudPluginC::thresholdInit.min),
-          m_M(PointyCloudPluginC::mInit.min),
+          m_splatRadius(PointyCloudPluginC::splatRadiusInit.init),
+          m_influenceRadius(PointyCloudPluginC::influenceInit.init),
+          m_beta(PointyCloudPluginC::betaInit.init),
+          m_threshold(PointyCloudPluginC::thresholdInit.init),
+          m_M(PointyCloudPluginC::mInit.init),
           m_upsampler(FIXED_METHOD), m_projector(ORTHOGONAL_METHOD),
           m_octree(false), m_cuda(false)
     {
@@ -53,13 +53,18 @@ namespace PointyCloudPlugin
 
         for ( const auto& data : geomData )
         {
-            std::string componentName = "PointyC_" + entity->getName() + std::to_string( id++ );
-            PointyCloudComponent * comp = new PointyCloudComponent( componentName, m_viewer->getCameraInterface()->getCamera() );
-            entity->addComponent( comp );
-            comp->handlePointyCloudLoading(data);
-            registerComponent( entity, comp );
-            //(xavier) Ajout du nouveau component dans la liste des components
-            pointyCloudComponentList.push_back(comp);
+            if (data->hasNormals()) {
+                std::string componentName = "PointyC_" + entity->getName() + std::to_string( id++ );
+                PointyCloudComponent * comp = new PointyCloudComponent( componentName, m_viewer->getCameraInterface()->getCamera() );
+                entity->addComponent( comp );
+                registerComponent( entity, comp );
+                comp->handlePointyCloudLoading(data);
+
+                pointyCloudComponentList.push_back(comp);
+            }
+            else {
+                LOGP(logINFO) << "Failed to load " << data->getName() << " : cloud has no normal.";
+            }
         }
 
     }
@@ -75,57 +80,81 @@ namespace PointyCloudPlugin
         taskQueue->registerTask(task);
     }
 
-    void PointyCloudSystem::setSplatRadius(float splatRadius)
+    void PointyCloudSystem::setSplatRadius(Scalar splatRadius)
     {
         m_splatRadius = splatRadius;
         m_renderer->setSplatSize(splatRadius);
     }
 
-    void PointyCloudSystem::setInfluenceRadius(float influenceRadius)
+    void PointyCloudSystem::setInfluenceRadius(Scalar influenceRadius)
     {
         m_influenceRadius = influenceRadius;
         // TODO donner à tous les components
+        for (auto comp : pointyCloudComponentList) {
+            comp->setInfluenceRadius(influenceRadius);
+        }
     }
-    void PointyCloudSystem::setBeta(float beta)
+    void PointyCloudSystem::setBeta(Scalar beta)
     {
         m_beta = beta;
         // TODO donner à tous les components
+        for (auto comp : pointyCloudComponentList) {
+            comp->setBeta(beta);
+        }
     }
 
     void PointyCloudSystem::setThreshold(int threshold)
     {
         m_threshold = threshold;
         // TODO donner à tout les components
+        for (auto comp : pointyCloudComponentList) {
+            comp->setThreshold(threshold);
+        }
     }
 
     void PointyCloudSystem::setM(int M)
     {
         m_M = M;
         // TODO donner à tout les components
+        for (auto comp : pointyCloudComponentList) {
+            comp->setM(M);
+        }
     }
 
     void PointyCloudSystem::setUpsamplingMethod(UPSAMPLING_METHOD upsampler)
     {
         m_upsampler = upsampler;
         // TODO donner à tout les components
+        for (auto comp : pointyCloudComponentList) {
+            comp->setUpsamplingMethod(upsampler);
+        }
     }
 
     void PointyCloudSystem::setProjectionMethod(PROJECTION_METHOD projector)
     {
         m_projector = projector;
         // TODO donner à tout les components
+        for (auto comp : pointyCloudComponentList) {
+            comp->setProjectionMethod(projector);
+        }
     }
 
     void PointyCloudSystem::setOptimizationByOctree(bool octree)
     {
         m_octree = octree;
         // TODO donner à tout les components
+        for (auto comp : pointyCloudComponentList) {
+            comp->setOptimizationByOctree(octree);
+        }
     }
 
     void PointyCloudSystem::setOptimizationByCUDA(bool cuda)
     {
         m_cuda = cuda;
         // TODO donner à tout les components
+        for (auto comp : pointyCloudComponentList) {
+            comp->setOptimizationByCUDA(cuda);
+        }
     }
 
 } // namespace PointyCloudPlugin

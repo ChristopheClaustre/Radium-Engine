@@ -12,13 +12,11 @@ namespace PointyCloudPlugin{
 class UpSampler
 {
 public :
-
     UpSampler(float rayon);
     ~UpSampler();
     virtual void upSampleCloud(PointyCloud& cloud)=0;
 
 protected :
-
     float m_rayon;
     std::vector<APoint> m_newpoints;
     PointyCloud* m_cloud;
@@ -27,6 +25,8 @@ protected :
     Ra::Core::Vector3 calculU(const Ra::Core::Vector3& normal);
     Ra::Core::Vector3 calculV(const Ra::Core::Vector3& normal,const Ra::Core::Vector3& u);
 
-};
-}
+}; // class Upsampler
+
+} // namespace PointyCloudPlugin
+
 #endif // POINTYCLOUDPLUGIN_UPSAMPLER_H

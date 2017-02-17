@@ -13,6 +13,7 @@
     #define POINTY_PLUGIN_API DLL_IMPORT
 #endif
 
+#define LOGP(log) LOG(log) << "PointyCloudPlugin : "
 
 namespace Ra
 {
@@ -37,11 +38,11 @@ namespace PointyCloudPlugin
     };
 
     struct QDoubleSpinBoxInit {
-        float min, max, step;
+        double min, max, step, init;
     };
 
     struct QSpinBoxInit {
-        int min, max, step;
+        int min, max, step, init;
     };
 
     class PointyCloudPluginC : public QObject, Ra::Plugins::RadiumPluginInterface
@@ -66,9 +67,9 @@ namespace PointyCloudPlugin
         std::string static getName(PROJECTION_METHOD m) { return PROJECTION_METHOD_STR[m]; }
 
     public slots:
-        void setSplatRadius(float);
-        void setInfluenceRadius(float);
-        void setBeta(float);
+        void setSplatRadius(Scalar);
+        void setInfluenceRadius(Scalar);
+        void setBeta(Scalar);
         void setThreshold(int);
         void setM(int);
         void setUpsamplingMethod(UPSAMPLING_METHOD);
@@ -82,11 +83,11 @@ namespace PointyCloudPlugin
     public:
         static const std::array<std::string,MAX_UPSAMPLING_METHOD> UPSAMPLING_METHOD_STR;
         static const std::array<std::string,MAX_PROJECTION_METHOD> PROJECTION_METHOD_STR;
-        static constexpr QDoubleSpinBoxInit splatRadiusInit {0.01f,5.0f,0.01f};
-        static constexpr QDoubleSpinBoxInit influenceInit   {0.01f,30.0f,0.01f};
-        static constexpr QDoubleSpinBoxInit betaInit        {-8,8,0.5f};
-        static constexpr QSpinBoxInit thresholdInit {1,5,1};
-        static constexpr QSpinBoxInit mInit         {10,100,10};
+        static constexpr QDoubleSpinBoxInit splatRadiusInit { 0.01,  5.0, 0.01, 0.5};
+        static constexpr QDoubleSpinBoxInit influenceInit   { 0.01, 30.0, 0.01, 2.5};
+        static constexpr QDoubleSpinBoxInit betaInit        {-8   ,  8  , 0.5 , 0.0};
+        static constexpr QSpinBoxInit thresholdInit { 1,   5,  1, 1};
+        static constexpr QSpinBoxInit mInit         { 3, 100, 10, 3};
     };
 
 } // namespace
