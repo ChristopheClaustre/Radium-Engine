@@ -30,6 +30,9 @@ PointyCloud UsefulPointsSelection::selectUsefulPoints()
 
     pc.m_points.erase(pointsFirst, pointsEnd);
 
+    if (pc.m_points.size() == 0)
+        pc.m_points.push_back(m_originalCloud->m_points[0]);
+
     return pc;
 }
 
