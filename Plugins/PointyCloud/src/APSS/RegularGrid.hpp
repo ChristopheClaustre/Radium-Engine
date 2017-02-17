@@ -41,8 +41,8 @@ namespace PointyCloudPlugin {
 
         inline int rawIndexLocal(const Ra::Core::Vector3& pLocal) const {
             return rawIndex(std::floor(pLocal[0]/m_dx),
-                            std::floor(pLocal[1]/m_dx),
-                            std::floor(pLocal[2]/m_dx));
+                            std::floor(pLocal[1]/m_dy),
+                            std::floor(pLocal[2]/m_dz));
         }
 
         Ra::Core::Aabb m_aabb;
