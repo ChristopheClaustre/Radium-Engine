@@ -22,11 +22,11 @@ namespace PointyCloudPlugin
 
     PointyCloudSystem::PointyCloudSystem(Ra::Gui::Viewer *viewer)
         : Ra::Engine::System(), m_viewer(viewer),
-          m_splatRadius(PointyCloudPluginC::splatRadiusInit.min),
-          m_influenceRadius(PointyCloudPluginC::influenceInit.min),
-          m_beta(PointyCloudPluginC::betaInit.min),
-          m_threshold(PointyCloudPluginC::thresholdInit.min),
-          m_M(PointyCloudPluginC::mInit.min),
+          m_splatRadius(PointyCloudPluginC::splatRadiusInit.init),
+          m_influenceRadius(PointyCloudPluginC::influenceInit.init),
+          m_beta(PointyCloudPluginC::betaInit.init),
+          m_threshold(PointyCloudPluginC::thresholdInit.init),
+          m_M(PointyCloudPluginC::mInit.init),
           m_upsampler(FIXED_METHOD), m_projector(ORTHOGONAL_METHOD),
           m_octree(false), m_cuda(false)
     {

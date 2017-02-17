@@ -37,11 +37,11 @@ namespace PointyCloudPlugin
     };
 
     struct QDoubleSpinBoxInit {
-        double min, max, step;
+        double min, max, step, init;
     };
 
     struct QSpinBoxInit {
-        int min, max, step;
+        int min, max, step, init;
     };
 
     class PointyCloudPluginC : public QObject, Ra::Plugins::RadiumPluginInterface
@@ -82,11 +82,11 @@ namespace PointyCloudPlugin
     public:
         static const std::array<std::string,MAX_UPSAMPLING_METHOD> UPSAMPLING_METHOD_STR;
         static const std::array<std::string,MAX_PROJECTION_METHOD> PROJECTION_METHOD_STR;
-        static constexpr QDoubleSpinBoxInit splatRadiusInit {0.01,5.0,0.01};
-        static constexpr QDoubleSpinBoxInit influenceInit   {0.01,30.0,0.01};
-        static constexpr QDoubleSpinBoxInit betaInit        {-8,8,0.5};
-        static constexpr QSpinBoxInit thresholdInit {1,5,1};
-        static constexpr QSpinBoxInit mInit         {10,100,10};
+        static constexpr QDoubleSpinBoxInit splatRadiusInit { 0.01,  5.0, 0.01, 0.5};
+        static constexpr QDoubleSpinBoxInit influenceInit   { 0.01, 30.0, 0.01, 2.5};
+        static constexpr QDoubleSpinBoxInit betaInit        {-8   ,  8  , 0.5 , 0.0};
+        static constexpr QSpinBoxInit thresholdInit { 1,   5,  1, 1};
+        static constexpr QSpinBoxInit mInit         { 3, 100, 10, 3};
     };
 
 } // namespace
