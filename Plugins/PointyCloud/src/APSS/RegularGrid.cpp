@@ -1,5 +1,7 @@
 #include "RegularGrid.hpp"
 
+#include "PointyCloud.hpp"
+
 #include <Core/Log/Log.hpp>
 #include <sstream>
 
@@ -23,10 +25,10 @@ std::vector<int> RegularGrid::query(const Ra::Core::Vector3& p, float r) const
     // searching limits of a cube centered at q of length r
     int imin = std::floor((q[0]-r)/m_dx);
     int imax = std::floor((q[0]+r)/m_dx);
-    int jmin = std::floor((q[1]-r)/m_dx);
-    int jmax = std::floor((q[1]+r)/m_dx);
-    int kmin = std::floor((q[2]-r)/m_dx);
-    int kmax = std::floor((q[2]+r)/m_dx);
+    int jmin = std::floor((q[1]-r)/m_dy);
+    int jmax = std::floor((q[1]+r)/m_dy);
+    int kmin = std::floor((q[2]-r)/m_dz);
+    int kmax = std::floor((q[2]+r)/m_dz);
 
     // clamp to grid
     imin = std::max(imin, 0);
@@ -45,9 +47,13 @@ std::vector<int> RegularGrid::query(const Ra::Core::Vector3& p, float r) const
                 int begin = m_cells[idxCell].index;
                 int length = m_cells[idxCell].length;
 
-                // TODO : use insert, not push_back !
                 for(int idx = begin; idx<begin+length; ++idx)
-                    indices.push_back(m_indices[idx]);
+                {
+                    if((p - m_cloud->m_points[m_indices[idx]].pos()).norm() <= r) // bug ?
+                    {
+                        indices.push_back(m_indices[idx]);
+                    }
+                }
             }
 
     return indices;

@@ -7,9 +7,12 @@
 
 namespace PointyCloudPlugin {
 
-std::unique_ptr<RegularGrid> RegularGridBuilder::buildRegularGrid(const PointyCloud &cloud, double influenceRadius)
+std::unique_ptr<RegularGrid> RegularGridBuilder::buildRegularGrid(std::shared_ptr<PointyCloud> cloud, double influenceRadius)
 {
     std::unique_ptr<RegularGrid> grid = std::make_unique<RegularGrid>();    
+
+    // set point cloud
+    grid->m_cloud = cloud;
 
     // set bounding box
     grid->m_aabb = computeAabb(cloud);
@@ -26,7 +29,7 @@ std::unique_ptr<RegularGrid> RegularGridBuilder::buildRegularGrid(const PointyCl
     grid->m_dz = grid->m_aabb.diagonal()[2]/grid->m_nz;
 
     // initialize indices from 0 to size-1
-    size_t size = cloud.m_points.size();
+    size_t size = cloud->m_points.size();
     grid->m_indices.resize(size);
     for(int idx = 0; idx<size; ++idx)
         grid->m_indices[idx] = idx;
@@ -39,7 +42,7 @@ std::unique_ptr<RegularGrid> RegularGridBuilder::buildRegularGrid(const PointyCl
     for(int k = 0; k < grid->m_indices.size();++k)
     {
         // corresponding cell
-        int idxCell = grid->rawIndex(cloud.m_points[k].pos());
+        int idxCell = grid->rawIndex(cloud->m_points[k].pos());
 
         // index in m_indices
         int pos = grid->m_cells[idxCell].index + grid->m_cells[idxCell].length + 1;
@@ -58,11 +61,11 @@ std::unique_ptr<RegularGrid> RegularGridBuilder::buildRegularGrid(const PointyCl
     return grid;
 }
 
-Ra::Core::Aabb RegularGridBuilder::computeAabb(const PointyCloud& cloud)
+Ra::Core::Aabb RegularGridBuilder::computeAabb(std::shared_ptr<PointyCloud> cloud)
 {
     Ra::Core::Aabb aabb;
 
-    for(auto& p : cloud.m_points)
+    for(auto& p : cloud->m_points)
         aabb.extend(p.pos());
 
     // add an extra space at max corner
