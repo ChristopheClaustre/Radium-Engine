@@ -47,8 +47,6 @@ namespace PointyCloudPlugin
         delete m_culling;
         delete m_upsampler;
         delete m_projection;
-        m_selector.reset();
-        m_originalCloud.reset();
     }
 
     void PointyCloudComponent::initialize()
@@ -87,7 +85,7 @@ namespace PointyCloudPlugin
             for ( const auto& v : data->getColors() ) colors.push_back( v );
         }
         else {
-            LOGP(logINFO) << "cloud " << cloudName << "has no color. Creation of colors.";
+            LOGP(logINFO) << "cloud " << cloudName << " has no color. Creation of colors.";
             Ra::Core::Color white;
             white << 1.0, 1.0, 1.0, 1.0;
             colors.resize(vertices.size(), white);
@@ -114,7 +112,7 @@ namespace PointyCloudPlugin
 
 // FOR APSS TEST (comment computePointyCloud's body)
 //        PointyCloud points = m_culling->selectUsefulPoints();
-//        m_upsampler->upSampleCloud(&points);
+//        m_upsampler->upSampleCloud(points);
 //        m_projection->project(points);
 //        points.loadToMesh(m_workingCloud.get());
     }
