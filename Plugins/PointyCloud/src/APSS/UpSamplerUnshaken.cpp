@@ -1,8 +1,6 @@
- 
 #include "UpSamplerUnshaken.hpp"
 
-namespace PointyCloudPlugin
-{
+namespace PointyCloudPlugin {
 
 UpSamplerUnshaken::UpSamplerUnshaken(float rayon,float M) : UpSampler(rayon), m_m(M)
 {
@@ -25,4 +23,4 @@ void UpSamplerUnshaken::upSampleCloud(PointyCloud& cloud)
     m_cloud->m_points = m_newpoints;
 }
 
-}
+} // namespace PointyCloudPlugin

@@ -8,19 +8,20 @@
 
 #include "PointyCloud.hpp"
 #include "UpSampler.hpp"
+
 namespace PointyCloudPlugin{
 
-class UpSamplerUnshaken:public UpSampler
+class UpSamplerUnshaken : public UpSampler
 {
-
 public :
-
     UpSamplerUnshaken(float rayon,float M) ;
     ~UpSamplerUnshaken();
     virtual void upSampleCloud(PointyCloud& cloud);
 
 private :
     int m_m;
-};
-}
+}; // class UpSamplerUnshaken
+
+} // namespace PointyCloudPlugin
+
 #endif // POINTYCLOUDPLUGIN_UPSAMPLERUNSHAKEN_H
