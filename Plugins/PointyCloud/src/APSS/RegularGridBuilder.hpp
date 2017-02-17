@@ -1,6 +1,8 @@
 #ifndef POINTYCLOUDPLUGIN_REGULARGRIDBUILDER_HPP
 #define POINTYCLOUDPLUGIN_REGULARGRIDBUILDER_HPP
 
+#include <Core/Math/LinearAlgebra.hpp>
+
 #include <memory>
 
 namespace PointyCloudPlugin {
@@ -13,6 +15,10 @@ namespace PointyCloudPlugin {
     public:
 
         static std::unique_ptr<RegularGrid> buildRegularGrid(const PointyCloud& cloud, double influenceRadius);
+
+    protected:
+
+        static Ra::Core::Aabb computeAabb(const PointyCloud& cloud);
 
     }; // class RegularGrid
 
