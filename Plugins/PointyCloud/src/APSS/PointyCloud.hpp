@@ -40,8 +40,6 @@ private:
     Ra::Core::Vector4 m_color;
 };
 
-//typedef _APoint<Scalar> APoint;
-
 class PointyCloud
 {
 public:
