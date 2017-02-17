@@ -26,7 +26,7 @@
 #include <APSS/PointyCloud.hpp>
 #include <APSS/OrthogonalProjection.hpp>
 #include <APSS/NeighborsSelection.hpp>
-#include <APSS/UpSampler.hpp>
+#include <APSS/UpSamplerUnshaken.hpp>
 
 using Ra::Engine::ComponentMessenger;
 
@@ -34,7 +34,7 @@ namespace PointyCloudPlugin
 {
     PointyCloudComponent::PointyCloudComponent(const std::string& name, const Ra::Engine::Camera *camera)
         : Ra::Engine::Component( name ), m_camera( camera ),
-          m_originalCloud(std::make_shared<PointyCloud>()), m_upsampler(new UpSampler(3)),
+          m_originalCloud(std::make_shared<PointyCloud>()), m_upsampler(new UpSamplerUnshaken(3,1)),
           m_culling(new UsefulPointsSelection(m_originalCloud, m_camera)),
           m_selector(std::make_shared<NeighborsSelection>(m_originalCloud, 3)),
           m_projection(new OrthogonalProjection(m_selector, m_originalCloud, 3))
@@ -121,7 +121,7 @@ namespace PointyCloudPlugin
     void PointyCloudComponent::computePointyCloud()
     {
         PointyCloud points = m_culling->selectUsefulPoints();
-        m_upsampler->upSampleCloud(&points);
+        m_upsampler->upSampleCloud(points);
         m_projection->project(points);
         points.loadToMesh(m_workingCloud.get());
     }
@@ -147,7 +147,7 @@ namespace PointyCloudPlugin
         // TODO switcher entre les méthodes
         auto sys = static_cast<PointyCloudSystem*>(m_system);
         delete m_upsampler;
-        m_upsampler = new UpSampler(sys->getM());
+        m_upsampler = new UpSamplerUnshaken(sys->getM(), sys->getInfluenceRadius());
     }
 
     void PointyCloudComponent::setProjectionMethod(PROJECTION_METHOD method) {
