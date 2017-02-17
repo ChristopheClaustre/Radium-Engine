@@ -157,10 +157,14 @@ namespace PointyCloudPlugin
     }
 
     void PointyCloudComponent::setOptimizationByOctree(bool octree) {
-        // TODO switcher entre avec et sans octree
         // TODO vérifier que la valeur change bien avant de swaper (risque de recréer la regular grid pour rien)
         auto sys = static_cast<PointyCloudSystem*>(m_system);
-        m_selector.reset(new NeighborsSelection(m_originalCloud, sys->getInfluenceRadius()));
+
+        if(octree)
+            m_selector.reset(new NeighborsSelectionWithRegularGrid(m_originalCloud, sys->getInfluenceRadius()));
+        else
+            m_selector.reset(new NeighborsSelection(m_originalCloud, sys->getInfluenceRadius()));
+
         setUpsamplingMethod(sys->getUpsamplingMethod());
         setProjectionMethod(sys->getProjectionMethod());
     }
