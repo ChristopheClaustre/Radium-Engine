@@ -49,7 +49,7 @@ public:
     inline PointyCloud() {}
 
     /// constructor with parameters
-    inline PointyCloud(Ra::Engine::Mesh *);
+    inline PointyCloud(const Ra::Engine::Mesh *);
 
     /// Copy constructor and assignment operator
     PointyCloud( const PointyCloud& ) = default;
@@ -58,7 +58,10 @@ public:
     /// Appends another pointycloud to this one.
     inline void append( const PointyCloud& other );
 
-    /// Load the point cloud in a Mesh
+    /// Load the point cloud from a Mesh
+    inline void loadFromMesh(const Ra::Engine::Mesh *);
+
+    /// Load the point cloud into a Mesh
     inline void loadToMesh(Ra::Engine::Mesh *);
 
 public:
