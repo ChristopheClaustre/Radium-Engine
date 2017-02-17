@@ -25,6 +25,9 @@ namespace PointyCloudPlugin {
 
         std::vector<int> query(const Ra::Core::Vector3& p, float r) const;
 
+        void printAll() const;
+        void printGrid() const;
+
     protected:
         RegularGrid();
 
@@ -33,7 +36,13 @@ namespace PointyCloudPlugin {
         }
 
         inline int rawIndex(const Ra::Core::Vector3& p) const {
-            return rawIndex(p[0]/m_dx, p[1]/m_dy, p[2]/m_dz);
+            return rawIndexLocal(p-m_aabb.min());
+        }
+
+        inline int rawIndexLocal(const Ra::Core::Vector3& pLocal) const {
+            return rawIndex(std::floor(pLocal[0]/m_dx),
+                            std::floor(pLocal[1]/m_dx),
+                            std::floor(pLocal[2]/m_dx));
         }
 
         Ra::Core::Aabb m_aabb;
@@ -44,7 +53,7 @@ namespace PointyCloudPlugin {
 
         std::vector<int> m_indices;
 
-        std::vector<Cell> m_leaves;
+        std::vector<Cell> m_cells;
 
     }; // class RegularGrid
 

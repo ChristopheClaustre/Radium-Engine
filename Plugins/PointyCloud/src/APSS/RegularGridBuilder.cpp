@@ -15,6 +15,7 @@ std::unique_ptr<RegularGrid> RegularGridBuilder::buildRegularGrid(const PointyCl
     grid->m_aabb = computeAabb(cloud);
 
     // fixed cells count along the 3 axis
+    //TODO pass it as parameter?
     grid->m_nx = 100;
     grid->m_ny = 100;
     grid->m_nz = 100;
@@ -30,28 +31,28 @@ std::unique_ptr<RegularGrid> RegularGridBuilder::buildRegularGrid(const PointyCl
     for(int idx = 0; idx<size; ++idx)
         grid->m_indices[idx] = idx;
 
-    // initialize leaves
-    grid->m_leaves.resize(grid->m_nx*grid->m_ny*grid->m_nz, RegularGrid::Cell());
+    // initialize cells
+    grid->m_cells.resize(grid->m_nx*grid->m_ny*grid->m_nz, RegularGrid::Cell());
 
     // grid filling
     auto begin = grid->m_indices.begin();
     for(int k = 0; k < grid->m_indices.size();++k)
     {
-        // corresponding leave
-        int idxLeave = grid->rawIndex(cloud.m_points[k].pos());
+        // corresponding cell
+        int idxCell = grid->rawIndex(cloud.m_points[k].pos());
 
         // index in m_indices
-        int pos = grid->m_leaves[idxLeave].index + grid->m_leaves[idxLeave].length + 1;
+        int pos = grid->m_cells[idxCell].index + grid->m_cells[idxCell].length + 1;
 
         // shift elements such that index k is located at pos
-        std::rotate(begin+pos, begin+k,begin+k);
+        std::rotate(begin+pos, begin+k,begin+k+1);
 
-        // update current leave (increment length)
-        ++grid->m_leaves[idxLeave].length;
+        // update current cell (increment length)
+        ++grid->m_cells[idxCell].length;
 
-        // increment all next leaves index
-        for(auto leaveIt = grid->m_leaves.begin()+idxLeave+1; leaveIt!=grid->m_leaves.end(); ++leaveIt)
-            ++(leaveIt->index);
+        // increment all next cells index
+        for(auto cellIt = grid->m_cells.begin()+idxCell+1; cellIt!=grid->m_cells.end(); ++cellIt)
+            ++(cellIt->index);
     }
 
     return grid;
@@ -63,6 +64,12 @@ Ra::Core::Aabb RegularGridBuilder::computeAabb(const PointyCloud& cloud)
 
     for(auto& p : cloud.m_points)
         aabb.extend(p.pos());
+
+    // add an extra space at max corner
+    const float epsilon = 1e-5;
+    Ra::Core::Vector3 e;
+    e << epsilon, epsilon, epsilon;
+    aabb.extend(aabb.max()+e);
 
     return aabb;
 }

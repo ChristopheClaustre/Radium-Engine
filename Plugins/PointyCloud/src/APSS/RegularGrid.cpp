@@ -1,5 +1,8 @@
 #include "RegularGrid.hpp"
 
+#include <Core/Log/Log.hpp>
+#include <sstream>
+
 namespace PointyCloudPlugin {
 
 RegularGrid::RegularGrid()
@@ -38,16 +41,49 @@ std::vector<int> RegularGrid::query(const Ra::Core::Vector3& p, float r) const
         for(int j = jmin; j<=jmax; ++j)
             for(int i = imin; i<=imax; ++i)
             {
-                int idxLeave = rawIndex(i, j, k);
-                int begin = m_leaves[idxLeave].index;
-                int length = m_leaves[idxLeave].length;
+                int idxCell = rawIndex(i, j, k);
+                int begin = m_cells[idxCell].index;
+                int length = m_cells[idxCell].length;
 
-                // TODO : use insert, not push_back
+                // TODO : use insert, not push_back !
                 for(int idx = begin; idx<begin+length; ++idx)
                     indices.push_back(m_indices[idx]);
             }
 
     return indices;
+}
+
+void RegularGrid::printAll() const
+{
+    std::stringstream output;
+    output << "\nAabb = [" << m_aabb.min()[0] << "," << m_aabb.min()[1] << "," << m_aabb.min()[2] << "];[" <<
+              m_aabb.max()[0] << "," << m_aabb.max()[1] << "," << m_aabb.max()[2] << "\n";
+    output << "dx=" << m_dx << " " << "dy=" << m_dy << " " << "dz=" << m_dz << "\n";
+    output << "nx=" << m_nx << " " << "ny=" << m_ny << " " << "nz=" << m_nz << "\n";
+
+    LOG(logINFO) << "Regular grid :\n";
+    LOG(logINFO) << output.str();
+
+    printGrid();
+}
+
+void RegularGrid::printGrid() const
+{
+    std::stringstream output;
+    int k = 0;
+    for(const auto& cell : m_cells)
+    {
+        output << k++ <<":["<< cell.index <<","<< cell.length<<"] -> ";
+        for(int i = cell.index; i < cell.index+cell.length; ++i)
+            output << m_indices[i] << " ";
+        output << "\n";
+    }
+
+    output << "\n";
+    for(const auto& idx : m_indices)
+        output << idx << " ";
+
+    LOG(logINFO) << "\n" << output.str() << "\n";
 }
 
 } // namespace PointyCloudPlugin
