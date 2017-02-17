@@ -64,16 +64,17 @@ namespace PointyCloudPlugin
         Ra::Core::Index m_meshIndex;
         std::string m_contentName;
 
+        const Ra::Engine::Camera *m_camera;
+
+        // the data
         std::shared_ptr<PointyCloud> m_originalCloud;
         std::shared_ptr<Ra::Engine::Mesh> m_workingCloud;
 
-        const Ra::Engine::Camera *m_camera;
-
-        UsefulPointsSelection* m_culling;
+        // class for the APSS
         UpSampler* m_upsampler;
-        OrthogonalProjection* m_projection;
+        UsefulPointsSelection* m_culling;
         std::shared_ptr<NeighborsSelection> m_selector;
-
+        OrthogonalProjection* m_projection;
     };
 
 } // namespace PointyCloudPlugin
