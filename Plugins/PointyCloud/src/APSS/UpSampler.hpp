@@ -15,7 +15,7 @@ public :
 
     UpSampler(float rayon);
     ~UpSampler();
-    virtual void upSampleCloud(PointyCloud* cloud)=0;
+    virtual void upSampleCloud(PointyCloud& cloud)=0;
 
 protected :
 

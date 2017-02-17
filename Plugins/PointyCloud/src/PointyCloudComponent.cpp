@@ -106,7 +106,7 @@ namespace PointyCloudPlugin
     {
         PointyCloud points = m_culling->selectUsefulPoints();
 //        m_projection->project(points);
-        m_upsampler->upSampleCloud(&points);
+        m_upsampler->upSampleCloud(points);
         points.loadToMesh(m_workingCloud.get());
     }
 
