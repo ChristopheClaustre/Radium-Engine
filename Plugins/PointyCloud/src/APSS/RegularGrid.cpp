@@ -31,7 +31,7 @@ std::vector<int> RegularGrid::query(const Ra::Core::Vector3& p, float r) const
     kmin = std::max(kmin, 0);
     imax = std::min(imax, m_nx-1);
     jmax = std::min(jmax, m_ny-1);
-    kmax = std::min(jmax, m_nz-1);
+    kmax = std::min(kmax, m_nz-1);
 
     // search
     for(int k = kmin; k<=kmax; ++k)

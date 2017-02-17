@@ -33,7 +33,26 @@ std::unique_ptr<RegularGrid> RegularGridBuilder::buildRegularGrid(const PointyCl
     // initialize leaves
     grid->m_leaves.resize(grid->m_nx*grid->m_ny*grid->m_nz, RegularGrid::Cell());
 
-    //TODO : fill grid
+    // grid filling
+    auto begin = grid->m_indices.begin();
+    for(int k = 0; k < grid->m_indices.size();++k)
+    {
+        // corresponding leave
+        int idxLeave = grid->rawIndex(cloud.m_points[k].pos());
+
+        // index in m_indices
+        int pos = grid->m_leaves[idxLeave].index + grid->m_leaves[idxLeave].length + 1;
+
+        // shift elements such that index k is located at pos
+        std::rotate(begin+pos, begin+k,begin+k);
+
+        // update current leave (increment length)
+        ++grid->m_leaves[idxLeave].length;
+
+        // increment all next leaves index
+        for(auto leaveIt = grid->m_leaves.begin()+idxLeave+1; leaveIt!=grid->m_leaves.end(); ++leaveIt)
+            ++(leaveIt->index);
+    }
 
     return grid;
 }

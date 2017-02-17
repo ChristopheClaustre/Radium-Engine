@@ -15,7 +15,7 @@ namespace PointyCloudPlugin {
 
     private:
         struct Cell {
-            Cell() : index(0), length(-1) {}
+            Cell() : index(0), length(0) {}
             int index;
             int length;
         };
