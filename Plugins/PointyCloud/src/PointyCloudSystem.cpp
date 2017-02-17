@@ -53,13 +53,18 @@ namespace PointyCloudPlugin
 
         for ( const auto& data : geomData )
         {
-            std::string componentName = "PointyC_" + entity->getName() + std::to_string( id++ );
-            PointyCloudComponent * comp = new PointyCloudComponent( componentName, m_viewer->getCameraInterface()->getCamera() );
-            entity->addComponent( comp );
-            comp->handlePointyCloudLoading(data);
-            registerComponent( entity, comp );
-            //(xavier) Ajout du nouveau component dans la liste des components
-            pointyCloudComponentList.push_back(comp);
+            if (data->hasNormals()) {
+                std::string componentName = "PointyC_" + entity->getName() + std::to_string( id++ );
+                PointyCloudComponent * comp = new PointyCloudComponent( componentName, m_viewer->getCameraInterface()->getCamera() );
+                entity->addComponent( comp );
+                registerComponent( entity, comp );
+                comp->handlePointyCloudLoading(data);
+
+                pointyCloudComponentList.push_back(comp);
+            }
+            else {
+                LOGP(logINFO) << "Failed to load " << data->getName() << " : cloud has no normal.";
+            }
         }
 
     }

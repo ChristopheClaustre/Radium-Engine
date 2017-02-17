@@ -13,6 +13,7 @@
     #define POINTY_PLUGIN_API DLL_IMPORT
 #endif
 
+#define LOGP(log) LOG(log) << "PointyCloudPlugin : "
 
 namespace Ra
 {
