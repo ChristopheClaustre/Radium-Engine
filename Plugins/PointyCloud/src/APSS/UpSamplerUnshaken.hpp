@@ -17,7 +17,7 @@ public :
 
     UpSamplerUnshaken(float rayon,float M) ;
     ~UpSamplerUnshaken();
-    virtual void upSampleCloud(PointyCloud* cloud);
+    virtual void upSampleCloud(PointyCloud& cloud);
 
 private :
     int m_m;

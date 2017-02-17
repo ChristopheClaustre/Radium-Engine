@@ -12,9 +12,9 @@ UpSamplerUnshaken::~UpSamplerUnshaken()
 {
 }
 
-void UpSamplerUnshaken::upSampleCloud(PointyCloud* cloud)
+void UpSamplerUnshaken::upSampleCloud(PointyCloud& cloud)
 {
-    m_cloud = cloud;
+    m_cloud = &cloud;
     m_newpoints.clear();
     const int &n = m_cloud->m_points.size() ;
 
