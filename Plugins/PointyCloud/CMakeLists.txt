@@ -69,4 +69,6 @@ target_link_libraries( PointyCloud
                        ${RADIUM_LIBRARIES}
                      )
 
+# Tests
+add_subdirectory(tests)
 

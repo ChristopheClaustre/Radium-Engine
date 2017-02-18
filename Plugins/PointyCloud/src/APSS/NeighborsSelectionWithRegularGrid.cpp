@@ -7,7 +7,7 @@ namespace PointyCloudPlugin {
 
 NeighborsSelectionWithRegularGrid::NeighborsSelectionWithRegularGrid(std::shared_ptr<PointyCloud> cloud, float influenceRadius) :
     NeighborsSelection(cloud, influenceRadius),
-    m_grid(RegularGridBuilder::buildRegularGrid(*cloud.get(), influenceRadius))
+    m_grid(RegularGridBuilder::buildRegularGrid(cloud, influenceRadius))
 {
 }
 

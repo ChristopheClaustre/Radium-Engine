@@ -8,6 +8,8 @@
 
 namespace PointyCloudPlugin {
 
+    class PointyCloud;
+
     class RegularGrid
     {
         friend std::unique_ptr<RegularGrid> std::make_unique<RegularGrid>();
@@ -41,8 +43,8 @@ namespace PointyCloudPlugin {
 
         inline int rawIndexLocal(const Ra::Core::Vector3& pLocal) const {
             return rawIndex(std::floor(pLocal[0]/m_dx),
-                            std::floor(pLocal[1]/m_dx),
-                            std::floor(pLocal[2]/m_dx));
+                            std::floor(pLocal[1]/m_dy),
+                            std::floor(pLocal[2]/m_dz));
         }
 
         Ra::Core::Aabb m_aabb;
@@ -54,6 +56,8 @@ namespace PointyCloudPlugin {
         std::vector<int> m_indices;
 
         std::vector<Cell> m_cells;
+
+        std::shared_ptr<PointyCloud> m_cloud;
 
     }; // class RegularGrid
 

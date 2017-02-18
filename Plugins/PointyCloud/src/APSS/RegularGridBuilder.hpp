@@ -14,11 +14,14 @@ namespace PointyCloudPlugin {
     {
     public:
 
-        static std::unique_ptr<RegularGrid> buildRegularGrid(const PointyCloud& cloud, double influenceRadius);
+        static std::unique_ptr<RegularGrid> buildRegularGrid(std::shared_ptr<PointyCloud> cloud, double influenceRadius);
 
     protected:
 
-        static Ra::Core::Aabb computeAabb(const PointyCloud& cloud);
+        static void initialize(std::shared_ptr<PointyCloud> cloud, RegularGrid &grid);
+        static void fill(std::shared_ptr<PointyCloud> cloud, RegularGrid& grid);
+
+        static Ra::Core::Aabb computeAabb(std::shared_ptr<PointyCloud> cloud);
 
     }; // class RegularGrid
 

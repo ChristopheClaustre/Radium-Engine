@@ -26,6 +26,7 @@
 #include <APSS/PointyCloud.hpp>
 #include <APSS/OrthogonalProjection.hpp>
 #include <APSS/NeighborsSelection.hpp>
+#include <APSS/NeighborsSelectionWithRegularGrid.hpp>
 #include <APSS/UpSamplerUnshaken.hpp>
 
 using Ra::Engine::ComponentMessenger;
@@ -176,10 +177,14 @@ namespace PointyCloudPlugin
     }
 
     void PointyCloudComponent::setOptimizationByOctree(bool octree) {
-        // TODO switcher entre avec et sans octree
         // TODO vérifier que la valeur change bien avant de swaper (risque de recréer la regular grid pour rien)
         auto sys = static_cast<PointyCloudSystem*>(m_system);
-        m_selector.reset(new NeighborsSelection(m_originalCloud, sys->getInfluenceRadius()));
+
+        if(octree)
+            m_selector.reset(new NeighborsSelectionWithRegularGrid(m_originalCloud, sys->getInfluenceRadius()));
+        else
+            m_selector.reset(new NeighborsSelection(m_originalCloud, sys->getInfluenceRadius()));
+
         setUpsamplingMethod(sys->getUpsamplingMethod());
         setProjectionMethod(sys->getProjectionMethod());
     }
