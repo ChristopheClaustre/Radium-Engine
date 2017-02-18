@@ -16,7 +16,6 @@ namespace ForPatate {
 
 class APoint
 {
-
 public:
     // required by Patate
     typedef ForPatate::_Scalar Scalar;
@@ -24,24 +23,26 @@ public:
 
     inline APoint(  const VectorType& _pos =            VectorType::Zero(),
                     const VectorType& _normal =         VectorType::Zero(),
-                    const Ra::Core::Vector4& _color =   VectorType::Zero()
+                    const Ra::Core::Vector4& _color =   Ra::Core::Vector4::Zero()
                     )
-        : m_pos(_pos), m_normal(_normal), m_color(_color) {}
+        : m_pos(_pos), m_normal(_normal), m_color(_color), m_eligible(true) {}
 
-    inline const VectorType& pos()    const { return m_pos; }
-    inline const VectorType& normal() const { return m_normal; }
-    inline const Ra::Core::Vector4& color()  const  { return m_color; }
+    inline const VectorType& pos()          const { return m_pos; }
+    inline const VectorType& normal()       const { return m_normal; }
+    inline const Ra::Core::Vector4& color() const { return m_color; }
 
-    inline VectorType& pos()    { return m_pos; }
-    inline VectorType& normal() { return m_normal; }
-    inline Ra::Core::Vector4& color()  { return m_color; }
+    inline VectorType& pos()            { return m_pos; }
+    inline VectorType& normal()         { return m_normal; }
+    inline Ra::Core::Vector4& color()   { return m_color; }
+
+    inline bool isEligible() { return m_eligible; }
+    inline void setEligible(bool eligible) { m_eligible = eligible; }
 
 private:
     VectorType m_pos, m_normal;
     Ra::Core::Vector4 m_color;
+    bool m_eligible;
 };
-
-//typedef _APoint<Scalar> APoint;
 
 class PointyCloud
 {
@@ -50,7 +51,7 @@ public:
     inline PointyCloud() {}
 
     /// constructor with parameters
-    inline PointyCloud(Ra::Engine::Mesh *);
+    inline PointyCloud(const Ra::Engine::Mesh *);
 
     /// Copy constructor and assignment operator
     PointyCloud( const PointyCloud& ) = default;
@@ -59,7 +60,10 @@ public:
     /// Appends another pointycloud to this one.
     inline void append( const PointyCloud& other );
 
-    /// Load the point cloud in a Mesh
+    /// Load the point cloud from a Mesh
+    inline void loadFromMesh(const Ra::Engine::Mesh *);
+
+    /// Load the point cloud into a Mesh
     inline void loadToMesh(Ra::Engine::Mesh *);
 
 public:

@@ -2,11 +2,16 @@
 
 namespace PointyCloudPlugin {
 
-inline PointyCloud::PointyCloud(Ra::Engine::Mesh * mesh)
+inline PointyCloud::PointyCloud(const Ra::Engine::Mesh * mesh)
 {
+    loadFromMesh(mesh);
+}
+
+inline void PointyCloud::loadFromMesh(const Ra::Engine::Mesh * mesh) {
     Ra::Core::TriangleMesh geometry = mesh->getGeometry();
     Ra::Core::Vector4Array colors = mesh->getData(Ra::Engine::Mesh::VERTEX_COLOR);
 
+    m_points.clear();
     for (int i = 0; i < geometry.m_vertices.size(); ++i)
     {
         m_points.push_back(APoint(geometry.m_vertices[i], geometry.m_normals[i], colors[i]));

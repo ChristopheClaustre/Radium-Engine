@@ -11,6 +11,8 @@
 #include <Engine/Renderer/Camera/Camera.hpp>
 
 #include <APSS/PointyCloud.hpp>
+#include <APSS/OrthogonalProjection.hpp>
+#include <APSS/UsefulPointsSelection.hpp>
 
 namespace Ra
 {
@@ -29,8 +31,6 @@ namespace Ra
 
 namespace PointyCloudPlugin
 {
-    class UsefulPointsSelection;
-    class OrthogonalProjection;
     class NeighborsSelection;
     class UpSampler;
 
@@ -51,8 +51,8 @@ namespace PointyCloudPlugin
         /// Do APSS on the point cloud
         void computePointyCloud();
 
-        void setInfluenceRadius(float);
-        void setBeta(float);
+        void setInfluenceRadius(Scalar);
+        void setBeta(Scalar);
         void setThreshold(int);
         void setM(int);
         void setUpsamplingMethod(UPSAMPLING_METHOD);
@@ -61,19 +61,28 @@ namespace PointyCloudPlugin
         void setOptimizationByCUDA(bool);
 
     private:
+        // set eligible flag on each points
+        void setEligible();
+
+    private:
         Ra::Core::Index m_meshIndex;
         std::string m_contentName;
 
+        const Ra::Engine::Camera *m_camera;
+
+        // the data
         std::shared_ptr<PointyCloud> m_originalCloud;
         std::shared_ptr<Ra::Engine::Mesh> m_workingCloud;
 
-        const Ra::Engine::Camera *m_camera;
-
-        UsefulPointsSelection* m_culling;
-        UpSampler* m_upsampler;
-        OrthogonalProjection* m_projection;
+        // class for the APSS
+        std::unique_ptr<UpSampler> m_upsampler;
+        UsefulPointsSelection m_culling;
         std::shared_ptr<NeighborsSelection> m_selector;
+        OrthogonalProjection m_projection;
 
+        // APSS attributes
+        UPSAMPLING_METHOD m_upsamplingMethod;
+        PROJECTION_METHOD m_projectionMethod;
     };
 
 } // namespace PointyCloudPlugin

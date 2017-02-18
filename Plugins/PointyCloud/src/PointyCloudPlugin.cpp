@@ -62,19 +62,19 @@ namespace PointyCloudPlugin
         return nullptr;
     }
 
-    void PointyCloudPluginC::setSplatRadius(float splatRadius)
+    void PointyCloudPluginC::setSplatRadius(Scalar splatRadius)
     {
         CORE_ASSERT(m_system, "System should be there ");
         m_system->setSplatRadius(splatRadius);
     }
 
-    void PointyCloudPluginC::setInfluenceRadius(float influenceRadius)
+    void PointyCloudPluginC::setInfluenceRadius(Scalar influenceRadius)
     {
         CORE_ASSERT(m_system, "System should be there ");
         m_system->setInfluenceRadius(influenceRadius);
     }
 
-    void PointyCloudPluginC::setBeta(float beta)
+    void PointyCloudPluginC::setBeta(Scalar beta)
     {
         CORE_ASSERT(m_system, "System should be there ");
         m_system->setBeta(beta);
