@@ -18,6 +18,9 @@ namespace PointyCloudPlugin {
 
     protected:
 
+        static void initialize(std::shared_ptr<PointyCloud> cloud, RegularGrid &grid);
+        static void fill(std::shared_ptr<PointyCloud> cloud, RegularGrid& grid);
+
         static Ra::Core::Aabb computeAabb(std::shared_ptr<PointyCloud> cloud);
 
     }; // class RegularGrid
