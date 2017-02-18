@@ -27,6 +27,7 @@
 #include <APSS/OrthogonalProjection.hpp>
 #include <APSS/NeighborsSelection.hpp>
 #include <APSS/UpSamplerUnshaken.hpp>
+#include <APSS/UpSamplerSimple.hpp>
 
 using Ra::Engine::ComponentMessenger;
 
@@ -97,8 +98,8 @@ namespace PointyCloudPlugin
         m_culling = new UsefulPointsSelection(m_originalCloud, m_camera);
 
         //TODO (xavier) Passer l'attribut rayon du component
-        m_upsampler = new UpSamplerUnshaken(1,3);
-
+//        m_upsampler = new UpSamplerUnshaken(1,3);
+        m_upsampler = new UpSamplerSimple(2.0f,1.0f,*m_camera);
         m_projection = new OrthogonalProjection(m_selector, m_originalCloud, 1.0);
     }
 
