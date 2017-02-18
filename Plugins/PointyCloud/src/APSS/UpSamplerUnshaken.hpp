@@ -14,12 +14,13 @@ namespace PointyCloudPlugin{
 class UpSamplerUnshaken : public UpSampler
 {
 public :
-    UpSamplerUnshaken(float rayon,float M) ;
+    UpSamplerUnshaken(Scalar radius, int M);
     ~UpSamplerUnshaken();
     virtual void upSampleCloud(PointyCloud& cloud);
 
+    void setM(int M) { m_M = M; }
 private :
-    int m_m;
+    int m_M;
 }; // class UpSamplerUnshaken
 
 } // namespace PointyCloudPlugin
