@@ -15,7 +15,7 @@ UpSampler::~UpSampler()
 void UpSampler::upSamplePoint(const int &m, const int& indice )
 {
     APoint centerPoint = m_cloud->m_points[indice];
-    if (centerPoint.isEligible())
+    if (centerPoint.isEligible() && m > 1)
     {
         const Ra::Core::Vector3 &normal = centerPoint.normal();
         const Ra::Core::Vector3 &u = this->calculU(normal);
