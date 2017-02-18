@@ -87,7 +87,7 @@ namespace PointyCloudPlugin
         static constexpr QDoubleSpinBoxInit influenceInit   { 0.01, 30.0, 0.01, 2.5};
         static constexpr QDoubleSpinBoxInit betaInit        {-8   ,  8  , 0.5 , 0.0};
         static constexpr QSpinBoxInit thresholdInit { 1,   5,  1, 1};
-        static constexpr QSpinBoxInit mInit         { 3, 100, 10, 3};
+        static constexpr QSpinBoxInit mInit         { 1, 100, 2, 3};
     };
 
 } // namespace
