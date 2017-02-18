@@ -60,7 +60,7 @@ void RegularGridBuilder::fill(std::shared_ptr<PointyCloud> cloud, RegularGrid &g
         int idxCell = grid.rawIndex(cloud->m_points[k].pos());
 
         // index in m_indices
-        int pos = grid.m_cells[idxCell].index + grid.m_cells[idxCell].length + 1;
+        int pos = grid.m_cells[idxCell].index + grid.m_cells[idxCell].length;
 
         // shift elements such that index k is located at pos
         std::rotate(begin+pos, begin+k,begin+k+1);
