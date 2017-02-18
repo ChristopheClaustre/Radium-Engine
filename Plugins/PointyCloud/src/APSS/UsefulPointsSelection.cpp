@@ -68,10 +68,22 @@ inline void UsefulPointsSelection::selectFromOrientation(PointyCloud &pc)
 
     auto pointsFirst = pc.m_points.begin();
     auto pointsEnd = pc.m_points.end();
-    for(auto pointsIt = pc.m_points.begin(); pointsIt!=pointsEnd; ++pointsIt)
+    if(m_camera->getProjType() == Ra::Engine::Camera::ProjType::ORTHOGRAPHIC)
     {
-        if(view.dot(pointsIt->normal()) < 0)
-            *pointsFirst++ = *pointsIt;
+        for(auto pointsIt = pc.m_points.begin(); pointsIt!=pointsEnd; ++pointsIt)
+        {
+            if(view.dot(pointsIt->normal()) < 0)
+                *pointsFirst++ = *pointsIt;
+        }
+    }
+    else
+    {
+        for(auto pointsIt = pc.m_points.begin(); pointsIt!=pointsEnd; ++pointsIt)
+        {
+            Ra::Core::Vector3 vecteurCameraPoint(pointsIt->pos() - m_camera->getPosition());
+            if(vecteurCameraPoint.dot(pointsIt->normal()) < 0)
+                *pointsFirst++ = *pointsIt;
+        }
     }
 
     pc.m_points.erase(pointsFirst, pointsEnd);
