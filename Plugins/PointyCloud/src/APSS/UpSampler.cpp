@@ -3,7 +3,7 @@
 namespace PointyCloudPlugin
 {
 
-UpSampler::UpSampler(float rayon) : m_rayon(rayon), m_cloud( nullptr)
+UpSampler::UpSampler(Scalar radius) : m_radius(radius), m_cloud( nullptr)
 {
 }
 
@@ -14,25 +14,32 @@ UpSampler::~UpSampler()
 // m x m = nb de splats
 void UpSampler::upSamplePoint(const int &m, const int& indice )
 {
-
-    const Ra::Core::Vector3 &normal = m_cloud->m_points[indice].normal();
-    const Ra::Core::Vector3 &u = this->calculU(normal);
-    const Ra::Core::Vector3 &v = this->calculV(normal, u);
-
-    const Ra::Core::Vector3 &u_pas =  u * m_rayon * 2  / (m-1);
-    const Ra::Core::Vector3 &v_pas =  v * m_rayon * 2  / (m-1);
-    const Ra::Core::Vector3 &centerVertice = m_cloud->m_points[indice].pos();
-
-    const Ra::Core::Vector4 &color = m_cloud->m_points[indice].color();
-
-    const Ra::Core::Vector3 &topLeftVertice = Ra::Core::Vector3(u * -m_rayon+v * m_rayon) + centerVertice;
-    for (int i = 0 ; i < m ; i ++ )
+    APoint centerPoint = m_cloud->m_points[indice];
+    if (centerPoint.isEligible())
     {
-        for (int j = 0 ; j < m ; j ++ )
+        const Ra::Core::Vector3 &normal = centerPoint.normal();
+        const Ra::Core::Vector3 &u = this->calculU(normal);
+        const Ra::Core::Vector3 &v = this->calculV(normal, u);
+
+        const Ra::Core::Vector3 &u_pas =  u * m_radius * 2  / (m-1);
+        const Ra::Core::Vector3 &v_pas =  v * m_radius * 2  / (m-1);
+        const Ra::Core::Vector3 &centerVertice = centerPoint.pos();
+
+        const Ra::Core::Vector4 &color = m_cloud->m_points[indice].color();
+
+        const Ra::Core::Vector3 &topLeftVertice = Ra::Core::Vector3(u * -m_radius+v * m_radius) + centerVertice;
+        for (int i = 0 ; i < m ; i ++ )
         {
-            APoint newPoint(Ra::Core::Vector3( i * u_pas + j * -v_pas)+topLeftVertice ,normal,color);
-            m_newpoints.push_back(newPoint);
+            for (int j = 0 ; j < m ; j ++ )
+            {
+                APoint newPoint(Ra::Core::Vector3( i * u_pas + j * -v_pas)+topLeftVertice ,normal,color);
+                m_newpoints.push_back(newPoint);
+            }
         }
+    }
+    else
+    {
+        m_newpoints.push_back(centerPoint);
     }
 }
 

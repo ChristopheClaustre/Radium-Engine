@@ -7,17 +7,20 @@
 #include <PointyCloudSystem.hpp>
 
 #include "PointyCloud.hpp"
-namespace PointyCloudPlugin{
+namespace PointyCloudPlugin
+{
 
 class UpSampler
 {
 public :
-    UpSampler(float rayon);
+    UpSampler(Scalar radius);
     ~UpSampler();
     virtual void upSampleCloud(PointyCloud& cloud)=0;
 
+    inline void setRadius(Scalar radius) { m_radius = radius; }
+
 protected :
-    float m_rayon;
+    Scalar m_radius;
     std::vector<APoint> m_newpoints;
     PointyCloud* m_cloud;
 
