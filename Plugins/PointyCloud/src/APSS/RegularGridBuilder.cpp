@@ -17,7 +17,7 @@ std::unique_ptr<RegularGrid> RegularGridBuilder::buildRegularGrid(std::shared_pt
     initialize(cloud, *grid.get(), nCell);
     fill(cloud, *grid.get());
 
-    LOG(logINFO) << "Regular Grid constructed in " << Ra::Core::Timer::getIntervalSeconds(start, Ra::Core::Timer::Clock::now()) << " seconds";
+    grid->m_buildTime = Ra::Core::Timer::getIntervalSeconds(start, Ra::Core::Timer::Clock::now());
 
     return grid;
 }

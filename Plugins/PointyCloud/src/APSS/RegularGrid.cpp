@@ -59,6 +59,12 @@ std::vector<int> RegularGrid::query(const Ra::Core::Vector3& p, float r) const
     return indices;
 }
 
+float RegularGrid::getBuildTime() const
+{
+    return m_buildTime;
+}
+
+
 void RegularGrid::printAll() const
 {
     std::stringstream output;

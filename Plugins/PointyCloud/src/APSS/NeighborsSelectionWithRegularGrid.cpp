@@ -20,4 +20,9 @@ std::vector<int> NeighborsSelectionWithRegularGrid::getNeighbors(const APoint &p
     return m_grid->query(point.pos(), m_influenceRadius);
 }
 
+float NeighborsSelectionWithRegularGrid::getBuildTime() const
+{
+    return m_grid->getBuildTime();
+}
+
 } // namespace PointyCloudPlugin
