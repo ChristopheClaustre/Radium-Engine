@@ -82,8 +82,8 @@ Ra::Core::Aabb RegularGridBuilder::computeAabb(std::shared_ptr<PointyCloud> clou
 
     // add an extra space at corners
     const float epsilon = 1e-5;
-    Ra::Core::Vector3 e;
-    e << epsilon, epsilon, epsilon;
+    Ra::Core::Vector3 e(epsilon, epsilon, epsilon);
+
     aabb.extend(aabb.max()+e);
     aabb.extend(aabb.min()-e);
 
