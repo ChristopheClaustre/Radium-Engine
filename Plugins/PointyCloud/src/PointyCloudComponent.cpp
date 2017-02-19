@@ -164,9 +164,15 @@ namespace PointyCloudPlugin
         auto sys = static_cast<PointyCloudSystem*>(m_system);
 
         if(octree)
+        {
             m_selector.reset(new NeighborsSelectionWithRegularGrid(m_originalCloud, sys->getInfluenceRadius()));
+            LOG(logINFO) << "Regular built in " << std::static_pointer_cast<NeighborsSelectionWithRegularGrid>(m_selector)->getBuildTime() <<
+                            " seconds";
+        }
         else
+        {
             m_selector.reset(new NeighborsSelection(m_originalCloud, sys->getInfluenceRadius()));
+        }
 
         setUpsamplingMethod(sys->getUpsamplingMethod());
         setProjectionMethod(sys->getProjectionMethod());
