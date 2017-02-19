@@ -9,12 +9,12 @@
 
 namespace PointyCloudPlugin {
 
-std::unique_ptr<RegularGrid> RegularGridBuilder::buildRegularGrid(std::shared_ptr<PointyCloud> cloud, double influenceRadius)
+std::unique_ptr<RegularGrid> RegularGridBuilder::buildRegularGrid(std::shared_ptr<PointyCloud> cloud, int nCell)
 {
     Ra::Core::Timer::TimePoint start = Ra::Core::Timer::Clock::now();
 
     std::unique_ptr<RegularGrid> grid = std::make_unique<RegularGrid>();
-    initialize(cloud, *grid.get());
+    initialize(cloud, *grid.get(), nCell);
     fill(cloud, *grid.get());
 
     LOG(logINFO) << "Regular Grid constructed in " << Ra::Core::Timer::getIntervalSeconds(start, Ra::Core::Timer::Clock::now()) << " seconds";
@@ -22,7 +22,7 @@ std::unique_ptr<RegularGrid> RegularGridBuilder::buildRegularGrid(std::shared_pt
     return grid;
 }
 
-void RegularGridBuilder::initialize(std::shared_ptr<PointyCloud> cloud,  RegularGrid& grid)
+void RegularGridBuilder::initialize(std::shared_ptr<PointyCloud> cloud,  RegularGrid& grid, int nCell)
 {
     // set point cloud
     grid.m_cloud = cloud;
@@ -31,10 +31,9 @@ void RegularGridBuilder::initialize(std::shared_ptr<PointyCloud> cloud,  Regular
     grid.m_aabb = computeAabb(cloud);
 
     // fixed cells count along the 3 axis
-    //TODO pass it as parameter?
-    grid.m_nx = 100;
-    grid.m_ny = 100;
-    grid.m_nz = 100;
+    grid.m_nx = nCell;
+    grid.m_ny = nCell;
+    grid.m_nz = nCell;
 
     // cells size
     grid.m_dx = grid.m_aabb.diagonal()[0]/grid.m_nx;
