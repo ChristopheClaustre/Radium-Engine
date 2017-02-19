@@ -31,12 +31,6 @@ namespace PointyCloudTests
             // number of selection test
             const int testCount = 25;
 
-            std::srand(std::time(0));
-            Ra::Core::Vector3 clamp3;
-            Ra::Core::Vector4 clamp4;
-            clamp3.fill(1.0);
-            clamp4.fill(1.0);
-
             for(int itest = 0; itest<testCount; itest++)
             {
                 // random radius
@@ -45,9 +39,9 @@ namespace PointyCloudTests
                 selectorTest.setInfluenceRadius(r);
 
                 // random point
-                Ra::Core::Vector3 pos = 0.5*(Ra::Core::Vector3::Random()+clamp3);
+                Ra::Core::Vector3 pos = 0.5*(Ra::Core::Vector3::Random()+Ra::Core::Vector3::Ones());
                 Ra::Core::Vector3 nor = Ra::Core::Vector3::Random().normalized();
-                Ra::Core::Vector4 col = 0.5*(Ra::Core::Vector4::Random()+clamp4);
+                Ra::Core::Vector4 col = 0.5*(Ra::Core::Vector4::Random()+Ra::Core::Vector4::Ones());
 
                 APoint p(pos, nor, col);
 
@@ -56,10 +50,11 @@ namespace PointyCloudTests
 
                 RA_UNIT_TEST(resRef.size()==resTest.size(), "Wrong neigbors count");
 
+                bool sameNeighbors = true;
                 for(auto& idxRef : resRef)
-                {
-                    RA_UNIT_TEST(std::find(resTest.begin(), resTest.end(), idxRef)!=resTest.end(), "Wrong neighbors");
-                }
+                    sameNeighbors &= (std::find(resTest.begin(), resTest.end(), idxRef)!=resTest.end());
+
+                RA_UNIT_TEST(sameNeighbors, "Wrong neighbors");
             }
         }
     };
