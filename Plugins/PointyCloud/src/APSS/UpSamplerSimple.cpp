@@ -26,7 +26,7 @@ void UpSamplerSimple::upSampleCloud(PointyCloud& cloud)
 
 int UpSamplerSimple::getM(const int& indice)
 {
-    return round(calculEta(indice) * m_rayon/ m_threshold);
+    return round(calculEta(indice) * m_radius/ m_threshold);
 }
 
 int UpSamplerSimple::calculEta(const int& indice)
