@@ -1,36 +1,14 @@
 #include <PointyCloudComponent.hpp>
 
-#include <iostream>
+#include <Core/Containers/MakeShared.hpp>
 
-#include <Core/String/StringUtils.hpp>
-#include <Core/Mesh/MeshUtils.hpp>
-
-#include <Core/Geometry/Normal/Normal.hpp>
-
-#include <Engine/Renderer/RenderObject/RenderObjectManager.hpp>
-#include <Engine/Managers/ComponentMessenger/ComponentMessenger.hpp>
-
-#include <Engine/Renderer/Mesh/Mesh.hpp>
-#include <Engine/Renderer/RenderObject/RenderObject.hpp>
-#include <Engine/Renderer/RenderObject/RenderObjectTypes.hpp>
-#include <Engine/Renderer/RenderTechnique/RenderTechnique.hpp>
-#include <Engine/Renderer/RenderTechnique/ShaderProgram.hpp>
-#include <Engine/Renderer/RenderTechnique/ShaderProgramManager.hpp>
-#include <Engine/Renderer/RenderObject/Primitives/DrawPrimitives.hpp>
-#include <Engine/Renderer/RenderTechnique/ShaderConfigFactory.hpp>
-
-#include <Engine/Assets/FileData.hpp>
 #include <Engine/Assets/GeometryData.hpp>
 
-#include <APSS/UsefulPointsSelection.hpp>
 #include <APSS/PointyCloud.hpp>
-#include <APSS/OrthogonalProjection.hpp>
 #include <APSS/NeighborsSelection.hpp>
 #include <APSS/NeighborsSelectionWithRegularGrid.hpp>
 #include <APSS/UpSamplerUnshaken.hpp>
 #include <APSS/UpSamplerSimple.hpp>
-
-using Ra::Engine::ComponentMessenger;
 
 namespace PointyCloudPlugin
 {
@@ -108,9 +86,9 @@ namespace PointyCloudPlugin
 //        LOGP(logINFO) << "cloud " << cloudName << " is pointy at " << m_originalCloud->m_points.size() << " level(s).";
 
         setUpsamplingMethod(sys->getUpsamplingMethod());
-//        setProjectionMethod(sys->getProjectionMethod());
-//        setOptimizationByOctree(sys->isOptimizedByOctree());
-//        setOptimizationByCUDA(sys->isOptimizedByCUDA());
+        setProjectionMethod(sys->getProjectionMethod());
+        setOptimizationByOctree(sys->isOptimizedByOctree());
+        setOptimizationByCUDA(sys->isOptimizedByCUDA());
 
 // FOR APSS TEST (comment computePointyCloud's body)
 //        PointyCloud points = m_culling.selectUsefulPoints();

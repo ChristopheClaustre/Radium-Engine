@@ -1,7 +1,7 @@
-#include "upsamplersimple.hpp"
+//#include "upsamplersimple.hpp"
 
-UpSamplerSimple::UpSamplerSimple()
-{
+//UpSamplerSimple::UpSamplerSimple()
+//{
 
-}
+//}
 
