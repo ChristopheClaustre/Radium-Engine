@@ -35,13 +35,9 @@ namespace PointyCloudPlugin
         PointyCloudComponent( const std::string& name, const Ra::Engine::Camera *camera);
         virtual ~PointyCloudComponent();
 
-
         virtual void initialize() override;
 
         void handlePointyCloudLoading(const Ra::Asset::GeometryData* data);
-
-        /// Returns the index of the associated RO (the display mesh)
-        Ra::Core::Index getRenderObjectIndex() const;
 
         /// Do APSS on the point cloud
         void computePointyCloud();
