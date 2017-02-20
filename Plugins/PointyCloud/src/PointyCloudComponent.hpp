@@ -43,6 +43,7 @@ namespace PointyCloudPlugin
         void computePointyCloud();
 
         void setInfluenceRadius(Scalar);
+        void setSplatRadius(Scalar);
         void setBeta(Scalar);
         void setThreshold(int);
         void setM(int);

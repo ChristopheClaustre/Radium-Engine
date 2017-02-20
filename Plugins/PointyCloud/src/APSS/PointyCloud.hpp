@@ -23,14 +23,15 @@ public:
 
     inline APoint(  const VectorType& _pos =            VectorType::Zero(),
                     const VectorType& _normal =         VectorType::Zero(),
-                    const Ra::Core::Vector4& _color =   Ra::Core::Vector4::Zero()
+                    const Ra::Core::Vector4& _color =   Ra::Core::Vector4::Zero(),
+                    const Scalar& m_splatSize = 0
                     )
         : m_pos(_pos), m_normal(_normal), m_color(_color), m_eligible(true) {}
 
     inline const VectorType& pos()          const { return m_pos; }
     inline const VectorType& normal()       const { return m_normal; }
     inline const Ra::Core::Vector4& color() const { return m_color; }
-    inline const Scalar& color()            const { return m_splatSize; }
+    inline const Scalar& splatSize()        const { return m_splatSize; }
 
     inline VectorType& pos()            { return m_pos; }
     inline VectorType& normal()         { return m_normal; }

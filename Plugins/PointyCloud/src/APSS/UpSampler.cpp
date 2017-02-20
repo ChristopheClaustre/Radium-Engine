@@ -26,13 +26,14 @@ void UpSampler::upSamplePoint(const int &m, const int& indice )
         const Ra::Core::Vector3 &centerVertice = centerPoint.pos();
 
         const Ra::Core::Vector4 &color = m_cloud->m_points[indice].color();
+        const Scalar &splatSize = m_cloud->m_points[indice].splatSize();
 
         const Ra::Core::Vector3 &topLeftVertice = Ra::Core::Vector3(u * -m_radius+v * m_radius) + centerVertice;
         for (int i = 0 ; i < m ; i ++ )
         {
             for (int j = 0 ; j < m ; j ++ )
             {
-                APoint newPoint(Ra::Core::Vector3( i * u_pas + j * -v_pas)+topLeftVertice ,normal,color);
+                APoint newPoint(Ra::Core::Vector3( i * u_pas + j * -v_pas)+topLeftVertice ,normal,color,Scalar(splatSize/m));
                 m_newpoints.push_back(newPoint);
             }
         }
