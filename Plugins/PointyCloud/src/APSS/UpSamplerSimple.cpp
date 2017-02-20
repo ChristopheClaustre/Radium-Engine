@@ -31,9 +31,21 @@ int UpSamplerSimple::getM(const int& indice)
 
 int UpSamplerSimple::calculEta(const int& indice)
 {
+    float facteurObliquite;
     Ra::Core::Vector3 distPToCam = m_cloud->m_points[indice].pos() - m_camera.getPosition();
 
-    std::cerr <<  10  / log2( distPToCam.norm() + 2  )   << std::endl;
-    return 10 / log2( distPToCam.norm() + 2  ) ;
+    //m_point are already normalized
+    if(m_camera.getProjType() == Ra::Engine::Camera::ProjType::ORTHOGRAPHIC)
+    {
+        facteurObliquite = m_camera.getDirection().normalized().dot(m_cloud->m_points[indice].normal());
+    }
+    else
+    {
+        facteurObliquite = distPToCam.normalized().dot(m_cloud->m_points[indice].normal());
+    }
+    facteurObliquite = (facteurObliquite+1.0f)*5;
+
+    std::cerr <<  facteurObliquite   << std::endl;
+    return (10 / log2( distPToCam.norm()  + 2  ))*facteurObliquite ;
 }
 }
