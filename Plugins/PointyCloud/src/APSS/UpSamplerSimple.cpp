@@ -26,12 +26,16 @@ void UpSamplerSimple::upSampleCloud(PointyCloud& cloud)
 
 int UpSamplerSimple::getM(const int& indice)
 {
-    return round(calculEta(indice) * m_rayon/ m_threshold);
+    int m = round(calculEta(indice) * m_radius / m_threshold);
+    std::cerr << "m : " << m <<  std::endl;
+    return m;
 }
 
 int UpSamplerSimple::calculEta(const int& indice)
 {
     Ra::Core::Vector3 distPToCam = m_cloud->m_points[indice].pos() - m_camera.getPosition();
-    return round( 1 * 23 / distPToCam.norm() + 1);
+
+    std::cerr <<  10  / log2( distPToCam.norm() + 2  )   << std::endl;
+    return 10 / log2( distPToCam.norm() + 2  ) ;
 }
 }
