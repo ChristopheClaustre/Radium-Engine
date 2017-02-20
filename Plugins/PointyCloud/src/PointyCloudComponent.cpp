@@ -21,10 +21,25 @@ namespace PointyCloudPlugin
           m_projection(OrthogonalProjection(m_selector, m_originalCloud, 3))
     {
         m_upsampler.reset(new UpSamplerUnshaken(3,1));
+
+        // APSS stats
+        m_count = 0;
+        m_timeCulling = 0;
+        m_timeUpsampling = 0;
+        m_timeProjecting = 0;
+        m_timeLoading = 0;
     }
 
     PointyCloudComponent::~PointyCloudComponent()
     {
+        if(m_count>0)
+        {
+            LOGP(logINFO) << "Timing results :\n" <<
+                             "Culling    : " << m_timeCulling/m_count << " ms\n" <<
+                             "Upsampling : " << m_timeUpsampling/m_count << " ms\n" <<
+                             "Projecting : " << m_timeProjecting/m_count << " ms\n" <<
+                             "Loading    : " << m_timeLoading/m_count << " ms";
+        }
     }
 
     void PointyCloudComponent::initialize()
@@ -106,6 +121,28 @@ namespace PointyCloudPlugin
         m_projection.project(points);
         points.loadToMesh(m_workingCloud.get());
     }
+
+    // record timing statistics printed in destructor
+//    void PointyCloudComponent::computePointyCloud()
+//    {
+//        Ra::Core::Timer::TimePoint t0, t1, t2, t3, t4;
+
+//        t0 = Ra::Core::Timer::Clock::now();
+//        PointyCloud points = m_culling.selectUsefulPoints();
+//        t1 = Ra::Core::Timer::Clock::now();
+//        m_upsampler->upSampleCloud(points);
+//        t2 = Ra::Core::Timer::Clock::now();
+//        m_projection.project(points);
+//        t3 = Ra::Core::Timer::Clock::now();
+//        points.loadToMesh(m_workingCloud.get());
+//        t4 = Ra::Core::Timer::Clock::now();
+
+//        m_timeCulling += Ra::Core::Timer::getIntervalMicro(t0, t1);
+//        m_timeUpsampling += Ra::Core::Timer::getIntervalMicro(t1, t2);
+//        m_timeProjecting += Ra::Core::Timer::getIntervalMicro(t2, t3);
+//        m_timeLoading += Ra::Core::Timer::getIntervalMicro(t3, t4);
+//        ++m_count;
+//    }
 
     void PointyCloudComponent::setEligible() {
         for (auto it = m_originalCloud->m_points.begin(); it != m_originalCloud->m_points.end(); ++it) {

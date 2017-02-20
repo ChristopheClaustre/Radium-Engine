@@ -74,6 +74,13 @@ namespace PointyCloudPlugin
         // APSS attributes
         UPSAMPLING_METHOD m_upsamplingMethod;
         PROJECTION_METHOD m_projectionMethod;
+
+        // APSS stats
+        size_t m_count;
+        float m_timeCulling;
+        float m_timeUpsampling;
+        float m_timeProjecting;
+        float m_timeLoading;
     };
 
 } // namespace PointyCloudPlugin
