@@ -94,6 +94,7 @@ namespace PointyCloudPlugin
         auto sys = static_cast<PointyCloudSystem*>(m_system);
 
         m_originalCloud->loadFromMesh(m_workingCloud.get());
+        setSplatRadius(sys->getSplatRadius());
         setEligible();
 
         LOGP(logINFO) << "cloud " << cloudName << " has " << m_originalCloud->m_points.size() << " point(s).";
@@ -154,6 +155,12 @@ namespace PointyCloudPlugin
         m_selector->setInfluenceRadius(influenceRadius);
         m_upsampler->setRadius(influenceRadius);
         setEligible();
+    }
+
+    void PointyCloudComponent::setSplatRadius(Scalar splatRadius) {
+        for (auto it = m_originalCloud->m_points.begin(); it != m_originalCloud->m_points.end(); ++it) {
+            it->setSplatSize(splatRadius);
+        }
     }
 
     void PointyCloudComponent::setBeta(Scalar beta) {

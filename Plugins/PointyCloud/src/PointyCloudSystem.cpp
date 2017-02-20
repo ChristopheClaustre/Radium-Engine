@@ -83,7 +83,10 @@ namespace PointyCloudPlugin
     void PointyCloudSystem::setSplatRadius(Scalar splatRadius)
     {
         m_splatRadius = splatRadius;
-        m_renderer->setSplatSize(splatRadius);
+        //m_renderer->setSplatSize(splatRadius);
+        for (auto comp : pointyCloudComponentList) {
+            comp->setSplatSize(splatRadius);
+        }
     }
 
     void PointyCloudSystem::setInfluenceRadius(Scalar influenceRadius)

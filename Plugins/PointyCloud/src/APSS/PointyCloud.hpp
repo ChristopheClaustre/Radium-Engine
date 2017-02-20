@@ -30,17 +30,22 @@ public:
     inline const VectorType& pos()          const { return m_pos; }
     inline const VectorType& normal()       const { return m_normal; }
     inline const Ra::Core::Vector4& color() const { return m_color; }
+    inline const Scalar& color()            const { return m_splatSize; }
 
     inline VectorType& pos()            { return m_pos; }
     inline VectorType& normal()         { return m_normal; }
     inline Ra::Core::Vector4& color()   { return m_color; }
+    inline Scalar& splatSize()          { return m_splatSize; }
 
     inline bool isEligible() { return m_eligible; }
     inline void setEligible(bool eligible) { m_eligible = eligible; }
 
+    inline void setSplatSize(Scalar splatSize) { m_splatSize = splatSize; }
+
 private:
     VectorType m_pos, m_normal;
     Ra::Core::Vector4 m_color;
+    Scalar m_splatSize;
     bool m_eligible;
 };
 
