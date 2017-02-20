@@ -2,7 +2,28 @@
 
 #include <APSS/PointyCloud.hpp>
 
+#include <Engine/Assets/FileData.hpp>
+
 namespace PointyCloudPlugin {
+
+std::shared_ptr<PointyCloud> PointyCloudFactory::makeFromFile(const std::string& path)
+{
+    std::shared_ptr<PointyCloud> cloud = std::make_shared<PointyCloud>();
+
+    Ra::Asset::FileData fileData(path);
+    for(auto& geoData : fileData.getGeometryData())
+    {
+        size_t size = geoData->getVertices().size();
+        for(uint k = 0; k<size; ++k)
+        {
+            cloud->m_points.emplace_back(geoData->getVertices().at(k),
+                         geoData->getNormals().size()==size ? geoData->getNormals().at(k) : Ra::Core::Vector3::Ones().normalized(),
+                         geoData->getColors().size()==size ? geoData->getColors().at(k) : Ra::Core::Vector4::Ones());
+        }
+    }
+
+    return cloud;
+}
 
 std::shared_ptr<PointyCloud> PointyCloudFactory::makeDenseCube(int n, double dl)
 {
