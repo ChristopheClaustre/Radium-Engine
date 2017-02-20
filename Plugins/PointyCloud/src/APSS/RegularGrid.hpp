@@ -27,6 +27,8 @@ namespace PointyCloudPlugin {
 
         std::vector<int> query(const Ra::Core::Vector3& p, float r) const;
 
+        bool hasNeighbors(const Ra::Core::Vector3& p, float r) const;
+
         float getBuildTime() const;
         float getDx() const;
         float getDy() const;

@@ -23,20 +23,12 @@ std::vector<int> RegularGrid::query(const Ra::Core::Vector3& p, float r) const
     Ra::Core::Vector3 q = p - m_aabb.min();
 
     // searching limits of a cube centered at q of length r
-    int imin = std::floor((q[0]-r)/m_dx);
-    int imax = std::floor((q[0]+r)/m_dx);
-    int jmin = std::floor((q[1]-r)/m_dy);
-    int jmax = std::floor((q[1]+r)/m_dy);
-    int kmin = std::floor((q[2]-r)/m_dz);
-    int kmax = std::floor((q[2]+r)/m_dz);
-
-    // clamp to grid
-    imin = std::max(imin, 0);
-    jmin = std::max(jmin, 0);
-    kmin = std::max(kmin, 0);
-    imax = std::min(imax, m_nx-1);
-    jmax = std::min(jmax, m_ny-1);
-    kmax = std::min(kmax, m_nz-1);
+    int imin = std::max((int)std::floor((q[0]-r)/m_dx), 0);
+    int jmin = std::max((int)std::floor((q[1]-r)/m_dy), 0);
+    int kmin = std::max((int)std::floor((q[2]-r)/m_dz), 0);
+    int imax = std::min((int)std::floor((q[0]+r)/m_dx), m_nx-1);
+    int jmax = std::min((int)std::floor((q[1]+r)/m_dy), m_ny-1);
+    int kmax = std::min((int)std::floor((q[2]+r)/m_dz), m_nz-1);
 
     // search
     for(int k = kmin; k<=kmax; ++k)
@@ -56,6 +48,41 @@ std::vector<int> RegularGrid::query(const Ra::Core::Vector3& p, float r) const
             }
 
     return indices;
+}
+
+bool RegularGrid::hasNeighbors(const Ra::Core::Vector3& p, float r) const
+{
+    // point in local coordinates
+    Ra::Core::Vector3 q = p - m_aabb.min();
+
+    // searching limits of a cube centered at q of length r
+    int imin = std::max((int)std::floor((q[0]-r)/m_dx), 0);
+    int jmin = std::max((int)std::floor((q[1]-r)/m_dy), 0);
+    int kmin = std::max((int)std::floor((q[2]-r)/m_dz), 0);
+    int imax = std::min((int)std::floor((q[0]+r)/m_dx), m_nx-1);
+    int jmax = std::min((int)std::floor((q[1]+r)/m_dy), m_ny-1);
+    int kmax = std::min((int)std::floor((q[2]+r)/m_dz), m_nz-1);
+
+    // neighbors count
+    int res = 0;
+
+    // search
+    for(int k = kmin; k<=kmax; ++k)
+        for(int j = jmin; j<=jmax; ++j)
+            for(int i = imin; i<=imax; ++i)
+            {
+                int idxCell = rawIndex(i, j, k);
+                int begin = m_cells[idxCell].index;
+                int length = m_cells[idxCell].length;
+
+                for(int idx = begin; idx<begin+length; ++idx)
+                    if((p - m_cloud->m_points[m_indices[idx]].pos()).norm() <= r)
+                        ++res;
+
+                if(res>=6)
+                    return true;
+            }
+    return false;
 }
 
 float RegularGrid::getBuildTime() const {
