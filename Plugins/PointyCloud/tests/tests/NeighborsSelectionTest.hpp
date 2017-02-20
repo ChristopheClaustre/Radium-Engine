@@ -29,7 +29,7 @@ namespace PointyCloudTests
             NeighborsSelectionWithRegularGrid selectorTest(cloud, 0.0);
 
             // number of selection test
-            const int testCount = 25;
+            const int testCount = 100;
 
             for(int itest = 0; itest<testCount; itest++)
             {
