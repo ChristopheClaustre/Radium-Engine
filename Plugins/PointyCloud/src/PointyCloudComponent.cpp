@@ -35,10 +35,10 @@ namespace PointyCloudPlugin
         if(m_count>0)
         {
             LOGP(logINFO) << "Timing results :\n" <<
-                             "Culling    : " << m_timeCulling/m_count << " ms\n" <<
-                             "Upsampling : " << m_timeUpsampling/m_count << " ms\n" <<
-                             "Projecting : " << m_timeProjecting/m_count << " ms\n" <<
-                             "Loading    : " << m_timeLoading/m_count << " ms";
+                             "Culling    : " << m_timeCulling/m_count << " μs\n" <<
+                             "Upsampling : " << m_timeUpsampling/m_count << " μs\n" <<
+                             "Projecting : " << m_timeProjecting/m_count << " μs\n" <<
+                             "Loading    : " << m_timeLoading/m_count << " μs";
         }
     }
 
@@ -79,9 +79,7 @@ namespace PointyCloudPlugin
         }
         else {
             LOGP(logINFO) << "cloud " << cloudName << " has no color. Creation of colors.";
-            Ra::Core::Color white;
-            white << 1.0, 1.0, 1.0, 1.0;
-            colors.resize(vertices.size(), white);
+            colors.resize(vertices.size(), Ra::Core::Color::Ones());
         }
 
         m_workingCloud->addData( Ra::Engine::Mesh::VERTEX_COLOR, colors);
