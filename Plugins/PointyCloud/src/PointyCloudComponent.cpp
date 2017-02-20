@@ -7,6 +7,7 @@
 #include <APSS/PointyCloud.hpp>
 #include <APSS/NeighborsSelection.hpp>
 #include <APSS/NeighborsSelectionWithRegularGrid.hpp>
+#include <APSS/RegularGrid.hpp>
 #include <APSS/UpSamplerUnshaken.hpp>
 #include <APSS/UpSamplerSimple.hpp>
 
@@ -166,7 +167,7 @@ namespace PointyCloudPlugin
         if(octree)
         {
             m_selector.reset(new NeighborsSelectionWithRegularGrid(m_originalCloud, sys->getInfluenceRadius()));
-            LOG(logINFO) << "Regular built in " << std::static_pointer_cast<NeighborsSelectionWithRegularGrid>(m_selector)->getBuildTime() <<
+            LOG(logINFO) << "Regular built in " << std::static_pointer_cast<NeighborsSelectionWithRegularGrid>(m_selector)->grid()->getBuildTime() <<
                             " seconds";
         }
         else

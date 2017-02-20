@@ -7,6 +7,7 @@
 
 #include <APSS/NeighborsSelection.hpp>
 #include <APSS/NeighborsSelectionWithRegularGrid.hpp>
+#include <APSS/RegularGrid.hpp>
 
 #include <Core/Time/Timer.hpp>
 
@@ -50,6 +51,8 @@ namespace PointyCloudTests
             std::shared_ptr<PointyCloud> cloud = PointyCloudFactory::makeFromFile(path);
             size_t size = cloud->m_points.size();
 
+            LOG(logINFO) << "Size = " << size;
+
             const int Nr = 10;
             const int NcellCount = 100;
             const int Nindices = 200;
@@ -89,7 +92,7 @@ namespace PointyCloudTests
             for(auto& cellCount : cellCountVec)
             {
                 NeighborsSelectionWithRegularGrid selectorGrid(cloud, 0.0, cellCount);
-                float buildTime = selectorGrid.getBuildTime();
+                float buildTime = selectorGrid.grid()->getBuildTime();
                 buildTimeFile.printLine(cellCount*cellCount*cellCount, buildTime);
 
                 // for each radius

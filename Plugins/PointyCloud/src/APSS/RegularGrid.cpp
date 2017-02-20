@@ -49,21 +49,42 @@ std::vector<int> RegularGrid::query(const Ra::Core::Vector3& p, float r) const
 
                 for(int idx = begin; idx<begin+length; ++idx)
                 {
-                    if((p - m_cloud->m_points[m_indices[idx]].pos()).norm() <= r) // bug ?
-                    {
+                    //TODO it may be faster to avoid push_back and use remove_if ?
+                    if((p - m_cloud->m_points[m_indices[idx]].pos()).norm() <= r)
                         indices.push_back(m_indices[idx]);
-                    }
                 }
             }
 
     return indices;
 }
 
-float RegularGrid::getBuildTime() const
-{
+float RegularGrid::getBuildTime() const {
     return m_buildTime;
 }
 
+float RegularGrid::getDx() const {
+    return m_dx;
+}
+
+float RegularGrid::getDy() const {
+    return m_dy;
+}
+
+float RegularGrid::getDz() const {
+    return m_dz;
+}
+
+int RegularGrid::getNx() const {
+    return m_nx;
+}
+
+int RegularGrid::getNy() const {
+    return m_ny;
+}
+
+int RegularGrid::getNz() const {
+    return m_nz;
+}
 
 void RegularGrid::printAll() const
 {

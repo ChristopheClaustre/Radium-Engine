@@ -15,7 +15,7 @@ namespace PointyCloudPlugin {
 
         virtual std::vector<int> getNeighbors(const APoint &point) const;
 
-        float getBuildTime() const;
+        const RegularGrid* grid() const;
 
     protected:
 
