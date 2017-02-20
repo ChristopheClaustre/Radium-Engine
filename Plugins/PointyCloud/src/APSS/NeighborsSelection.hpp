@@ -14,6 +14,7 @@ namespace PointyCloudPlugin
         ~NeighborsSelection();
 
         virtual std::vector<int> getNeighbors(const APoint& point) const;
+        virtual bool isEligible(const APoint& point) const;
 
         void setInfluenceRadius(Scalar influenceRadius) { m_influenceRadius = influenceRadius; }
     protected:
