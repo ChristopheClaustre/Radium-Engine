@@ -5,9 +5,9 @@
 
 namespace PointyCloudPlugin {
 
-NeighborsSelectionWithRegularGrid::NeighborsSelectionWithRegularGrid(std::shared_ptr<PointyCloud> cloud, float influenceRadius) :
+NeighborsSelectionWithRegularGrid::NeighborsSelectionWithRegularGrid(std::shared_ptr<PointyCloud> cloud, float influenceRadius, int nCell) :
     NeighborsSelection(cloud, influenceRadius),
-    m_grid(RegularGridBuilder::buildRegularGrid(cloud, influenceRadius))
+    m_grid(RegularGridBuilder::buildRegularGrid(cloud, nCell))
 {
 }
 
@@ -17,11 +17,13 @@ NeighborsSelectionWithRegularGrid::~NeighborsSelectionWithRegularGrid()
 
 std::vector<int> NeighborsSelectionWithRegularGrid::getNeighbors(const APoint &point) const
 {
-    std::vector<int> indices = m_grid->query(point.pos(), m_influenceRadius);
-
-    //TODO : remove indices far from more than radius
-
-    return indices;
+    return m_grid->query(point.pos(), m_influenceRadius);
 }
+
+const RegularGrid* NeighborsSelectionWithRegularGrid::grid() const
+{
+    return m_grid.get();
+}
+
 
 } // namespace PointyCloudPlugin

@@ -27,6 +27,14 @@ namespace PointyCloudPlugin {
 
         std::vector<int> query(const Ra::Core::Vector3& p, float r) const;
 
+        float getBuildTime() const;
+        float getDx() const;
+        float getDy() const;
+        float getDz() const;
+        int getNx() const;
+        int getNy() const;
+        int getNz() const;
+
         void printAll() const;
         void printGrid() const;
 
@@ -58,6 +66,8 @@ namespace PointyCloudPlugin {
         std::vector<Cell> m_cells;
 
         std::shared_ptr<PointyCloud> m_cloud;
+
+        float m_buildTime;
 
     }; // class RegularGrid
 

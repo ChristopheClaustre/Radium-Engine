@@ -3,14 +3,8 @@
 
 #include <PointyCloudPlugin.hpp>
 
-#include <Core/Mesh/MeshTypes.hpp>
-#include <Core/Mesh/TriangleMesh.hpp>
-#include <Core/Containers/MakeShared.hpp>
-
 #include <Engine/Component/Component.hpp>
-#include <Engine/Renderer/Camera/Camera.hpp>
 
-#include <APSS/PointyCloud.hpp>
 #include <APSS/OrthogonalProjection.hpp>
 #include <APSS/UsefulPointsSelection.hpp>
 
@@ -31,6 +25,7 @@ namespace Ra
 
 namespace PointyCloudPlugin
 {
+    class PointyCloud;
     class NeighborsSelection;
     class UpSampler;
 
@@ -40,13 +35,9 @@ namespace PointyCloudPlugin
         PointyCloudComponent( const std::string& name, const Ra::Engine::Camera *camera);
         virtual ~PointyCloudComponent();
 
-
         virtual void initialize() override;
 
         void handlePointyCloudLoading(const Ra::Asset::GeometryData* data);
-
-        /// Returns the index of the associated RO (the display mesh)
-        Ra::Core::Index getRenderObjectIndex() const;
 
         /// Do APSS on the point cloud
         void computePointyCloud();
