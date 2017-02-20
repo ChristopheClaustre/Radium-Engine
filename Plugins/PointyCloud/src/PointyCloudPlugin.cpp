@@ -83,7 +83,7 @@ namespace PointyCloudPlugin
     void PointyCloudPluginC::setThreshold(int threshold)
     {
         CORE_ASSERT(m_system, "System should be there ");
-        m_system->setSplatRadius(threshold);
+        m_system->setThreshold(threshold);
     }
 
     void PointyCloudPluginC::setM(int M)
