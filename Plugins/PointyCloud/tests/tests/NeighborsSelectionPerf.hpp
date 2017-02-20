@@ -28,10 +28,10 @@ struct OutFile {
         stream.close();
     }
 
-    inline void printLine(int i, float f1, float f2) const {
+    inline void printLine(int i, float f1, float f2, float f3, float f4, float f5) const {
         std::ofstream stream;
         stream.open(name, std::ofstream::app);
-        stream << i << " " << f1 << " " << f2 << "\n";
+        stream << i << " " << f1 << " " << f2 << " " << f3 << " " << f4 << " " << f5 << "\n";
         stream.close();
     }
 
@@ -53,13 +53,13 @@ namespace PointyCloudTests
 
             LOG(logINFO) << "Size = " << size;
 
-            const int Nr = 10;
-            const int NcellCount = 100;
-            const int Nindices = 200;
+            const int Nr = 20;
+            const int NcellCount = 20;
+            const int Nindices = 100;
 
             // define different influence radius
             float rmin = 0.1;
-            float rmax = 5.0;
+            float rmax = 2.0;
             std::array<float, Nr> rVec;
             for(uint k = 0; k<Nr; ++k)
                 rVec[k] = (double)k/(Nr-1)*(rmax-rmin)+rmin;
@@ -78,9 +78,9 @@ namespace PointyCloudTests
                 idxVec[k] = ((double)k/(Nindices-1))*idxMax;
 
             // open file to print results
-            OutFile buildTimeFile("../../models/timeBuild.txt");
-            OutFile timeRefFile("../../models/timeRef.txt");
-            OutFile timeGridFile("../../models/timeGrid.txt");
+            OutFile buildTimeFile("../../models/timeBuild.txt");    // Ncell , time
+            OutFile timeRefFile("../../models/timeRef.txt");        // Ncell , r , time , dx , dy , dz
+            OutFile timeGridFile("../../models/timeGrid.txt");      // Ncell , r , time , dx , dy , dz
 
             NeighborsSelection selectorRef(cloud, 0.0);
             Ra::Core::Timer::TimePoint start;
@@ -94,6 +94,10 @@ namespace PointyCloudTests
                 NeighborsSelectionWithRegularGrid selectorGrid(cloud, 0.0, cellCount);
                 float buildTime = selectorGrid.grid()->getBuildTime();
                 buildTimeFile.printLine(cellCount*cellCount*cellCount, buildTime);
+
+                float dx = selectorGrid.grid()->getDx();
+                float dy = selectorGrid.grid()->getDy();
+                float dz = selectorGrid.grid()->getDz();
 
                 // for each radius
                 for(auto& r : rVec)
@@ -111,14 +115,14 @@ namespace PointyCloudTests
                     for(auto& idx : idxVec)
                         std::vector<int> resRef = selectorRef.getNeighbors(cloud->m_points[idx]);
                     float timeRef = Ra::Core::Timer::getIntervalMicro(start, Ra::Core::Timer::Clock::now());
-                    timeRefFile.printLine(cellCount*cellCount*cellCount, r, timeRef/Nindices);
+                    timeRefFile.printLine(cellCount*cellCount*cellCount, r, timeRef/Nindices, dx, dy, dz);
 
                     // select for each index with grid
                     start = Ra::Core::Timer::Clock::now();
                     for(auto& idx : idxVec)
                         std::vector<int> resGrid = selectorGrid.getNeighbors(cloud->m_points[idx]);
                     float timeGrid = Ra::Core::Timer::getIntervalMicro(start, Ra::Core::Timer::Clock::now());
-                    timeGridFile.printLine(cellCount*cellCount*cellCount, r, timeGrid/Nindices);
+                    timeGridFile.printLine(cellCount*cellCount*cellCount, r, timeGrid/Nindices, dx, dy, dz);
                 }
             }
             RA_UNIT_TEST(true,"ok");
