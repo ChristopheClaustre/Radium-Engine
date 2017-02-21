@@ -24,9 +24,9 @@ public:
     inline APoint(  const VectorType& _pos =            VectorType::Zero(),
                     const VectorType& _normal =         VectorType::Zero(),
                     const Ra::Core::Vector4& _color =   Ra::Core::Vector4::Zero(),
-                    const Scalar& m_splatSize = 0
+                    const Scalar& _splatSize = 0.
                     )
-        : m_pos(_pos), m_normal(_normal), m_color(_color), m_eligible(true) {}
+        : m_pos(_pos), m_normal(_normal), m_color(_color), m_splatSize(_splatSize), m_eligible(true) {}
 
     inline const VectorType& pos()          const { return m_pos; }
     inline const VectorType& normal()       const { return m_normal; }
