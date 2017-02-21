@@ -22,7 +22,6 @@ public:
 signals:
     void setSplatRadius(Scalar);
     void setInfluenceRadius(Scalar);
-    void setBeta(Scalar);
     void setThreshold(int);
     void setM(int);
     void setUpsamplingMethod(PointyCloudPlugin::UPSAMPLING_METHOD);
@@ -34,7 +33,6 @@ private slots:
 
     void on_m_splatRadius_valueChanged(double value);
     void on_m_influenceRadius_valueChanged(double value);
-    void on_m_beta_valueChanged(double value);
     void on_m_threshold_valueChanged(int value);
     void on_m_M_valueChanged(int value);
     void on_m_upsamplingMethod_currentIndexChanged(int index);

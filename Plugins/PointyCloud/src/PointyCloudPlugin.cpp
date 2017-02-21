@@ -41,7 +41,6 @@ namespace PointyCloudPlugin
 
         connect( widget, &PointyCloudUI::setSplatRadius,        this, &PointyCloudPluginC::setSplatRadius );
         connect( widget, &PointyCloudUI::setInfluenceRadius,    this, &PointyCloudPluginC::setInfluenceRadius );
-        connect( widget, &PointyCloudUI::setBeta,               this, &PointyCloudPluginC::setBeta );
         connect( widget, &PointyCloudUI::setThreshold,          this, &PointyCloudPluginC::setThreshold );
         connect( widget, &PointyCloudUI::setM,                  this, &PointyCloudPluginC::setM );
         connect( widget, &PointyCloudUI::setUpsamplingMethod,   this, &PointyCloudPluginC::setUpsamplingMethod );
