@@ -276,6 +276,11 @@ namespace Ra
         if (m_renderers[index] != nullptr) {
             // NOTE(Charly): This is probably buggy since it has not been tested.
             LOG( logWARNING ) << "Changing renderers might be buggy since it has not been tested.";
+
+            // Tested by the "dynamic sampling and rendering of algebraic point set surfaces" students team
+            //   We think this function is okay now after adding the rendererReady emission and modifying
+            //   the function which fills the combo-box texture selection to ensure its cleaning before
+
             m_currentRenderer->lockRendering();
             m_currentRenderer = m_renderers[index].get();
             m_currentRenderer->initialize();
@@ -289,9 +294,8 @@ namespace Ra
     {
         if (renderer != nullptr)
         {
-            // NOTE(Cricri): This is probably buggy since it has not been tested.
-            LOG( logWARNING ) << "Adding renderers might be buggy since it has not been tested.";
-
+            // Tested by the "dynamic sampling and rendering of algebraic point set surfaces" students team
+            // needed if an plugin want to add an renderer
             int index = m_renderers.size();
             m_renderers.emplace(m_renderers.end(), renderer);
 
