@@ -44,13 +44,14 @@ namespace PointyCloudPlugin
 
         void setInfluenceRadius(Scalar);
         void setSplatRadius(Scalar);
-        void setBeta(Scalar);
         void setThreshold(int);
         void setM(int);
         void setUpsamplingMethod(UPSAMPLING_METHOD);
         void setProjectionMethod(PROJECTION_METHOD);
         void setOptimizationByOctree(bool);
         void setOptimizationByCUDA(bool);
+
+        void resetOriginalCloud();
 
     private:
         // set eligible flag on each points

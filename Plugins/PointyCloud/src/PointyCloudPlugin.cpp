@@ -35,7 +35,7 @@ namespace PointyCloudPlugin
     QWidget* PointyCloudPluginC::getWidget()
     {
         PointyCloudUI* widget = new PointyCloudUI(
-                    m_system->getSplatRadius(), m_system->getInfluenceRadius(), m_system->getBeta(),
+                    m_system->getSplatRadius(), m_system->getInfluenceRadius(),
                     m_system->getThreshold(), m_system->getM(), m_system->getUpsamplingMethod(),
                     m_system->getProjectionMethod(), m_system->isOptimizedByOctree(), m_system->isOptimizedByCUDA(),
                     m_system->isAPSSused(), m_system->isRendererUsed());
@@ -48,6 +48,8 @@ namespace PointyCloudPlugin
         connect( widget, &PointyCloudUI::setProjectionMethod,   this, &PointyCloudPluginC::setProjectionMethod );
         connect( widget, &PointyCloudUI::setOptimizationByOctree,   this, &PointyCloudPluginC::setOptimizationByOctree );
         connect( widget, &PointyCloudUI::setOptimizationByCUDA,     this, &PointyCloudPluginC::setOptimizationByCUDA );
+        connect( widget, &PointyCloudUI::setAPSS,       this, &PointyCloudPluginC::setAPSS );
+        connect( widget, &PointyCloudUI::setRenderer,   this, &PointyCloudPluginC::setRenderer );
 
         return widget;
     }
@@ -72,12 +74,6 @@ namespace PointyCloudPlugin
     {
         CORE_ASSERT(m_system, "System should be there ");
         m_system->setInfluenceRadius(influenceRadius);
-    }
-
-    void PointyCloudPluginC::setBeta(Scalar beta)
-    {
-        CORE_ASSERT(m_system, "System should be there ");
-        m_system->setBeta(beta);
     }
 
     void PointyCloudPluginC::setThreshold(int threshold)
@@ -114,6 +110,19 @@ namespace PointyCloudPlugin
     {
         CORE_ASSERT(m_system, "System should be there ");
         m_system->setOptimizationByCUDA(cuda);
+    }
+
+
+    void PointyCloudPluginC::setAPSS(bool apss)
+    {
+        CORE_ASSERT(m_system, "System should be there ");
+        m_system->setAPSS(apss);
+    }
+
+    void PointyCloudPluginC::setRenderer(bool renderer)
+    {
+        CORE_ASSERT(m_system, "System should be there ");
+        m_system->setRenderer(renderer);
     }
 
 }

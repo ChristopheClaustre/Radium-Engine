@@ -13,7 +13,7 @@ class PointyCloudUI : public QFrame
     Q_OBJECT
 
 public:
-    explicit PointyCloudUI(Scalar splatRadius, Scalar influenceRadius, Scalar beta, int Threshold, int M,
+    explicit PointyCloudUI(Scalar splatRadius, Scalar influenceRadius, int Threshold, int M,
                            PointyCloudPlugin::UPSAMPLING_METHOD upsampler,
                            PointyCloudPlugin::PROJECTION_METHOD projector,
                            bool cuda, bool octree, bool APSS=true, bool renderer=true, QWidget *parent = 0);

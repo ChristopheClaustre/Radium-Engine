@@ -69,13 +69,14 @@ namespace PointyCloudPlugin
     public slots:
         void setSplatRadius(Scalar);
         void setInfluenceRadius(Scalar);
-        void setBeta(Scalar);
         void setThreshold(int);
         void setM(int);
         void setUpsamplingMethod(UPSAMPLING_METHOD);
         void setProjectionMethod(PROJECTION_METHOD);
         void setOptimizationByOctree(bool);
         void setOptimizationByCUDA(bool);
+        void setAPSS(bool);
+        void setRenderer(bool);
 
     private:
         class PointyCloudSystem * m_system;

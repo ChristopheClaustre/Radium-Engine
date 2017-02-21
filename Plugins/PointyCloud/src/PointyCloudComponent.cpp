@@ -171,10 +171,6 @@ namespace PointyCloudPlugin
         }
     }
 
-    void PointyCloudComponent::setBeta(Scalar beta) {
-        // TODO donner beta à la projection
-    }
-
     void PointyCloudComponent::setThreshold(int threshold) {
         // TODO donner le threshold a quelqu'un
     }
@@ -231,6 +227,11 @@ namespace PointyCloudPlugin
 
     void PointyCloudComponent::setOptimizationByCUDA(bool cuda) {
         // TODO donner à tout le monde ???
+    }
+
+    void PointyCloudComponent::resetOriginalCloud()
+    {
+        m_originalCloud->loadToMesh(m_workingCloud.get());
     }
 
 } // namespace PointyCloudPlugin

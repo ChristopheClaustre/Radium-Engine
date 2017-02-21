@@ -49,13 +49,14 @@ namespace PointyCloudPlugin
 
         void setSplatRadius(Scalar splatRadius);
         void setInfluenceRadius(Scalar influenceRadius);
-        void setBeta(Scalar beta);
         void setThreshold(int threshold);
         void setM(int M);
         void setUpsamplingMethod(UPSAMPLING_METHOD upsampler);
         void setProjectionMethod(PROJECTION_METHOD projector);
         void setOptimizationByOctree(bool octree);
         void setOptimizationByCUDA(bool cuda);
+        void setAPSS(bool apss);
+        void setRenderer(bool renderer);
 
         inline const Scalar& getSplatRadius() const { return m_splatRadius; }
         inline const Scalar& getInfluenceRadius()  const { return m_influenceRadius; }

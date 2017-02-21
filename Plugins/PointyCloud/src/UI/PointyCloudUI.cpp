@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-PointyCloudUI::PointyCloudUI(Scalar splatRadius, Scalar influenceRadius, Scalar beta, int Threshold, int M,
+PointyCloudUI::PointyCloudUI(Scalar splatRadius, Scalar influenceRadius, int Threshold, int M,
                              PointyCloudPlugin::UPSAMPLING_METHOD upsampler,
                              PointyCloudPlugin::PROJECTION_METHOD projector,
                              bool cuda, bool octree, bool APSS, bool renderer, QWidget *parent) :
