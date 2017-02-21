@@ -1,7 +1,7 @@
 #ifndef POINTYCLOUDPLUGIN_NEIGHBORSSELECTIONWITHREGULARGRID_HPP
 #define POINTYCLOUDPLUGIN_NEIGHBORSSELECTIONWITHREGULARGRID_HPP
 
-#include "NeighborsSelection.hpp"
+#include <APSS/NeighborsSelection/NeighborsSelection.hpp>
 
 namespace PointyCloudPlugin {
 

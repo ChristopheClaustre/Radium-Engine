@@ -5,7 +5,7 @@
 
 #include <Engine/Component/Component.hpp>
 
-#include <APSS/OrthogonalProjection.hpp>
+#include <APSS/Projection/OrthogonalProjection.hpp>
 #include <APSS/UsefulPointsSelection.hpp>
 
 namespace Ra

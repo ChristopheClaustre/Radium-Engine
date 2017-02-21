@@ -124,7 +124,7 @@ std::shared_ptr<PointyCloud> PointyCloudFactory::makeRandom(int n, float xmin, f
 
     for(int i=0; i<n; ++i)
     {
-        cloud->m_points[i].pos() = (0.5*(Ra::Core::Vector3::Random()+Ra::Core::Vector3::Ones()).array()*(max-min)+min).matrix();
+//        cloud->m_points[i].pos() = (0.5*(Ra::Core::Vector3::Random()+Ra::Core::Vector3::Ones()).array()*(max-min)+min).matrix();
         cloud->m_points[i].normal() = Ra::Core::Vector3::Random().normalized();
         cloud->m_points[i].color() = 0.5*( Ra::Core::Vector4::Random() + Ra::Core::Vector4::Ones() );
     }

@@ -6,7 +6,8 @@
 #include <Eigen/Geometry>
 #include <PointyCloudSystem.hpp>
 
-#include "PointyCloud.hpp"
+#include <APSS/PointyCloud.hpp>
+
 namespace PointyCloudPlugin
 {
 

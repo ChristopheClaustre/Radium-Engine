@@ -2,7 +2,7 @@
 #ifndef POINTYCLOUDPLUGIN_POINTYCLOUDRENDERER_HPP
 #define POINTYCLOUDPLUGIN_POINTYCLOUDRENDERER_HPP
 
-#include "PointyCloudPlugin.hpp"
+#include <PointyCloudPlugin.hpp>
 
 #include <Engine/RadiumEngine.hpp>
 #include <Engine/Renderer/Renderer.hpp>

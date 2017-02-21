@@ -1,5 +1,5 @@
  
-#include "src/Renderer/PointyCloudRenderer.hpp"
+#include "PointyCloudRenderer.hpp"
 
 #include <Engine/RadiumEngine.hpp>
 
@@ -60,7 +60,7 @@ namespace PointyCloudPlugin
         {
             m_fbo->useAsTarget(m_width, m_height);
             {
-                glPointSize(m_splatSize);
+//                glPointSize(m_splatSize);
 
                 GL_ASSERT( glDepthMask( GL_TRUE ) );
                 GL_ASSERT( glColorMask( 1, 1, 1, 1 ) );

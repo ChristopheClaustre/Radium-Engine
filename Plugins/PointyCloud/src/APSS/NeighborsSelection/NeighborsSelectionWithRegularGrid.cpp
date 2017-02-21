@@ -1,7 +1,7 @@
 #include "NeighborsSelectionWithRegularGrid.hpp"
 
-#include "RegularGridBuilder.hpp"
-#include "RegularGrid.hpp"
+#include <APSS/NeighborsSelection/RegularGrid/RegularGridBuilder.hpp>
+#include <APSS/NeighborsSelection/RegularGrid/RegularGrid.hpp>
 
 namespace PointyCloudPlugin {
 
