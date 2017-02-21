@@ -13,9 +13,11 @@
 #include <Engine/Managers/ComponentMessenger/ComponentMessenger.hpp>
 
 #include <GuiBase/Viewer/CameraInterface.hpp>
+#include <GuiBase/Viewer/Viewer.hpp>
 
 #include <PointyCloudComponent.hpp>
-#include <PointyCloudPlugin.hpp>
+#include <Renderer/PointyCloudRenderer.hpp>
+#include <ComputePointyCloudTask.hpp>
 
 namespace PointyCloudPlugin
 {
@@ -78,7 +80,8 @@ namespace PointyCloudPlugin
     void PointyCloudSystem::generateTasks( Ra::Core::TaskQueue* taskQueue, const Ra::Engine::FrameInfo& frameInfo )
     {
         if(m_APSS)
-            taskQueue->registerTask(new ComputePointyCloudTask(this));
+            for(auto comp : pointyCloudComponentList)
+                taskQueue->registerTask(new ComputePointyCloudTask(comp));
     }
 
     void PointyCloudSystem::setSplatRadius(Scalar splatRadius)
