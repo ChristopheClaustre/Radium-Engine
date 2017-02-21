@@ -43,8 +43,8 @@ PointyCloudUI::PointyCloudUI(Scalar splatRadius, Scalar influenceRadius, Scalar 
     ui->m_cuda->setChecked(cuda);
     ui->m_octree->setChecked(octree);
 
-    ui->m_APSS->setChecked(cuda);
-    ui->m_renderer->setChecked(octree);
+    ui->m_APSS->setChecked(APSS);
+    ui->m_renderer->setChecked(renderer);
 }
 
 PointyCloudUI::~PointyCloudUI()
