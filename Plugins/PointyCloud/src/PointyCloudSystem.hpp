@@ -2,12 +2,8 @@
 #define POINTYCLOUDPLUGIN_POINTYCLOUDSYSTEM_HPP
 
 #include <PointyCloudPlugin.hpp>
-#include <ComputePointyCloudTask.hpp>
 
 #include <Engine/System/System.hpp>
-#include <GuiBase/Viewer/Viewer.hpp>
-
-#include <Renderer/PointyCloudRenderer.hpp>
 
 namespace Ra
 {
@@ -15,10 +11,11 @@ namespace Ra
     {
         struct TriangleMesh;
     }
-}
 
-namespace Ra
-{
+    namespace GuiBase {
+        class Viewer;
+    } // namespace Viewer
+
     namespace Engine
     {
         class Entity;
@@ -36,6 +33,8 @@ namespace PointyCloudPlugin
 
 namespace PointyCloudPlugin
 {
+    class PointyCloudRenderer;
+
     class POINTY_PLUGIN_API PointyCloudSystem : public Ra::Engine::System
     {
     public:
@@ -72,7 +71,7 @@ namespace PointyCloudPlugin
         inline const bool& isRendererUsed() const { return m_rendererUsed; }
 
     private:
-        PointyCloudPlugin::PointyCloudRenderer * m_renderer;
+        PointyCloudRenderer * m_renderer;
         int m_rendererIndex;
         Ra::Gui::Viewer * m_viewer;
         std::vector<PointyCloudComponent*> pointyCloudComponentList;
