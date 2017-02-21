@@ -2,9 +2,9 @@
 #define POINTYCLOUDPLUGIN_POINTYCLOUDTASK_HPP_
 
 #include <Core/Tasks/Task.hpp>
-#include "PointyCloudComponent.hpp"
-#include "PointyCloudSystem.hpp"
 
+#include <PointyCloudComponent.hpp>
+#include <PointyCloudSystem.hpp>
 
 namespace PointyCloudPlugin
 {

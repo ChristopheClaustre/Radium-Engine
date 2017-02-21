@@ -1,6 +1,6 @@
 #include "RegularGrid.hpp"
 
-#include "PointyCloud.hpp"
+#include <APSS/PointyCloud.hpp>
 
 #include <Core/Log/Log.hpp>
 #include <sstream>

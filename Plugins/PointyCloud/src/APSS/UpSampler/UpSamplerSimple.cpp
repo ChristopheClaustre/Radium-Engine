@@ -1,7 +1,6 @@
 #include "UpSamplerSimple.hpp"
+
 namespace  PointyCloudPlugin {
-
-
 
 UpSamplerSimple::UpSamplerSimple(float rayon, float threshold,const Ra::Engine::Camera & camera) : UpSampler(rayon), m_threshold(threshold),m_camera(camera)
 {
@@ -48,4 +47,5 @@ int UpSamplerSimple::calculEta(const int& indice)
     std::cerr <<  facteurObliquite   << std::endl;
     return (10 / log2( distPToCam.norm()  + 2  ))*facteurObliquite ;
 }
-}
+
+} // namespace PointyCloudPlugin

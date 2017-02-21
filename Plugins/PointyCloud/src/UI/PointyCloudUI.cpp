@@ -1,5 +1,5 @@
 #include "PointyCloudUI.h"
-#include "PointyCloudPlugin.hpp"
+#include <PointyCloudPlugin.hpp>
 #include "ui_PointyCloudUI.h"
 
 #include <iostream>

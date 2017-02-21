@@ -1,5 +1,6 @@
 #include "OrthogonalProjection.hpp"
-#include "NeighborsSelection.hpp"
+
+#include <APSS/NeighborsSelection/NeighborsSelection.hpp>
 
 #include <Core/Time/Timer.hpp>
 

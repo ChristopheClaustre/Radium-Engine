@@ -1,7 +1,8 @@
 #ifndef POINTYCLOUDPLUGIN_UPSAMPLERSIMPLE_H
 #define POINTYCLOUDPLUGIN_UPSAMPLERSIMPLE_H
 
-#include "UpSampler.hpp"
+#include <APSS/UpSampler/UpSampler.hpp>
+
 #include <Engine/Renderer/Camera/Camera.hpp>
 
 namespace PointyCloudPlugin {
@@ -20,8 +21,8 @@ protected:
 
     int getM(const int& indice);
     int calculEta(const int& indice);
-};
+}; // class UpSamplerSimple
 
-}
+} // namespace PointyCloudPlugin
 
 #endif // POINTYCLOUDPLUGIN_UPSAMPLERSIMPLE_H

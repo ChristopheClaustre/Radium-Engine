@@ -4,8 +4,8 @@
 #include "Test.hpp"
 
 #include <misc/PointyCloudFactory.hpp>
-#include <APSS/NeighborsSelection.hpp>
-#include <APSS/NeighborsSelectionWithRegularGrid.hpp>
+#include <APSS/NeighborsSelection/NeighborsSelection.hpp>
+#include <APSS/NeighborsSelection/NeighborsSelectionWithRegularGrid.hpp>
 
 #include <cstdlib>
 

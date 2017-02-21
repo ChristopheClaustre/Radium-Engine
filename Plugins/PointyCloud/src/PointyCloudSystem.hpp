@@ -1,11 +1,12 @@
 #ifndef POINTYCLOUDPLUGIN_POINTYCLOUDSYSTEM_HPP
 #define POINTYCLOUDPLUGIN_POINTYCLOUDSYSTEM_HPP
 
-#include "PointyCloudPlugin.hpp"
-#include "ComputePointyCloudTask.hpp"
+#include <PointyCloudPlugin.hpp>
+#include <ComputePointyCloudTask.hpp>
 
 #include <Engine/System/System.hpp>
 #include <GuiBase/Viewer/Viewer.hpp>
+
 #include <Renderer/PointyCloudRenderer.hpp>
 
 namespace Ra

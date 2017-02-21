@@ -1,9 +1,9 @@
 #include "RegularGridBuilder.hpp"
 
-#include "RegularGrid.hpp"
-#include "PointyCloud.hpp"
+#include <APSS/NeighborsSelection/RegularGrid/RegularGrid.hpp>
+#include <APSS/PointyCloud.hpp>
 
-#include "Core/Time/Timer.hpp"
+#include <Core/Time/Timer.hpp>
 
 #include <limits>
 

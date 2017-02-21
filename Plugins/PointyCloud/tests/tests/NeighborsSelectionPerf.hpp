@@ -5,9 +5,9 @@
 
 #include <misc/PointyCloudFactory.hpp>
 
-#include <APSS/NeighborsSelection.hpp>
-#include <APSS/NeighborsSelectionWithRegularGrid.hpp>
-#include <APSS/RegularGrid.hpp>
+#include <APSS/NeighborsSelection/NeighborsSelection.hpp>
+#include <APSS/NeighborsSelection/NeighborsSelectionWithRegularGrid.hpp>
+#include <APSS/NeighborsSelection/RegularGrid/RegularGrid.hpp>
 
 #include <Core/Time/Timer.hpp>
 
