@@ -28,7 +28,8 @@ namespace PointyCloudPlugin
           m_threshold(PointyCloudPluginC::thresholdInit.init),
           m_M(PointyCloudPluginC::mInit.init),
           m_upsampler(FIXED_METHOD), m_projector(ORTHOGONAL_METHOD),
-          m_octree(false), m_cuda(false)
+          m_octree(false), m_cuda(false),
+          m_APSS(false), m_rendererUsed(false)
     {
         m_renderer = new PointyCloudPlugin::PointyCloudRenderer(m_viewer->width(), m_viewer->height(), m_splatRadius);
         m_rendererIndex = m_viewer->addRenderer(m_renderer);

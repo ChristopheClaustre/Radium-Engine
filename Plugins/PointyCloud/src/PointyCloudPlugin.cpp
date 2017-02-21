@@ -37,7 +37,8 @@ namespace PointyCloudPlugin
         PointyCloudUI* widget = new PointyCloudUI(
                     m_system->getSplatRadius(), m_system->getInfluenceRadius(), m_system->getBeta(),
                     m_system->getThreshold(), m_system->getM(), m_system->getUpsamplingMethod(),
-                    m_system->getProjectionMethod(), m_system->isOptimizedByOctree(), m_system->isOptimizedByCUDA());
+                    m_system->getProjectionMethod(), m_system->isOptimizedByOctree(), m_system->isOptimizedByCUDA(),
+                    m_system->isAPSSused(), m_system->isRendererUsed());
 
         connect( widget, &PointyCloudUI::setSplatRadius,        this, &PointyCloudPluginC::setSplatRadius );
         connect( widget, &PointyCloudUI::setInfluenceRadius,    this, &PointyCloudPluginC::setInfluenceRadius );
