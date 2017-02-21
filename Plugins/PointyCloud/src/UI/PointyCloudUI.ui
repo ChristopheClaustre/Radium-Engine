@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>292</width>
-    <height>287</height>
+    <height>497</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -232,6 +232,24 @@
       <widget class="QCheckBox" name="m_cuda">
        <property name="text">
         <string>CUDA</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QCheckBox" name="m_APSS">
+       <property name="text">
+        <string>APSS</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="m_renderer">
+       <property name="text">
+        <string>Renderer</string>
        </property>
       </widget>
      </item>

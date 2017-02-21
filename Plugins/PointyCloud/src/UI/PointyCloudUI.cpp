@@ -7,7 +7,7 @@
 PointyCloudUI::PointyCloudUI(Scalar splatRadius, Scalar influenceRadius, Scalar beta, int Threshold, int M,
                              PointyCloudPlugin::UPSAMPLING_METHOD upsampler,
                              PointyCloudPlugin::PROJECTION_METHOD projector,
-                             bool cuda, bool octree, QWidget *parent) :
+                             bool cuda, bool octree, bool APSS, bool renderer, QWidget *parent) :
     QFrame(parent),
     ui(new Ui::PointyCloudUI)
 {
@@ -42,6 +42,9 @@ PointyCloudUI::PointyCloudUI(Scalar splatRadius, Scalar influenceRadius, Scalar 
 
     ui->m_cuda->setChecked(cuda);
     ui->m_octree->setChecked(octree);
+
+    ui->m_APSS->setChecked(cuda);
+    ui->m_renderer->setChecked(octree);
 }
 
 PointyCloudUI::~PointyCloudUI()
@@ -93,4 +96,14 @@ void PointyCloudUI::on_m_octree_clicked(bool checked)
 void PointyCloudUI::on_m_cuda_clicked(bool checked)
 {
     emit setOptimizationByCUDA(checked);
+}
+
+void PointyCloudUI::on_m_APSS_clicked(bool checked)
+{
+    emit setAPSS(checked);
+}
+
+void PointyCloudUI::on_m_renderer_clicked(bool checked)
+{
+    emit setRenderer(checked);
 }

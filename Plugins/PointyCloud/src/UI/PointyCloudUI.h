@@ -16,7 +16,7 @@ public:
     explicit PointyCloudUI(Scalar splatRadius, Scalar influenceRadius, Scalar beta, int Threshold, int M,
                            PointyCloudPlugin::UPSAMPLING_METHOD upsampler,
                            PointyCloudPlugin::PROJECTION_METHOD projector,
-                           bool cuda, bool octree, QWidget *parent = 0);
+                           bool cuda, bool octree, bool APSS=true, bool renderer=true, QWidget *parent = 0);
     ~PointyCloudUI();
 
 signals:
@@ -28,6 +28,8 @@ signals:
     void setProjectionMethod(PointyCloudPlugin::PROJECTION_METHOD);
     void setOptimizationByOctree(bool);
     void setOptimizationByCUDA(bool);
+    void setAPSS(bool);
+    void setRenderer(bool);
 
 private slots:
 
@@ -39,6 +41,8 @@ private slots:
     void on_m_projectionMethod_currentIndexChanged(int index);
     void on_m_octree_clicked(bool checked);
     void on_m_cuda_clicked(bool checked);
+    void on_m_APSS_clicked(bool checked);
+    void on_m_renderer_clicked(bool checked);
 
 private:
     Ui::PointyCloudUI *ui;
