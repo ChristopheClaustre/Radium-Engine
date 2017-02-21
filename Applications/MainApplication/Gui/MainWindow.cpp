@@ -392,6 +392,7 @@ namespace Ra
         QSignalBlocker blockTextures(m_displayedTextureCombo);
 
         auto texs = m_viewer->getRenderer()->getAvailableTextures();
+        m_displayedTextureCombo->clear();
         for (const auto& tex : texs)
         {
             m_displayedTextureCombo->addItem(tex.c_str());
