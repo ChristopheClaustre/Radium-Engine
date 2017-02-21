@@ -34,11 +34,19 @@ namespace PointyCloudPlugin
     {
         if(m_count>0)
         {
-            LOGP(logINFO) << "Timing results :\n" <<
+            LOGP(logINFO) << "\n===Timing computePointyCloud()===\n" <<
                              "Culling    : " << m_timeCulling/m_count << " μs\n" <<
                              "Upsampling : " << m_timeUpsampling/m_count << " μs\n" <<
                              "Projecting : " << m_timeProjecting/m_count << " μs\n" <<
-                             "Loading    : " << m_timeLoading/m_count << " μs";
+                             "Loading    : " << m_timeLoading/m_count << " μs\n";
+
+        }
+        if(m_projection.getCount()>0)
+        {
+            LOGP(logINFO) << "\n===Timing project()===\n" <<
+                             "Neighbors query  : " << m_projection.getTimeNeighbors() << " μs\n" <<
+                             "Sphere fitting   : " << m_projection.getTimeFitting() << " μs\n" <<
+                             "Point projection : " << m_projection.getTimeProjecting() << " μs" ;
         }
     }
 

@@ -31,12 +31,24 @@ public:
 
     void project(PointyCloud& upSampledCloud);
 
+    // timing accessor
+    float getTimeNeighbors() const;
+    float getTimeFitting() const;
+    float getTimeProjecting() const;
+    int getCount() const;
+
 protected:
 
     std::shared_ptr<NeighborsSelection> m_selector;
     std::shared_ptr<PointyCloud> m_originalCloud;
 
     Scalar m_influenceRadius;
+
+    // time stats
+    float m_timeNeighbors;
+    float m_timeFitting;
+    float m_timeProjecting;
+    size_t m_count;
 };
 
 
