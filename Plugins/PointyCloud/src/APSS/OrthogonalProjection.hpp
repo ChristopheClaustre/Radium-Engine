@@ -1,11 +1,11 @@
 #ifndef POINTYCLOUDPLUGIN_ORTHOGONALPROJECTION_HPP
 #define POINTYCLOUDPLUGIN_ORTHOGONALPROJECTION_HPP
 
+#include <APSS/PointyCloud.hpp>
+
 #include <grenaille.h>
 
 #include <memory>
-
-#include <APSS/PointyCloud.hpp>
 
 namespace PointyCloudPlugin {
 
