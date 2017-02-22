@@ -123,6 +123,13 @@ namespace Ra {
             m_isDirty = true;
         }
 
+        void Mesh::addData( const Vec1Data& type, const Core::Vector1Array& data )
+        {
+            m_v1Data[static_cast<uint>(type)] = data;
+            m_dataDirty[MAX_MESH + MAX_VEC3 + MAX_VEC4 + static_cast<uint>(type)] = true;
+            m_isDirty = true;
+        }
+
         // Template parameter must be a Core::VectorNArray
         template< typename VecArray >
         void Mesh::sendGLData( const VecArray& arr, const uint vboIdx )
@@ -143,7 +150,7 @@ namespace Ra {
                 GL_ASSERT( glGenBuffers( 1, &m_vbos[vboIdx] ) );
                 GL_ASSERT( glBindBuffer( GL_ARRAY_BUFFER, m_vbos[vboIdx] ) );
                 GL_ASSERT( glBufferData( GL_ARRAY_BUFFER, arr.size() * sizeof( typename VecArray::Vector ),
-                arr.data(), GL_DYNAMIC_DRAW ) );
+                                            arr.data(), GL_DYNAMIC_DRAW ) );
 
                 // Use (vboIdx - 1) as attribute index because vbo 0 is actually ibo.
                 GL_ASSERT( glVertexAttribPointer( vboIdx - 1, size, type, normalized,
@@ -162,6 +169,47 @@ namespace Ra {
             }
         }
 
+        // "Dynamic Sampling and Rendering of APSS" students team
+        // this function si needed for the moment because of the reality behind the typedef Vector1Array :
+        // Vector1Array isn't an array of vector (of any dimension), it's just an array(std::vector) of scalar
+        // and the templated sendGLData method use attributes only available in an Eigen's vector...
+        // Maybe we should change the Vector1Array, to not have to hide this terrible reality ???
+        void Mesh::sendGLData( const Core::Vector1Array& arr, const uint vboIdx )
+        {
+#ifdef CORE_USE_DOUBLE
+            GLenum type = GL_DOUBLE;
+#else
+            GLenum type = GL_FLOAT;
+#endif
+            constexpr GLuint size = 1;
+            constexpr GLboolean normalized  = GL_FALSE;
+            constexpr GLint64 ptr = 0;
+
+            // This vbo has not been created yet
+            if ( m_vbos[vboIdx] == 0 && arr.size() > 0 )
+            {
+                GL_ASSERT( glGenBuffers( 1, &m_vbos[vboIdx] ) );
+                GL_ASSERT( glBindBuffer( GL_ARRAY_BUFFER, m_vbos[vboIdx] ) );
+                GL_ASSERT( glBufferData( GL_ARRAY_BUFFER, arr.size() * sizeof( Scalar ),
+                                            arr.data(), GL_DYNAMIC_DRAW ) );
+
+                // Use (vboIdx - 1) as attribute index because vbo 0 is actually ibo.
+                GL_ASSERT( glVertexAttribPointer( vboIdx - 1, size, type, normalized,
+                                                  sizeof( Scalar ), (GLvoid*)ptr ) );
+
+                GL_ASSERT( glEnableVertexAttribArray( vboIdx - 1 ) );
+
+            }
+
+            if ( m_dataDirty[vboIdx] == true && m_vbos[vboIdx] != 0 && arr.size() > 0 )
+            {
+                GL_ASSERT( glBindBuffer( GL_ARRAY_BUFFER, m_vbos[vboIdx] ) );
+                GL_ASSERT( glBufferData( GL_ARRAY_BUFFER, arr.size() * sizeof( Scalar ),
+                arr.data(), GL_DYNAMIC_DRAW ) );
+                m_dataDirty[vboIdx] = false;
+            }
+        }
+
         void Mesh::updateGL()
         {
             if ( m_isDirty )
@@ -171,8 +219,7 @@ namespace Ra {
                 CORE_ASSERT( dirtyTest == m_isDirty, "Dirty flags inconsistency");
 
                 CORE_ASSERT( !m_mesh.m_vertices.empty(), "Vertices is empty array.");
-
-                CORE_ASSERT( !m_mesh.m_triangles.empty(), "Indices is an empty arrays.");
+                CORE_ASSERT( !m_mesh.m_triangles.empty(), "Indices is empty array.");
 
                 if ( m_vao == 0 )
                 {
@@ -208,6 +255,9 @@ namespace Ra {
                 sendGLData(m_v4Data[VERTEX_COLOR],      MAX_MESH + MAX_VEC3 + VERTEX_COLOR );
                 sendGLData(m_v4Data[VERTEX_WEIGHTS],    MAX_MESH + MAX_VEC3 + VERTEX_WEIGHTS);
                 sendGLData(m_v4Data[VERTEX_WEIGHT_IDX], MAX_MESH + MAX_VEC3 + VERTEX_WEIGHT_IDX);
+
+                // Vec1 data
+                sendGLData(m_v1Data[POINT_SPLATSIZE], MAX_MESH + MAX_VEC3 + MAX_VEC4 + POINT_SPLATSIZE);
 
                 GL_ASSERT( glBindVertexArray( 0 ) );
 

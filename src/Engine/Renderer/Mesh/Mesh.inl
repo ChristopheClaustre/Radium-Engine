@@ -27,6 +27,11 @@ namespace Engine {
         return m_v4Data[static_cast<uint>(type)];
     }
 
+    const Core::Vector1Array &Mesh::getData(const Mesh::Vec1Data &type) const
+    {
+        return m_v1Data[static_cast<uint>(type)];
+    }
+
     Core::Vector3Array &Mesh::getData(const Mesh::Vec3Data &type)
     {
         return m_v3Data[static_cast<uint>(type)];
@@ -37,9 +42,15 @@ namespace Engine {
         return m_v4Data[static_cast<uint>(type)];
     }
 
+    Core::Vector1Array &Mesh::getData(const Mesh::Vec1Data &type)
+    {
+        return m_v1Data[static_cast<uint>(type)];
+    }
+
     void Mesh::setDirty(const Mesh::MeshData &type) { m_dataDirty[type] = true; m_isDirty = true;}
     void Mesh::setDirty(const Mesh::Vec3Data &type) { m_dataDirty[MAX_MESH + type] = true; m_isDirty = true;}
     void Mesh::setDirty(const Mesh::Vec4Data &type) { m_dataDirty[MAX_MESH + MAX_VEC3 + type ] = true ; m_isDirty = true;}
+    void Mesh::setDirty(const Mesh::Vec1Data &type) { m_dataDirty[MAX_MESH + MAX_VEC3 + MAX_VEC4 + type ] = true ; m_isDirty = true;}
 
 }
 }

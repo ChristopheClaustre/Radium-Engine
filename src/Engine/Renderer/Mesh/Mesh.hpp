@@ -27,7 +27,6 @@ namespace Ra
         //                for the plugin developper (or we can just provide shaders
         //                for this kind of renderings ...)
 
-
         /// A class representing an openGL general mesh to be displayed.
         /// It stores the vertex attributes, indices, and can be rendered
         /// with a specific render mode (e.g. GL_TRIANGLES or GL_LINES).
@@ -69,8 +68,16 @@ namespace Ra
                 MAX_VEC4
             };
 
+            /// Optional vector 1 data
+            enum Vec1Data : uint
+            {
+                POINT_SPLATSIZE = 0,   /// points splat size.
+
+                MAX_VEC1
+            };
+
             /// Total number of vertex attributes.
-            constexpr static uint MAX_DATA = MAX_MESH + MAX_VEC3 + MAX_VEC4;
+            constexpr static uint MAX_DATA = MAX_MESH + MAX_VEC3 + MAX_VEC4 + MAX_VEC1;
 
         public:
             Mesh( const std::string& name, GLenum renderMode = GL_TRIANGLES );
@@ -92,25 +99,29 @@ namespace Ra
 
             // TODO (val) : remove this function (it is used mostly in the display primitives)
             void loadGeometry( const Core::Vector3Array& vertices, const std::vector<uint>& indices);
-            //NOTE(chris): fonction à peut être fusionner avec une des loadGeometry
+            //NOTE(DSRAPSS students team): function maybe to fusion with one of the loadGeometry functions
             void loadPointyGeometry(const Core::Vector3Array &vertices, const Core::Vector3Array &normals);
 
             /// Load additionnal vertex data.
             void addData( const Vec3Data& type, const Core::Vector3Array& data);
             void addData( const Vec4Data& type, const Core::Vector4Array& data);
+            void addData( const Vec1Data& type, const Core::Vector1Array& data);
 
             /// Access the additionnal data arrays by type.
             inline const Core::Vector3Array& getData( const Vec3Data& type ) const;
             inline const Core::Vector4Array& getData( const Vec4Data& type ) const;
+            inline const Core::Vector1Array& getData( const Vec1Data& type ) const;
 
             /// Access the non-const additionnal data arrays by type
             inline Core::Vector3Array& getData( const Vec3Data& type );
             inline Core::Vector4Array& getData( const Vec4Data& type );
+            inline Core::Vector1Array& getData( const Vec1Data& type );
 
             /// Mark one of the data types as dirty, forcing an update of the openGL buffer.
             inline void setDirty( const MeshData& type );
             inline void setDirty( const Vec3Data& type );
             inline void setDirty( const Vec4Data& type );
+            inline void setDirty( const Vec1Data& type );
 
             /// This function is called at the start of the rendering. It will update the
             /// necessary openGL buffers.
@@ -127,6 +138,9 @@ namespace Ra
             template < typename VecArray >
             void sendGLData( const VecArray& arr, const uint vboIdx );
 
+            /// Helper function to send buffer data to openGL.
+            void sendGLData( const Core::Vector1Array& arr, const uint vboIdx );
+
         private:
             std::string m_name;  /// Name of the mesh.
 
@@ -137,8 +151,9 @@ namespace Ra
 
             std::array<Core::Vector3Array, MAX_VEC3 > m_v3Data; /// Additionnal vertex vector 3 data
             std::array<Core::Vector4Array, MAX_VEC4 > m_v4Data; /// Additionnal vertex vector 4 data
+            std::array<Core::Vector1Array, MAX_VEC1 > m_v1Data; /// Additionnal vertex vector 1 data
 
-            // Combined arrays store the flags in this order Mesh, then Vec3 then Vec4 data.
+            // Combined arrays store the flags in this order Mesh, then Vec3 then Vec4 data then Vec1 data.
             // Following the enum declaration above.
             // Our first VBO index is actually the indices buffer index.
             // The following are for vertex data.
