@@ -42,6 +42,7 @@ message("Found CUDA " ${CUDA_VERSION_STRING} " in " ${CUDA_TOOLKIT_ROOT_DIR})
 file( GLOB_RECURSE sources src/*.cpp )
 file( GLOB_RECURSE headers src/*.hpp )
 file( GLOB_RECURSE inlines src/*.inl )
+file( GLOB_RECURSE cuda    src/*.cu )
 
 file(GLOB_RECURSE app_uis *.ui)
 qt5_wrap_ui(app_uis_moc ${app_uis})
@@ -62,7 +63,8 @@ include_directories(
     ${ASSIMP_INC}
     )
 
-add_library( PointyCloud SHARED ${sources} ${headers} ${inlines} ${app_uis})
+CUDA_ADD_LIBRARY( PointyCloud SHARED ${sources} ${headers} ${inlines} ${app_uis})
+
 add_dependencies( PointyCloud radiumCore radiumEngine radiumGuiBase )
 
 target_compile_definitions( PointyCloud PRIVATE "-DPointyCloud_EXPORTS" )
