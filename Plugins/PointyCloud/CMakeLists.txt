@@ -34,7 +34,10 @@ endif(MSVC OR MSVC_IDE)
 find_package( Qt5Core    REQUIRED )
 find_package( Qt5Widgets REQUIRED )
 
-#find_package(CUDA)
+# CUDA
+find_package( CUDA REQUIRED )
+message("Found CUDA " ${CUDA_VERSION_STRING} " in " ${CUDA_TOOLKIT_ROOT_DIR})
+
 
 file( GLOB_RECURSE sources src/*.cpp )
 file( GLOB_RECURSE headers src/*.hpp )
