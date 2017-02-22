@@ -53,7 +53,23 @@ namespace PointyCloudPlugin
 
         for ( const auto& data : geomData )
         {
-            if (data->hasNormals()) {
+            bool valid = data->hasVertices() && data->hasNormals();
+
+            if (data->getType() != Ra::Asset::GeometryData::POINT_CLOUD) {
+                if (valid) {
+                    LOGP(logINFO) << data->getName() << " isn't a Point cloud, but it can be loaded as one.";
+                }
+                else {
+                    LOGP(logINFO) << data->getName() << " isn't a Point cloud, and it CAN'T be loaded as one (no normal nor position).";
+                }
+            }
+            else {
+                if (!valid) {
+                    LOGP(logINFO) << "Failed to load " << data->getName() << " : cloud has no normal nor position and it's needed for APSS.";
+                }
+            }
+
+            if (valid) {
                 std::string componentName = "PointyC_" + entity->getName() + std::to_string( id++ );
                 PointyCloudComponent * comp = new PointyCloudComponent( componentName, m_viewer->getCameraInterface()->getCamera() );
                 entity->addComponent( comp );
@@ -61,9 +77,6 @@ namespace PointyCloudPlugin
                 comp->handlePointyCloudLoading(data);
 
                 pointyCloudComponentList.push_back(comp);
-            }
-            else {
-                LOGP(logINFO) << "Failed to load " << data->getName() << " : cloud has no normal.";
             }
         }
 
