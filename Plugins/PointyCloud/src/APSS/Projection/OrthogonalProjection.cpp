@@ -31,7 +31,7 @@ void OrthogonalProjection::project(PointyCloud &upSampledCloud)
 
     for(auto &p : upSampledCloud.m_points)
     {
-        if (p.isEligible())
+        if (p.eligible())
         {
             fit.init(p.pos());
 
@@ -49,7 +49,7 @@ void OrthogonalProjection::project(PointyCloud &upSampledCloud)
             } while(res == Grenaille::NEED_OTHER_PASS && i<MAX_FITTING_ITERATION);
 
             auto newPos = fit.project(p.pos());
-            APoint _p(newPos, fit.primitiveGradient(newPos), p.color());
+            APoint _p(newPos, fit.primitiveGradient(newPos), p.color(), p.splatSize());
             p = _p;
         }
     }

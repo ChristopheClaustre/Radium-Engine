@@ -15,7 +15,7 @@ UpSampler::~UpSampler()
 void UpSampler::upSamplePoint(const int &m, const int& indice )
 {
     APoint centerPoint = m_cloud->m_points[indice];
-    if (centerPoint.isEligible() && m > 1)
+    if (centerPoint.eligible() && m > 1)
     {
         const Ra::Core::Vector3 &normal = centerPoint.normal();
         const Ra::Core::Vector3 &u = this->calculU(normal);
@@ -26,14 +26,15 @@ void UpSampler::upSamplePoint(const int &m, const int& indice )
         const Ra::Core::Vector3 &centerVertice = centerPoint.pos();
 
         const Ra::Core::Vector4 &color = m_cloud->m_points[indice].color();
-        const Scalar &splatSize = m_cloud->m_points[indice].splatSize();
+        const Scalar splatSize = m_cloud->m_points[indice].splatSize();
+        const Scalar newSplatSize = splatSize/m;
 
         const Ra::Core::Vector3 &topLeftVertice = Ra::Core::Vector3(u * -m_radius+v * m_radius) + centerVertice;
         for (int i = 0 ; i < m ; i ++ )
         {
             for (int j = 0 ; j < m ; j ++ )
             {
-                APoint newPoint(Ra::Core::Vector3( i * u_pas + j * -v_pas)+topLeftVertice ,normal,color,Scalar(splatSize/m));
+                APoint newPoint(Ra::Core::Vector3( i * u_pas + j * -v_pas)+topLeftVertice ,normal,color,newSplatSize);
                 m_newpoints.push_back(newPoint);
             }
         }
@@ -62,6 +63,7 @@ Ra::Core::Vector3 UpSampler::calculU(const Ra::Core::Vector3& normal)
     u.normalize();
     return u;
 }
+
 // crossProd de 2 vect donne un vect ortho aux 2 ;
 Ra::Core::Vector3 UpSampler::calculV(const Ra::Core::Vector3& normal, const Ra::Core::Vector3& u)
 {
@@ -70,4 +72,4 @@ Ra::Core::Vector3 UpSampler::calculV(const Ra::Core::Vector3& normal, const Ra::
     return v;
 }
 
-}
+} // namespace PointyCloudPlugin

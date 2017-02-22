@@ -154,7 +154,7 @@ namespace PointyCloudPlugin
     void PointyCloudComponent::setEligible() {
         for (auto it = m_originalCloud->m_points.begin(); it != m_originalCloud->m_points.end(); ++it) {
             // defined by Patate
-            it->setEligible(m_selector->getNeighbors(*it).size() > 6);
+            it->eligible() = (m_selector->getNeighbors(*it).size() > 6);
         }
     }
 
@@ -167,7 +167,7 @@ namespace PointyCloudPlugin
 
     void PointyCloudComponent::setSplatRadius(Scalar splatRadius) {
         for (auto it = m_originalCloud->m_points.begin(); it != m_originalCloud->m_points.end(); ++it) {
-            it->setSplatSize(splatRadius);
+            it->splatSize() = splatRadius;
         }
     }
 
