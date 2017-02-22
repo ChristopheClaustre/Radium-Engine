@@ -63,7 +63,7 @@ include_directories(
     ${ASSIMP_INC}
     )
 
-CUDA_ADD_LIBRARY( PointyCloud SHARED ${sources} ${headers} ${inlines} ${app_uis})
+CUDA_ADD_LIBRARY( PointyCloud SHARED ${sources} ${headers} ${inlines} ${cuda} ${app_uis})
 
 add_dependencies( PointyCloud radiumCore radiumEngine radiumGuiBase )
 
