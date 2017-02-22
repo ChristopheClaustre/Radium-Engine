@@ -1,9 +1,12 @@
 #include "ComputePointyCloudTask.hpp"
 
+#include <PointyCloudComponent.hpp>
+
 namespace PointyCloudPlugin
 {
 
-    ComputePointyCloudTask::ComputePointyCloudTask(PointyCloudSystem* _system):system(_system)
+    ComputePointyCloudTask::ComputePointyCloudTask(PointyCloudComponent* component) :
+        m_component(component)
     {
     }
 
@@ -14,9 +17,6 @@ namespace PointyCloudPlugin
 
     void ComputePointyCloudTask::process()
     {
-        for(PointyCloudComponent* component : system->getComponents())
-        {
-            component->computePointyCloud();
-        }
+        m_component->computePointyCloud();
     }
 }

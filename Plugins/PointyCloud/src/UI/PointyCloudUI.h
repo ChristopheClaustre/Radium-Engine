@@ -13,34 +13,36 @@ class PointyCloudUI : public QFrame
     Q_OBJECT
 
 public:
-    explicit PointyCloudUI(Scalar splatRadius, Scalar influenceRadius, Scalar beta, int Threshold, int M,
+    explicit PointyCloudUI(Scalar splatRadius, Scalar influenceRadius, int Threshold, int M,
                            PointyCloudPlugin::UPSAMPLING_METHOD upsampler,
                            PointyCloudPlugin::PROJECTION_METHOD projector,
-                           bool cuda, bool octree, QWidget *parent = 0);
+                           bool cuda, bool octree, bool APSS=true, bool renderer=true, QWidget *parent = 0);
     ~PointyCloudUI();
 
 signals:
     void setSplatRadius(Scalar);
     void setInfluenceRadius(Scalar);
-    void setBeta(Scalar);
     void setThreshold(int);
     void setM(int);
     void setUpsamplingMethod(PointyCloudPlugin::UPSAMPLING_METHOD);
     void setProjectionMethod(PointyCloudPlugin::PROJECTION_METHOD);
     void setOptimizationByOctree(bool);
     void setOptimizationByCUDA(bool);
+    void setAPSS(bool);
+    void setRenderer(bool);
 
 private slots:
 
     void on_m_splatRadius_valueChanged(double value);
     void on_m_influenceRadius_valueChanged(double value);
-    void on_m_beta_valueChanged(double value);
     void on_m_threshold_valueChanged(int value);
     void on_m_M_valueChanged(int value);
     void on_m_upsamplingMethod_currentIndexChanged(int index);
     void on_m_projectionMethod_currentIndexChanged(int index);
     void on_m_octree_clicked(bool checked);
     void on_m_cuda_clicked(bool checked);
+    void on_m_APSS_clicked(bool checked);
+    void on_m_renderer_clicked(bool checked);
 
 private:
     Ui::PointyCloudUI *ui;

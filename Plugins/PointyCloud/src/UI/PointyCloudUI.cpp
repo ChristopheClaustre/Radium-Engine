@@ -4,10 +4,10 @@
 
 #include <iostream>
 
-PointyCloudUI::PointyCloudUI(Scalar splatRadius, Scalar influenceRadius, Scalar beta, int Threshold, int M,
+PointyCloudUI::PointyCloudUI(Scalar splatRadius, Scalar influenceRadius, int Threshold, int M,
                              PointyCloudPlugin::UPSAMPLING_METHOD upsampler,
                              PointyCloudPlugin::PROJECTION_METHOD projector,
-                             bool cuda, bool octree, QWidget *parent) :
+                             bool cuda, bool octree, bool APSS, bool renderer, QWidget *parent) :
     QFrame(parent),
     ui(new Ui::PointyCloudUI)
 {
@@ -19,10 +19,6 @@ PointyCloudUI::PointyCloudUI(Scalar splatRadius, Scalar influenceRadius, Scalar 
     ui->m_influenceRadius->setValue(influenceRadius);
     ui->m_influenceRadius->setRange(PointyCloudPlugin::PointyCloudPluginC::influenceInit.min, PointyCloudPlugin::PointyCloudPluginC::influenceInit.max);
     ui->m_influenceRadius->setSingleStep(PointyCloudPlugin::PointyCloudPluginC::influenceInit.step);
-
-    ui->m_beta->setValue(beta);
-    ui->m_beta->setRange(PointyCloudPlugin::PointyCloudPluginC::betaInit.min, PointyCloudPlugin::PointyCloudPluginC::betaInit.max);
-    ui->m_beta->setSingleStep(PointyCloudPlugin::PointyCloudPluginC::betaInit.step);
 
     ui->m_threshold->setValue(Threshold);
     ui->m_threshold->setRange(PointyCloudPlugin::PointyCloudPluginC::thresholdInit.min, PointyCloudPlugin::PointyCloudPluginC::thresholdInit.max);
@@ -46,6 +42,9 @@ PointyCloudUI::PointyCloudUI(Scalar splatRadius, Scalar influenceRadius, Scalar 
 
     ui->m_cuda->setChecked(cuda);
     ui->m_octree->setChecked(octree);
+
+    ui->m_APSS->setChecked(APSS);
+    ui->m_renderer->setChecked(renderer);
 }
 
 PointyCloudUI::~PointyCloudUI()
@@ -63,11 +62,6 @@ void PointyCloudUI::on_m_influenceRadius_valueChanged(double value)
     emit setInfluenceRadius(value);
 }
 
-void PointyCloudUI::on_m_beta_valueChanged(double value)
-{
-    emit setBeta(value);
-}
-
 void PointyCloudUI::on_m_threshold_valueChanged(int value)
 {
     emit setThreshold(value);
@@ -80,9 +74,13 @@ void PointyCloudUI::on_m_M_valueChanged(int value)
 
 void PointyCloudUI::on_m_upsamplingMethod_currentIndexChanged(int index)
 {
-    ui->label_8->setVisible(PointyCloudPlugin::UPSAMPLING_METHOD(index) == PointyCloudPlugin::FIXED_METHOD);
-    ui->m_M->setVisible(PointyCloudPlugin::UPSAMPLING_METHOD(index) == PointyCloudPlugin::FIXED_METHOD);
-    emit setUpsamplingMethod(PointyCloudPlugin::UPSAMPLING_METHOD(index));
+        ui->label_8->setVisible(PointyCloudPlugin::UPSAMPLING_METHOD(index) == PointyCloudPlugin::FIXED_METHOD);
+        ui->m_M->setVisible(PointyCloudPlugin::UPSAMPLING_METHOD(index) == PointyCloudPlugin::FIXED_METHOD);
+
+        ui->label_4->setVisible(PointyCloudPlugin::UPSAMPLING_METHOD(index) == PointyCloudPlugin::SIMPLE_METHOD);
+        ui->m_threshold->setVisible(PointyCloudPlugin::UPSAMPLING_METHOD(index) == PointyCloudPlugin::SIMPLE_METHOD);
+
+        emit setUpsamplingMethod(PointyCloudPlugin::UPSAMPLING_METHOD(index));
 }
 
 void PointyCloudUI::on_m_projectionMethod_currentIndexChanged(int index)
@@ -98,4 +96,14 @@ void PointyCloudUI::on_m_octree_clicked(bool checked)
 void PointyCloudUI::on_m_cuda_clicked(bool checked)
 {
     emit setOptimizationByCUDA(checked);
+}
+
+void PointyCloudUI::on_m_APSS_clicked(bool checked)
+{
+    emit setAPSS(checked);
+}
+
+void PointyCloudUI::on_m_renderer_clicked(bool checked)
+{
+    emit setRenderer(checked);
 }

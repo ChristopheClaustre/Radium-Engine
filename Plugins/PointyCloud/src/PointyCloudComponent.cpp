@@ -156,8 +156,7 @@ namespace PointyCloudPlugin
 
     void PointyCloudComponent::setEligible() {
         for (auto it = m_originalCloud->m_points.begin(); it != m_originalCloud->m_points.end(); ++it) {
-            // defined by Patate
-            it->eligible() = (m_selector->getNeighbors(*it).size() > 6);
+            it->setEligible(m_selector->isEligible(*it));
         }
     }
 
@@ -172,10 +171,6 @@ namespace PointyCloudPlugin
         for (auto it = m_originalCloud->m_points.begin(); it != m_originalCloud->m_points.end(); ++it) {
             it->splatSize() = splatRadius;
         }
-    }
-
-    void PointyCloudComponent::setBeta(Scalar beta) {
-        // TODO donner beta à la projection
     }
 
     void PointyCloudComponent::setThreshold(int threshold) {
@@ -242,6 +237,11 @@ namespace PointyCloudPlugin
 
     void PointyCloudComponent::setOptimizationByCUDA(bool cuda) {
         // TODO donner à tout le monde ???
+    }
+
+    void PointyCloudComponent::resetOriginalCloud()
+    {
+        m_originalCloud->loadToMesh(m_workingCloud.get());
     }
 
 } // namespace PointyCloudPlugin

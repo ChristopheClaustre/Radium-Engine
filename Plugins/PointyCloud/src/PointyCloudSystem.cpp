@@ -13,9 +13,11 @@
 #include <Engine/Managers/ComponentMessenger/ComponentMessenger.hpp>
 
 #include <GuiBase/Viewer/CameraInterface.hpp>
+#include <GuiBase/Viewer/Viewer.hpp>
 
 #include <PointyCloudComponent.hpp>
-#include <PointyCloudPlugin.hpp>
+#include <Renderer/PointyCloudRenderer.hpp>
+#include <ComputePointyCloudTask.hpp>
 
 namespace PointyCloudPlugin
 {
@@ -28,11 +30,12 @@ namespace PointyCloudPlugin
           m_threshold(PointyCloudPluginC::thresholdInit.init),
           m_M(PointyCloudPluginC::mInit.init),
           m_upsampler(FIXED_METHOD), m_projector(ORTHOGONAL_METHOD),
-          m_octree(false), m_cuda(false)
+          m_octree(false), m_cuda(false),
+          m_APSS(true), m_rendererUsed(true)
     {
         m_renderer = new PointyCloudPlugin::PointyCloudRenderer(m_viewer->width(), m_viewer->height(), m_splatRadius);
         m_rendererIndex = m_viewer->addRenderer(m_renderer);
-        m_viewer->changeRenderer(m_rendererIndex);
+        setRenderer(true);
 
         Ra::Engine::ShaderConfiguration config("Pointy");
         config.addShader(Ra::Engine::ShaderType_VERTEX,   "../Shaders/Pointy/PointyQuad.vert.glsl");
@@ -89,8 +92,9 @@ namespace PointyCloudPlugin
 
     void PointyCloudSystem::generateTasks( Ra::Core::TaskQueue* taskQueue, const Ra::Engine::FrameInfo& frameInfo )
     {
-        ComputePointyCloudTask* task = new ComputePointyCloudTask(this);
-        taskQueue->registerTask(task);
+        if(m_APSS)
+            for(auto comp : pointyCloudComponentList)
+                taskQueue->registerTask(new ComputePointyCloudTask(comp));
     }
 
     void PointyCloudSystem::setSplatRadius(Scalar splatRadius)
@@ -106,17 +110,8 @@ namespace PointyCloudPlugin
     void PointyCloudSystem::setInfluenceRadius(Scalar influenceRadius)
     {
         m_influenceRadius = influenceRadius;
-        // TODO donner à tous les components
         for (auto comp : pointyCloudComponentList) {
             comp->setInfluenceRadius(influenceRadius);
-        }
-    }
-    void PointyCloudSystem::setBeta(Scalar beta)
-    {
-        m_beta = beta;
-        // TODO donner à tous les components
-        for (auto comp : pointyCloudComponentList) {
-            comp->setBeta(beta);
         }
     }
 
@@ -132,7 +127,6 @@ namespace PointyCloudPlugin
     void PointyCloudSystem::setM(int M)
     {
         m_M = M;
-        // TODO donner à tout les components
         for (auto comp : pointyCloudComponentList) {
             comp->setM(M);
         }
@@ -141,7 +135,6 @@ namespace PointyCloudPlugin
     void PointyCloudSystem::setUpsamplingMethod(UPSAMPLING_METHOD upsampler)
     {
         m_upsampler = upsampler;
-        // TODO donner à tout les components
         for (auto comp : pointyCloudComponentList) {
             comp->setUpsamplingMethod(upsampler);
         }
@@ -150,7 +143,6 @@ namespace PointyCloudPlugin
     void PointyCloudSystem::setProjectionMethod(PROJECTION_METHOD projector)
     {
         m_projector = projector;
-        // TODO donner à tout les components
         for (auto comp : pointyCloudComponentList) {
             comp->setProjectionMethod(projector);
         }
@@ -159,7 +151,6 @@ namespace PointyCloudPlugin
     void PointyCloudSystem::setOptimizationByOctree(bool octree)
     {
         m_octree = octree;
-        // TODO donner à tout les components
         for (auto comp : pointyCloudComponentList) {
             comp->setOptimizationByOctree(octree);
         }
@@ -168,10 +159,26 @@ namespace PointyCloudPlugin
     void PointyCloudSystem::setOptimizationByCUDA(bool cuda)
     {
         m_cuda = cuda;
-        // TODO donner à tout les components
         for (auto comp : pointyCloudComponentList) {
             comp->setOptimizationByCUDA(cuda);
         }
+    }
+
+    void PointyCloudSystem::setAPSS(bool apss)
+    {
+        m_APSS = apss;
+        if(!apss)
+            for (auto comp : pointyCloudComponentList)
+                comp->resetOriginalCloud();
+    }
+
+    void PointyCloudSystem::setRenderer(bool renderer)
+    {
+        m_rendererUsed = renderer;
+        if(renderer)
+            m_viewer->changeRenderer(m_rendererIndex);
+        else
+            m_viewer->changeRenderer(0);
     }
 
 } // namespace PointyCloudPlugin

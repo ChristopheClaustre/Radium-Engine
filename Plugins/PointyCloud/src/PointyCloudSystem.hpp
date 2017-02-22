@@ -2,12 +2,8 @@
 #define POINTYCLOUDPLUGIN_POINTYCLOUDSYSTEM_HPP
 
 #include <PointyCloudPlugin.hpp>
-#include <ComputePointyCloudTask.hpp>
 
 #include <Engine/System/System.hpp>
-#include <GuiBase/Viewer/Viewer.hpp>
-
-#include <Renderer/PointyCloudRenderer.hpp>
 
 namespace Ra
 {
@@ -15,10 +11,11 @@ namespace Ra
     {
         struct TriangleMesh;
     }
-}
 
-namespace Ra
-{
+    namespace GuiBase {
+        class Viewer;
+    } // namespace Viewer
+
     namespace Engine
     {
         class Entity;
@@ -36,6 +33,8 @@ namespace PointyCloudPlugin
 
 namespace PointyCloudPlugin
 {
+    class PointyCloudRenderer;
+
     class POINTY_PLUGIN_API PointyCloudSystem : public Ra::Engine::System
     {
     public:
@@ -50,26 +49,29 @@ namespace PointyCloudPlugin
 
         void setSplatRadius(Scalar splatRadius);
         void setInfluenceRadius(Scalar influenceRadius);
-        void setBeta(Scalar beta);
         void setThreshold(int threshold);
         void setM(int M);
         void setUpsamplingMethod(UPSAMPLING_METHOD upsampler);
         void setProjectionMethod(PROJECTION_METHOD projector);
         void setOptimizationByOctree(bool octree);
         void setOptimizationByCUDA(bool cuda);
+        void setAPSS(bool apss);
+        void setRenderer(bool renderer);
 
-        inline Scalar getSplatRadius() { return m_splatRadius; }
-        inline Scalar getInfluenceRadius()  { return m_influenceRadius; }
-        inline Scalar getBeta() { return m_beta; }
-        inline int getThreshold() { return m_threshold; }
-        inline int getM() { return m_M; }
-        inline UPSAMPLING_METHOD getUpsamplingMethod() { return m_upsampler; }
-        inline PROJECTION_METHOD getProjectionMethod() { return m_projector; }
-        inline bool isOptimizedByOctree() { return m_octree; }
-        inline bool isOptimizedByCUDA() { return m_cuda; }
+        inline const Scalar& getSplatRadius() const { return m_splatRadius; }
+        inline const Scalar& getInfluenceRadius()  const { return m_influenceRadius; }
+        inline const Scalar& getBeta() const { return m_beta; }
+        inline const int& getThreshold() const { return m_threshold; }
+        inline const int& getM() const { return m_M; }
+        inline const UPSAMPLING_METHOD& getUpsamplingMethod() const { return m_upsampler; }
+        inline const PROJECTION_METHOD& getProjectionMethod() const { return m_projector; }
+        inline const bool& isOptimizedByOctree() const { return m_octree; }
+        inline const bool& isOptimizedByCUDA() const { return m_cuda; }
+        inline const bool& isAPSSused() const { return m_APSS; }
+        inline const bool& isRendererUsed() const { return m_rendererUsed; }
 
     private:
-        PointyCloudPlugin::PointyCloudRenderer * m_renderer;
+        PointyCloudRenderer * m_renderer;
         int m_rendererIndex;
         Ra::Gui::Viewer * m_viewer;
         std::vector<PointyCloudComponent*> pointyCloudComponentList;
@@ -83,6 +85,8 @@ namespace PointyCloudPlugin
         PROJECTION_METHOD m_projector;
         bool m_octree;
         bool m_cuda;
+        bool m_APSS;
+        bool m_rendererUsed;
     };
 
 } // namespace PointyCloudPlugin
