@@ -44,8 +44,7 @@ int UpSamplerSimple::calculEta(const int& indice)
     }
     facteurObliquite = (facteurObliquite+1.0f)*5;
 
-    std::cerr <<  facteurObliquite   << std::endl;
-    return (10 / log2( distPToCam.norm()  + 2  ))*facteurObliquite ;
+    return (10 / log2( distPToCam.norm()  + 2  ))*facteurObliquite;
 }
 
 } // namespace PointyCloudPlugin
