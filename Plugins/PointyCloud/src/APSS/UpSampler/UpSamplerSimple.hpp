@@ -14,6 +14,8 @@ public:
     ~UpSamplerSimple();
     virtual void upSampleCloud(PointyCloud& cloud);
 
+    void setThreshold(int ts) { m_threshold = ts; }
+
 protected:
 
     float m_threshold;
