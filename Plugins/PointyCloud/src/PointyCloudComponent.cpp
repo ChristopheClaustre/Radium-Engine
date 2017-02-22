@@ -156,7 +156,7 @@ namespace PointyCloudPlugin
 
     void PointyCloudComponent::setEligible() {
         for (auto it = m_originalCloud->m_points.begin(); it != m_originalCloud->m_points.end(); ++it) {
-            it->setEligible(m_selector->isEligible(*it));
+            it->eligible() = (m_selector->isEligible(*it));
         }
     }
 
