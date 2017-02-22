@@ -62,12 +62,12 @@ namespace PointyCloudPlugin
         std::string roName = name;
         roName.append( "_RO" );
 
-        std::string cloudName = name;
-        cloudName.append( "_Cloud" );
+        m_cloudName = name;
+        m_cloudName.append( "_Cloud" );
 
         m_contentName = data->getName();
 
-        m_workingCloud = Ra::Core::make_shared<Ra::Engine::Mesh>( cloudName, GL_POINTS );
+        m_workingCloud = Ra::Core::make_shared<Ra::Engine::Mesh>( m_cloudName, GL_POINTS );
 
         Ra::Core::Transform T = data->getFrame();
         Ra::Core::Transform N;
@@ -77,7 +77,7 @@ namespace PointyCloudPlugin
         Ra::Core::Vector3Array normals;
 
         for ( const auto& v : data->getVertices() ) vertices.push_back( T * v );
-        for ( const auto& v : data->getNormals() )  normals.push_back( (N * v).normalized() );
+        for ( const auto& n : data->getNormals() )  normals.push_back( (N * n).normalized() );
 
         m_workingCloud->loadPointyGeometry( vertices, normals );
 
@@ -86,11 +86,14 @@ namespace PointyCloudPlugin
             for ( const auto& v : data->getColors() ) colors.push_back( v );
         }
         else {
-            LOGP(logINFO) << "cloud " << cloudName << " has no color. Creation of colors.";
+            LOGP(logINFO) << "cloud " << m_cloudName << " has no color. Creation of colors.";
             colors.resize(vertices.size(), Ra::Core::Color::Ones());
         }
+        Ra::Core::Vector1Array splatSizes;
+        splatSizes.resize(vertices.size(), 1.0);
 
         m_workingCloud->addData( Ra::Engine::Mesh::VERTEX_COLOR, colors);
+        m_workingCloud->addData( Ra::Engine::Mesh::POINT_SPLATSIZE, splatSizes);
 
         auto config = Ra::Engine::ShaderConfigurationFactory::getConfiguration("Pointy");
 
@@ -102,11 +105,11 @@ namespace PointyCloudPlugin
         auto sys = static_cast<PointyCloudSystem*>(m_system);
 
         m_originalCloud->loadFromMesh(m_workingCloud.get());
+
         setSplatRadius(sys->getSplatRadius());
         setEligible();
 
-        LOGP(logINFO) << "cloud " << cloudName << " has " << m_originalCloud->m_points.size() << " point(s).";
-//        LOGP(logINFO) << "cloud " << cloudName << " is pointy at " << m_originalCloud->m_points.size() << " level(s).";
+        LOGP(logINFO) << "cloud " << m_cloudName << " has " << m_originalCloud->m_points.size() << " point(s).";
 
         setUpsamplingMethod(sys->getUpsamplingMethod());
         setProjectionMethod(sys->getProjectionMethod());
@@ -176,36 +179,43 @@ namespace PointyCloudPlugin
     }
 
     void PointyCloudComponent::setThreshold(int threshold) {
-        // TODO donner le threshold a quelqu'un
+        if (m_upsamplingMethod != FIXED_METHOD) {
+            static_cast<UpSamplerSimple*>(m_upsampler.get())->setThreshold(threshold);
+        }
+        else {
+            LOGP(logDEBUG)
+                << "The Fixed method IS currently the activated one for the upsampler. Impossible to set threshold.";
+        }
     }
 
     void PointyCloudComponent::setM(int M) {
-        // TODO donner au ré-echantillonnage
         if (m_upsamplingMethod == FIXED_METHOD) {
             static_cast<UpSamplerUnshaken*>(m_upsampler.get())->setM(M);
         }
         else
         {
             LOGP(logDEBUG)
-                << "The Fixed method isn't currently the activated one for the upsampler. "
-                << "Impossible to set M.";
+                << "The Fixed method isn't currently the activated one for the upsampler. Impossible to set M.";
         }
     }
 
     void PointyCloudComponent::setUpsamplingMethod(UPSAMPLING_METHOD method) {
         m_upsamplingMethod = method;
-        // TODO switcher entre les méthodes
+
         auto sys = static_cast<PointyCloudSystem*>(m_system);
+
         if ( m_upsamplingMethod == FIXED_METHOD ){
             m_upsampler.reset(new UpSamplerUnshaken(sys->getM(), sys->getInfluenceRadius()));
         }
-        else if ( m_upsamplingMethod == SIMPLE_METHOD )
+        else if ( m_upsamplingMethod == SIMPLE_METHOD ){
             m_upsampler.reset(new UpSamplerSimple(sys->getInfluenceRadius(),sys->getThreshold(),*m_camera));
+        }
+        // TODO the last method (but not the least)
     }
 
     void PointyCloudComponent::setProjectionMethod(PROJECTION_METHOD method) {
         m_projectionMethod = method;
-        // TODO switcher entre les méthodes
+        // TODO choosing between all the methods
         auto sys = static_cast<PointyCloudSystem*>(m_system);
         m_projection = OrthogonalProjection(m_selector, m_originalCloud, sys->getInfluenceRadius());
     }
@@ -217,8 +227,9 @@ namespace PointyCloudPlugin
         if(octree)
         {
             m_selector.reset(new NeighborsSelectionWithRegularGrid(m_originalCloud, sys->getInfluenceRadius()));
-            LOG(logINFO) << "Regular built in " << std::static_pointer_cast<NeighborsSelectionWithRegularGrid>(m_selector)->grid()->getBuildTime() <<
-                            " seconds";
+            LOGP(logINFO) << m_cloudName << "'s Regular grid built in "
+                         << std::static_pointer_cast<NeighborsSelectionWithRegularGrid>(m_selector)->grid()->getBuildTime()
+                         << " seconds";
         }
         else
         {

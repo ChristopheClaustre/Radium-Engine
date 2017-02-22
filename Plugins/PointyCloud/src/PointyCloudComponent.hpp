@@ -59,6 +59,7 @@ namespace PointyCloudPlugin
     private:
         Ra::Core::Index m_meshIndex;
         std::string m_contentName;
+        std::string m_cloudName;
 
         const Ra::Engine::Camera *m_camera;
 
@@ -82,7 +83,8 @@ namespace PointyCloudPlugin
         float m_timeUpsampling;
         float m_timeProjecting;
         float m_timeLoading;
-    };
+
+    }; // class PointyCloudComponent
 
 } // namespace PointyCloudPlugin
 
