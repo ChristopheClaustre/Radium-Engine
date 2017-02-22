@@ -154,7 +154,7 @@ namespace PointyCloudPlugin
     void PointyCloudComponent::setEligible() {
         for (auto it = m_originalCloud->m_points.begin(); it != m_originalCloud->m_points.end(); ++it) {
             // defined by Patate
-            it->setEligible(m_selector->getNeighbors(*it).size() > 6);
+            it->setEligible(m_selector->isEligible(*it));
         }
     }
 
