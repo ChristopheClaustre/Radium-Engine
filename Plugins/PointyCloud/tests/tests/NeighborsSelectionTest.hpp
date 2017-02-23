@@ -30,6 +30,7 @@ namespace PointyCloudTests
 
             // number of selection test
             const int testCount = 100;
+            bool sameNeighbors = true;
 
             for(int itest = 0; itest<testCount; itest++)
             {
@@ -48,14 +49,13 @@ namespace PointyCloudTests
                 std::vector<int> resRef  = selectorRef.getNeighbors(p);
                 std::vector<int> resTest = selectorTest.getNeighbors(p);
 
-                RA_UNIT_TEST(resRef.size()==resTest.size(), "Wrong neigbors count");
+                sameNeighbors &= (resRef.size()==resTest.size());
 
-                bool sameNeighbors = true;
                 for(auto& idxRef : resRef)
                     sameNeighbors &= (std::find(resTest.begin(), resTest.end(), idxRef)!=resTest.end());
 
-                RA_UNIT_TEST(sameNeighbors, "Wrong neighbors");
             }
+            RA_UNIT_TEST(sameNeighbors, "Wrong neighbors");
         }
     };
     RA_TEST_CLASS(NeighborsSelectionTest);
