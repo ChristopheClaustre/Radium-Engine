@@ -47,7 +47,7 @@ namespace PointyCloudTests
         void run() override
         {
             // load from file
-            std::string path = "../../models/bunny.ply"; // models/ in Radium root directory
+            std::string path = "../../models/bunny_34k.ply"; // models/ in Radium root directory
             std::shared_ptr<PointyCloud> cloud = PointyCloudFactory::makeFromFile(path);
             size_t size = cloud->m_points.size();
 

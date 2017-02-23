@@ -2,6 +2,7 @@
 
 #include "tests/DummyTest.hpp"
 #include "tests/NeighborsSelectionTest.hpp"
+#include "tests/PerformanceAPSS.hpp"
 
 //#include "tests/NeighborsSelectionPerf.hpp" <- be careful (could be long!)
 
