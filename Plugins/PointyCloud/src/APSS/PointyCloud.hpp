@@ -1,11 +1,13 @@
 #ifndef POINTYCLOUDPLUGIN_POINTYCLOUD_HPP
 #define POINTYCLOUDPLUGIN_POINTYCLOUD_HPP
 
-#include <Core/RaCore.hpp>
 #include <Core/Math/LinearAlgebra.hpp>
-#include <Core/Containers/VectorArray.hpp>
-#include <Core/Mesh/MeshTypes.hpp>
-#include <Engine/Renderer/Mesh/Mesh.hpp>
+
+namespace Ra {
+namespace Engine {
+    class Mesh;
+} // namespace Engine
+} // namespace Ra
 
 namespace PointyCloudPlugin {
 

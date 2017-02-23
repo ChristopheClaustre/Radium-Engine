@@ -1,5 +1,7 @@
 #include "PointyCloud.hpp"
 
+#include <Engine/Renderer/Mesh/Mesh.hpp>
+
 namespace PointyCloudPlugin {
 
 inline PointyCloud::PointyCloud(const Ra::Engine::Mesh * mesh)
