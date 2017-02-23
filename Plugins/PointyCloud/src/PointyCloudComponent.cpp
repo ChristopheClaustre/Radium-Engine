@@ -200,7 +200,7 @@ namespace PointyCloudPlugin
         auto sys = static_cast<PointyCloudSystem*>(m_system);
 
         if ( m_upsamplingMethod == FIXED_METHOD ){
-            m_upsampler.reset(new UpSamplerUnshaken(sys->getM(), sys->getInfluenceRadius()));
+            m_upsampler.reset(new UpSamplerUnshaken(sys->getInfluenceRadius(), sys->getM()));
         }
         else if ( m_upsamplingMethod == SIMPLE_METHOD ){
             m_upsampler.reset(new UpSamplerSimple(sys->getInfluenceRadius(),sys->getThreshold(),*m_camera));
