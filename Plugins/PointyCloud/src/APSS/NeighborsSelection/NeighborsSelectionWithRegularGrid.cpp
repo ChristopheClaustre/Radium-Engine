@@ -1,5 +1,6 @@
 #include "NeighborsSelectionWithRegularGrid.hpp"
 
+#include <APSS/Point.h>
 #include <APSS/NeighborsSelection/RegularGrid/RegularGridBuilder.hpp>
 #include <APSS/NeighborsSelection/RegularGrid/RegularGrid.hpp>
 

@@ -6,6 +6,7 @@
 #include <misc/PointyCloudFactory.hpp>
 #include <APSS/NeighborsSelection/NeighborsSelection.hpp>
 #include <APSS/NeighborsSelection/NeighborsSelectionWithRegularGrid.hpp>
+#include <APSS/Point.h>
 
 #include <cstdlib>
 

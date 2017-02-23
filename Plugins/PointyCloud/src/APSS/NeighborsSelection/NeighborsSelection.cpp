@@ -1,5 +1,8 @@
 #include "NeighborsSelection.hpp"
 
+#include "APSS/Point.h"
+#include "APSS/PointyCloud.hpp"
+
 namespace PointyCloudPlugin
 {
 

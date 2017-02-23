@@ -1,11 +1,15 @@
 #ifndef POINTYCLOUDPLUGIN_NEIGHBORSSELECTION_HPP
 #define POINTYCLOUDPLUGIN_NEIGHBORSSELECTION_HPP
 
-#include <Engine/Renderer/Mesh/Mesh.hpp>
-#include <APSS/PointyCloud.hpp>
+#include <Core/CoreMacros.hpp>
+
+#include <memory>
+#include <vector>
 
 namespace PointyCloudPlugin
 {
+    class PointyCloud;
+    class APoint;
 
     class NeighborsSelection
     {
