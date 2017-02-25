@@ -89,11 +89,11 @@ namespace PointyCloudPlugin
             LOGP(logINFO) << "cloud " << m_cloudName << " has no color. Creation of colors.";
             colors.resize(vertices.size(), Ra::Core::Color::Ones());
         }
-        Ra::Core::Vector1Array splatSizes;
-        splatSizes.resize(vertices.size(), 1.0);
+        Ra::Core::Vector1Array radiuses;
+        radiuses.resize(vertices.size(), 1.0);
 
         m_workingCloud->addData( Ra::Engine::Mesh::VERTEX_COLOR, colors);
-        m_workingCloud->addData( Ra::Engine::Mesh::POINT_SPLATSIZE, splatSizes);
+        m_workingCloud->addData( Ra::Engine::Mesh::POINT_RADIUS, radiuses);
 
         auto config = Ra::Engine::ShaderConfigurationFactory::getConfiguration("Pointy");
 
@@ -169,7 +169,7 @@ namespace PointyCloudPlugin
 
     void PointyCloudComponent::setSplatRadius(Scalar splatRadius) {
         for (auto it = m_originalCloud->m_points.begin(); it != m_originalCloud->m_points.end(); ++it) {
-            it->splatSize() = splatRadius;
+            it->radius() = splatRadius;
         }
     }
 
