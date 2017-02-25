@@ -102,6 +102,9 @@ namespace Ra
             //NOTE(DSRAPSS students team): function maybe to fusion with one of the loadGeometry functions
             void loadPointyGeometry(const Core::Vector3Array &vertices, const Core::Vector3Array &normals);
 
+            void loadPointyCloud(size_t size, const Core::Vector3 *positions, const Core::Vector3 *normals,
+                                 const Core::Vector4 *colors, const Scalar *splatSizes);
+
             /// Load additionnal vertex data.
             void addData( const Vec3Data& type, const Core::Vector3Array& data);
             void addData( const Vec4Data& type, const Core::Vector4Array& data);

@@ -109,6 +109,37 @@ namespace Ra {
             m_isDirty = true;
         }
 
+        void Mesh::loadPointyCloud(size_t size, const Core::Vector3* positions, const Core::Vector3* normals,
+                             const Core::Vector4* colors, const Scalar* splatSizes)
+        {
+            CORE_ASSERT( m_renderMode == GL_POINTS, "This function can be used only to render points");
+
+            // vertices
+            m_mesh.m_vertices.assign(positions, positions+size);
+
+            // normals
+            m_mesh.m_normals.assign(normals, normals+size);
+
+            // indices
+            m_mesh.m_triangles.clear();
+            for ( uint i = 0; i < size; i += 3 )
+                m_mesh.m_triangles.push_back( { i, (i + 1)%m_numElements, (i + 2)%m_numElements } );
+
+            // colors
+            m_v4Data[static_cast<uint>(VERTEX_COLOR)].assign(colors, colors+size);
+
+            // splats sizes
+            m_v1Data[static_cast<uint>(POINT_SPLATSIZE)].assign(splatSizes, splatSizes+size);
+
+            // mark mesh as dirty
+            m_dataDirty[MAX_MESH + MAX_VEC3 + static_cast<uint>(VERTEX_COLOR)] = true;
+            m_dataDirty[MAX_MESH + MAX_VEC3 + MAX_VEC4 + static_cast<uint>(POINT_SPLATSIZE)] = true;
+            for (uint i = 0; i < MAX_MESH; ++i)
+                m_dataDirty[i] = true;
+            m_isDirty = true;
+        }
+
+
         void Mesh::addData( const Vec3Data& type, const Core::Vector3Array& data )
         {
             m_v3Data[static_cast<uint>(type)] = data;
