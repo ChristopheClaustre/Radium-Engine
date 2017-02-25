@@ -26,12 +26,12 @@ public:
 
     // APSS steps
     void select(const Vector3& cameraPosition, const Vector3& cameraDirection);
-    void upsample(/*APSS parameters*/);
+    void upsample(int m/*APSS parameters*/);
     void project(Scalar splatRadius/*APSS parameters*/);
     void finalize();
 
     // get APSS results
-    inline const size_t&  sizeFinal() const {return m_sizeFinal;}
+    inline const int&     sizeFinal() const {return m_sizeFinal;}
     inline const Vector3* positionFinal() const {return m_positionFinalHost;}
     inline const Vector3* normalFinal() const {return m_normalFinalHost;}
     inline const Vector4* colorFinal() const {return m_colorFinalHost;}
@@ -40,7 +40,7 @@ public:
 private:
 
     void updateSelectedCount();
-
+    void updateSampleCount();
 
     RegularGrid* m_grid;
 
@@ -64,7 +64,7 @@ private:
     int* m_splatCountSum; // C'
 
     // final cloud
-    size_t   m_sizeFinal;     // P
+    int      m_sizeFinal;     // P
     Vector3* m_positionFinal; // splats
     Vector3* m_normalFinal;
     Vector4* m_colorFinal;

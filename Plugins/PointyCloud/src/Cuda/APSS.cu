@@ -30,6 +30,8 @@ APSS::APSS(const Vector3* positions,
     CUDA_ASSERT( cudaMalloc(&m_visibility,    size*sizeof(int)) );
     CUDA_ASSERT( cudaMalloc(&m_visibilitySum, size*sizeof(int)) );
     CUDA_ASSERT( cudaMalloc(&m_selected,      size*sizeof(int)) );
+    CUDA_ASSERT( cudaMalloc(&m_splatCount,    size*sizeof(int)) );
+    CUDA_ASSERT( cudaMalloc(&m_splatCountSum, size*sizeof(int)) );
 
     //TEST for test only
     // sizeFinal depends on generated splats count!
@@ -77,11 +79,22 @@ void APSS::select(const Vector3 &cameraPosition, const Vector3 &cameraDirection)
     CUDA_ASSERT( cudaDeviceSynchronize() );
 }
 
-void APSS::upsample(/*APSS parameters*/)
+void APSS::upsample(int m/*APSS parameters*/)
 {
-    //TODO
-//    kernel<<</*numBlocks, blockSize*/>>>(...);
-//    cudaDeviceSynchronize();
+    computeSampleCountFixed<<<1,1>>>(m_sizeSelected, m, m_splatCount);
+    CUDA_ASSERT( cudaPeekAtLastError() );
+    CUDA_ASSERT( cudaDeviceSynchronize() );
+
+    // prefix sum
+    thrust::device_ptr<int> devPtr = thrust::device_pointer_cast(m_splatCount);
+    thrust::device_ptr<int> devPtrSum = thrust::device_pointer_cast(m_splatCountSum);
+    thrust::exclusive_scan(thrust::device, devPtr, devPtr+m_sizeSelected, devPtrSum, 0);
+
+    updateSampleCount();
+
+    generateSample<<<1,1>>>(/*TODO*/);
+    CUDA_ASSERT( cudaPeekAtLastError() );
+    CUDA_ASSERT( cudaDeviceSynchronize() );
 }
 
 void APSS::project(Scalar splatRadius/*APSS parameters*/)
@@ -112,6 +125,12 @@ void APSS::updateSelectedCount()
 {
     m_sizeSelected = -1;
     CUDA_ASSERT( cudaMemcpy(&m_sizeSelected, m_visibilitySum+m_sizeOriginal-1, sizeof(int), cudaMemcpyDeviceToHost) );
+}
+
+void APSS::updateSampleCount()
+{
+    m_sizeFinal = -1;
+    CUDA_ASSERT( cudaMemcpy(&m_sizeFinal, m_splatCountSum+m_sizeSelected-1, sizeof(int), cudaMemcpyDeviceToHost) );
 }
 
 

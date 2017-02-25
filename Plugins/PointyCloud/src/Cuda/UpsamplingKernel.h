@@ -1,12 +1,23 @@
 #ifndef POINTYCLOUDPLUGIN_UPSAMPLINGKERNEL_H
 #define POINTYCLOUDPLUGIN_UPSAMPLINGKERNEL_H
 
+#include <Cuda/defines.h>
+
 namespace PointyCloudPlugin {
 namespace Cuda {
 
-//TODO kernel 3
-//TODO kernel 4
-//TODO kernel 5
+__global__
+void computeSampleCountFixed(size_t sizeSelected, int m, int* splatCount)
+{
+    for (int i = 0; i < sizeSelected; ++i)
+        splatCount[i] = m;
+}
+
+__global__
+void generateSample(/*TODO*/)
+{
+
+}
 
 } // namespace Cuda
 } // namespace PointyCloudPlugin

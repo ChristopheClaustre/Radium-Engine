@@ -14,8 +14,8 @@ namespace PointyCloudPlugin {
     class APSSTask : public Ra::Core::Task
     {
     public:
-        APSSTask(Cuda::APSS* apss, std::shared_ptr<Ra::Engine::Mesh> mesh, const Ra::Engine::Camera* camera, Scalar splatRadius) :
-            m_apss(apss), m_mesh(mesh), m_camera(camera), m_splatRadius(splatRadius) {}
+        APSSTask(Cuda::APSS* apss, std::shared_ptr<Ra::Engine::Mesh> mesh, const Ra::Engine::Camera* camera, Scalar splatRadius, int M) :
+            m_apss(apss), m_mesh(mesh), m_camera(camera), m_splatRadius(splatRadius), m_M(M) {}
         ~APSSTask() {}
 
         virtual std::string getName() const override {return "APSS";}
@@ -24,7 +24,7 @@ namespace PointyCloudPlugin {
         {
             // APSS steps
             m_apss->select(m_camera->getPosition(), m_camera->getDirection());
-            m_apss->upsample(/*APSS parameters*/);
+            m_apss->upsample(m_M);
             m_apss->project(m_splatRadius/*APSS parameters*/);
             m_apss->finalize();
 
@@ -46,6 +46,7 @@ namespace PointyCloudPlugin {
 
         const Ra::Engine::Camera* m_camera;
         Scalar m_splatRadius;
+        int m_M;
     };
 
 } // namespace PointyCloudPlugin

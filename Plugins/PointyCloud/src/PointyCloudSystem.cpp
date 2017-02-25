@@ -107,7 +107,8 @@ namespace PointyCloudPlugin
     void PointyCloudSystem::generateTasks( Ra::Core::TaskQueue* taskQueue, const Ra::Engine::FrameInfo& frameInfo )
     {
         for(int k=0; k<m_APPS.size(); ++k)
-            taskQueue->registerTask(new APSSTask(m_APPS[k], m_mesh[k], m_viewer->getCameraInterface()->getCamera(), m_splatRadius));
+            taskQueue->registerTask(new APSSTask(m_APPS[k], m_mesh[k], m_viewer->getCameraInterface()->getCamera(),
+                                                 m_splatRadius, m_M));
 
 //        if(m_APSS)
 //            for(auto comp : pointyCloudComponentList)
