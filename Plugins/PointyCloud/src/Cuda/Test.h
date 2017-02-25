@@ -7,6 +7,10 @@
 namespace PointyCloudPlugin {
 namespace Cuda {
 
+// just a kernel test that copy original data to final one
+// no blocks or thread
+// just change the color from white to red!
+
 __global__
 void copy(size_t sizeOriginal, Vector3* posIn,  Vector3* norIn,  Vector4* colIn,
           size_t sizeFinal,    Vector3* posOut, Vector3* norOut, Vector4* colOut, Scalar* splatSizeOut)
