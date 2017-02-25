@@ -13,7 +13,7 @@ namespace PointyCloudPlugin {
         NeighborsSelectionWithRegularGrid(std::shared_ptr<PointyCloud> cloud, float influenceRadius, int nCell = 100);
         ~NeighborsSelectionWithRegularGrid();
 
-        virtual std::vector<int> getNeighbors(const APoint &point) const;
+        virtual void getNeighbors(const APoint& point, std::vector<int>& indexSelected) const;
         virtual bool isEligible(const APoint& point) const;
 
         const RegularGrid* grid() const;

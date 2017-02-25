@@ -55,7 +55,7 @@ namespace PointyCloudPlugin
 
     private:
         // set eligible flag on each points
-        void setEligible();
+        void setEligibleFlags();
 
     private:
         Ra::Core::Index m_meshIndex;
@@ -79,11 +79,12 @@ namespace PointyCloudPlugin
         PROJECTION_METHOD m_projectionMethod;
 
         // APSS stats
+        ON_TIMED(
         size_t m_count;
         float m_timeCulling;
         float m_timeUpsampling;
         float m_timeProjecting;
-        float m_timeLoading;
+        float m_timeLoading;)
 
     }; // class PointyCloudComponent
 

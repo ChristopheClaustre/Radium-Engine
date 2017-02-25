@@ -15,39 +15,32 @@ namespace Engine {
 
 namespace PointyCloudPlugin
 {
-        class POINTY_PLUGIN_API PointyCloudRenderer : public Ra::Engine::Renderer
-        {
-        public:
-            PointyCloudRenderer(uint width, uint height, Scalar splatSize = 1.0);
-            virtual ~PointyCloudRenderer();
-            virtual std::string getRendererName() const override { return "PointyCloud Renderer"; }
+    class POINTY_PLUGIN_API PointyCloudRenderer : public Ra::Engine::Renderer
+    {
+    public:
+        PointyCloudRenderer(uint width, uint height);
+        virtual ~PointyCloudRenderer();
+        virtual std::string getRendererName() const override { return "PointyCloud Renderer"; }
 
-            inline void setSplatSize(Scalar size) { lockRendering(); m_splatSize = size; unlockRendering(); }
-            inline const Scalar& getSplatSize() const {return m_splatSize;}
+    protected:
 
-        protected:
+        virtual void initializeInternal() override;
+        virtual void resizeInternal() override;
+        virtual void renderInternal( const Ra::Engine::RenderData& renderData ) override;
 
-            virtual void initializeInternal() override;
-            virtual void resizeInternal() override;
-            virtual void renderInternal( const Ra::Engine::RenderData& renderData ) override;
+        virtual void updateStepInternal( const Ra::Engine::RenderData& renderData ) override {}
+        virtual void debugInternal( const Ra::Engine::RenderData& renderData ) override {}
+        virtual void uiInternal( const Ra::Engine::RenderData& renderData ) override {}
+        virtual void postProcessInternal( const Ra::Engine::RenderData &renderData ) override {}
 
-            virtual void updateStepInternal( const Ra::Engine::RenderData& renderData ) override {}
-            virtual void debugInternal( const Ra::Engine::RenderData& renderData ) override {}
-            virtual void uiInternal( const Ra::Engine::RenderData& renderData ) override {}
-            virtual void postProcessInternal( const Ra::Engine::RenderData &renderData ) override {}
+    private:
+        void initBuffers();
 
-        private:
-            //NOTE(chris): ne faut-il pas fusionner cette méthode private avec intializeInternal() ?
-            void initBuffers();
+    private:
+        std::unique_ptr<Ra::Engine::FBO> m_fbo;
+        std::unique_ptr<Ra::Engine::Texture> m_texture;
 
-        private:
-
-            Scalar m_splatSize;
-
-            std::unique_ptr<Ra::Engine::FBO> m_fbo;
-            std::unique_ptr<Ra::Engine::Texture> m_texture;
-
-        };
+    }; // class PointyCloudRenderer
 
 } // namespace PointyCloudPlugin
 

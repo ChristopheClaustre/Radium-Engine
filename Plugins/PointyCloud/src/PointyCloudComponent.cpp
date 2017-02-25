@@ -23,31 +23,36 @@ namespace PointyCloudPlugin
         m_upsampler.reset(new UpSamplerUnshaken(3,1));
 
         // APSS stats
+        ON_TIMED(
         m_count = 0;
         m_timeCulling = 0;
         m_timeUpsampling = 0;
         m_timeProjecting = 0;
-        m_timeLoading = 0;
+        m_timeLoading = 0;)
     }
 
     PointyCloudComponent::~PointyCloudComponent()
     {
-        if(m_count>0)
-        {
-            LOGP(logINFO) << "\n===Timing computePointyCloud()===\n" <<
-                             "Culling    : " << m_timeCulling/m_count << " μs\n" <<
-                             "Upsampling : " << m_timeUpsampling/m_count << " μs\n" <<
-                             "Projecting : " << m_timeProjecting/m_count << " μs\n" <<
-                             "Loading    : " << m_timeLoading/m_count << " μs\n";
-
-        }
-        if(m_projection.getCount()>0)
-        {
-            LOGP(logINFO) << "\n===Timing project()===\n" <<
-                             "Neighbors query  : " << m_projection.getTimeNeighbors() << " μs\n" <<
-                             "Sphere fitting   : " << m_projection.getTimeFitting() << " μs\n" <<
-                             "Point projection : " << m_projection.getTimeProjecting() << " μs" ;
-        }
+        ON_TIMED(
+            if(m_count>0)
+            {
+                LOGP(logINFO)
+                    << "\n===Timing computePointyCloud() - " << m_cloudName << "===\n"
+                    << "Culling    : " << m_timeCulling/m_count << " μs\n"
+                    << "Upsampling : " << m_timeUpsampling/m_count << " μs\n"
+                    << "Projecting : " << m_timeProjecting/m_count << " μs\n"
+                    << "Loading    : " << m_timeLoading/m_count << " μs\n";
+            }
+            if(m_projection.getCount()>0)
+            {
+                LOGP(logINFO)
+                    << "\n===Timing project() - " << m_cloudName << "===\n"
+                    << "Neighbors query  : " << m_projection.getTimeNeighbors() << " μs\n"
+                    << "Sphere fitting   : " << m_projection.getTimeFitting() << " μs\n"
+                    << "Point projection : " << m_projection.getTimeProjecting() << " μs\n"
+                    << "Mean projection number : " << m_projection.getMeanProjectionCount();
+            }
+        )
     }
 
     void PointyCloudComponent::initialize()
@@ -89,11 +94,11 @@ namespace PointyCloudPlugin
             LOGP(logINFO) << "cloud " << m_cloudName << " has no color. Creation of colors.";
             colors.resize(vertices.size(), Ra::Core::Color::Ones());
         }
-        Ra::Core::Vector1Array splatSizes;
-        splatSizes.resize(vertices.size(), 1.0);
+        Ra::Core::Vector1Array radiuses;
+        radiuses.resize(vertices.size(), 1.0);
 
         m_workingCloud->addData( Ra::Engine::Mesh::VERTEX_COLOR, colors);
-        m_workingCloud->addData( Ra::Engine::Mesh::POINT_SPLATSIZE, splatSizes);
+        m_workingCloud->addData( Ra::Engine::Mesh::POINT_RADIUS, radiuses);
 
         auto config = Ra::Engine::ShaderConfigurationFactory::getConfiguration("Pointy");
 
@@ -107,7 +112,7 @@ namespace PointyCloudPlugin
         m_originalCloud->loadFromMesh(m_workingCloud.get());
 
         setSplatRadius(sys->getSplatRadius());
-        setEligible();
+        setEligibleFlags();
 
         LOGP(logINFO) << "cloud " << m_cloudName << " has " << m_originalCloud->m_points.size() << " point(s).";
 
@@ -126,35 +131,26 @@ namespace PointyCloudPlugin
 
     void PointyCloudComponent::computePointyCloud()
     {
+
+        ON_TIMED(auto t0 = Ra::Core::Timer::Clock::now());
         PointyCloud points = m_culling.selectUsefulPoints();
+        ON_TIMED(auto t1 = Ra::Core::Timer::Clock::now());
         m_upsampler->upSampleCloud(points);
+        ON_TIMED(auto t2 = Ra::Core::Timer::Clock::now());
         m_projection.project(points);
+        ON_TIMED(auto t3 = Ra::Core::Timer::Clock::now());
         points.loadToMesh(m_workingCloud.get());
+        ON_TIMED(auto t4 = Ra::Core::Timer::Clock::now());
+
+        ON_TIMED(
+        m_timeCulling += Ra::Core::Timer::getIntervalMicro(t0, t1);
+        m_timeUpsampling += Ra::Core::Timer::getIntervalMicro(t1, t2);
+        m_timeProjecting += Ra::Core::Timer::getIntervalMicro(t2, t3);
+        m_timeLoading += Ra::Core::Timer::getIntervalMicro(t3, t4);
+        ++m_count;)
     }
 
-    // record timing statistics printed in destructor
-//    void PointyCloudComponent::computePointyCloud()
-//    {
-//        Ra::Core::Timer::TimePoint t0, t1, t2, t3, t4;
-
-//        t0 = Ra::Core::Timer::Clock::now();
-//        PointyCloud points = m_culling.selectUsefulPoints();
-//        t1 = Ra::Core::Timer::Clock::now();
-//        m_upsampler->upSampleCloud(points);
-//        t2 = Ra::Core::Timer::Clock::now();
-//        m_projection.project(points);
-//        t3 = Ra::Core::Timer::Clock::now();
-//        points.loadToMesh(m_workingCloud.get());
-//        t4 = Ra::Core::Timer::Clock::now();
-
-//        m_timeCulling += Ra::Core::Timer::getIntervalMicro(t0, t1);
-//        m_timeUpsampling += Ra::Core::Timer::getIntervalMicro(t1, t2);
-//        m_timeProjecting += Ra::Core::Timer::getIntervalMicro(t2, t3);
-//        m_timeLoading += Ra::Core::Timer::getIntervalMicro(t3, t4);
-//        ++m_count;
-//    }
-
-    void PointyCloudComponent::setEligible() {
+    void PointyCloudComponent::setEligibleFlags() {
         for (auto it = m_originalCloud->m_points.begin(); it != m_originalCloud->m_points.end(); ++it) {
             it->eligible() = (m_selector->isEligible(*it));
         }
@@ -164,12 +160,12 @@ namespace PointyCloudPlugin
         m_projection.setInfluenceRadius(influenceRadius);
         m_selector->setInfluenceRadius(influenceRadius);
         m_upsampler->setRadius(influenceRadius);
-        setEligible();
+        setEligibleFlags();
     }
 
     void PointyCloudComponent::setSplatRadius(Scalar splatRadius) {
         for (auto it = m_originalCloud->m_points.begin(); it != m_originalCloud->m_points.end(); ++it) {
-            it->splatSize() = splatRadius;
+            it->radius() = splatRadius;
         }
     }
 

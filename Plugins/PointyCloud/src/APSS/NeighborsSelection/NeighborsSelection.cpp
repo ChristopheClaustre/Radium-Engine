@@ -13,9 +13,8 @@ NeighborsSelection::~NeighborsSelection()
 {
 }
 
-std::vector<int> NeighborsSelection::getNeighbors(const APoint& point) const
+void NeighborsSelection::getNeighbors(const APoint& point, std::vector<int> & indexSelected) const
 {
-   std::vector<int> indexSelected;
    auto beginIt = m_cloud->m_points.begin();
 
    for (auto currentIt = beginIt; currentIt != m_cloud->m_points.end(); ++currentIt)
@@ -25,7 +24,6 @@ std::vector<int> NeighborsSelection::getNeighbors(const APoint& point) const
            indexSelected.push_back(currentIt-beginIt);
        }
    }
-   return indexSelected;
 }
 
 bool NeighborsSelection::isEligible(const APoint& point) const

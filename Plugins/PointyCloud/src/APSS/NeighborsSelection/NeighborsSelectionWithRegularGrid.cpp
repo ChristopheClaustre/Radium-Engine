@@ -15,9 +15,9 @@ NeighborsSelectionWithRegularGrid::~NeighborsSelectionWithRegularGrid()
 {
 }
 
-std::vector<int> NeighborsSelectionWithRegularGrid::getNeighbors(const APoint &point) const
+void NeighborsSelectionWithRegularGrid::getNeighbors(const APoint &point, std::vector<int> & indexSelected) const
 {
-    return m_grid->query(point.pos(), m_influenceRadius);
+    m_grid->query(point.pos(), m_influenceRadius, indexSelected);
 }
 
 bool NeighborsSelectionWithRegularGrid::isEligible(const APoint& point) const

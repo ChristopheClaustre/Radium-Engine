@@ -2,6 +2,7 @@
 #define POINTYCLOUDPLUGIN_ORTHOGONALPROJECTION_HPP
 
 #include <APSS/PointyCloud.hpp>
+#include <PointyCloudPlugin.hpp>
 
 #include <grenaille.h>
 
@@ -25,17 +26,19 @@ public:
     OrthogonalProjection(std::shared_ptr<NeighborsSelection> neighborsSelection,
                          std::shared_ptr<PointyCloud> originalCloud,
                          Scalar influenceRadius);
-    ~OrthogonalProjection();
+    virtual ~OrthogonalProjection();
 
     inline void setInfluenceRadius(Scalar influenceRadius) { m_influenceRadius=influenceRadius; }
 
     void project(PointyCloud& upSampledCloud);
 
     // timing accessor
+    ON_TIMED(
     float getTimeNeighbors() const;
     float getTimeFitting() const;
     float getTimeProjecting() const;
     int getCount() const;
+    int getMeanProjectionCount() const;)
 
 protected:
 
@@ -45,10 +48,12 @@ protected:
     Scalar m_influenceRadius;
 
     // time stats
+    ON_TIMED(
     float m_timeNeighbors;
     float m_timeFitting;
     float m_timeProjecting;
     size_t m_count;
+    size_t m_meanProjectionCount;)
 };
 
 

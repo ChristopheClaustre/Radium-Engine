@@ -25,7 +25,7 @@ namespace PointyCloudPlugin {
     public:
         ~RegularGrid();
 
-        std::vector<int> query(const Ra::Core::Vector3& p, float r) const;
+        void query(const Ra::Core::Vector3& p, float r, std::vector<int> & indices) const;
 
         bool hasNeighbors(const Ra::Core::Vector3& p, float r) const;
 

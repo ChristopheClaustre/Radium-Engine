@@ -15,6 +15,13 @@
 
 #define LOGP(log) LOG(log) << "PointyCloudPlugin : "
 
+#define TIMED
+#ifndef TIMED
+#   define ON_TIMED(CODE) /* rien */
+#else
+#   define ON_TIMED(CODE) CODE
+#endif
+
 namespace Ra
 {
     namespace Engine

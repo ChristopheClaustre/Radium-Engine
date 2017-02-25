@@ -46,8 +46,10 @@ namespace PointyCloudTests
 
                 APoint p(pos, nor, col);
 
-                std::vector<int> resRef  = selectorRef.getNeighbors(p);
-                std::vector<int> resTest = selectorTest.getNeighbors(p);
+                std::vector<int> resRef;
+                selectorRef.getNeighbors(p, resRef);
+                std::vector<int> resTest;
+                selectorTest.getNeighbors(p, resTest);
 
                 sameNeighbors &= (resRef.size()==resTest.size());
 
