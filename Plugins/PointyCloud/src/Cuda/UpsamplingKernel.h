@@ -10,7 +10,7 @@ __global__
 void computeSampleCountFixed(int sizeSelected, int m, int* splatCount)
 {
     for (int i = 0; i < sizeSelected; ++i)
-        splatCount[i] = 1;
+        splatCount[i] = m*m;
 }
 
 
@@ -28,13 +28,12 @@ void genSplat(int idxBegin, int splatCount, Scalar splatRadius,
         //TODO: compute generated splat position
         /* /!\ k might be replaced by i,j indices /?\ (cf upsampler)*/
         // for now the splats are at the same position
-        positionOut[idxBegin+k] = positionIn;
+        positionOut[idxBegin+k] = positionIn+ k*0.1*normalIn;
         normalOut[idxBegin+k] = normalIn;
         colorOut[idxBegin+k] = colorIn;
         splatSizeOut[idxBegin+k] = splatRadius;
     }
 }
-
 
 __global__
 void generateSample(int sizeSelected, Scalar splatRadius, int* selected, int* splatCount, int* splatCountSum,
