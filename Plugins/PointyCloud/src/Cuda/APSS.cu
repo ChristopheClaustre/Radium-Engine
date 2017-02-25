@@ -1,6 +1,9 @@
 #include <Cuda/APSS.h>
 
-#include <Cuda/Test.h>
+#include <Cuda/Test.h> // <- to delete
+#include <Cuda/SelectionKernel.h>
+#include <Cuda/UpsamplingKernel.h>
+#include <Cuda/ProjectionKernel.h>
 
 #include <iostream>
 
