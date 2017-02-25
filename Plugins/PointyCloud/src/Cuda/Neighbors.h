@@ -10,7 +10,7 @@ namespace Cuda {
 template<typename F> __device__
 void processNeighbors(const Vector3& p, Scalar r, const RegularGrid& grid, F& fun)
 {
-    //TODO
+    //TODO apply fun to neighbors
 }
 
 } // namespace Cuda
