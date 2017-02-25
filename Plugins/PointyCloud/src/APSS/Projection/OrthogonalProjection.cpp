@@ -1,8 +1,10 @@
 #include "OrthogonalProjection.hpp"
 
 #include <APSS/NeighborsSelection/NeighborsSelection.hpp>
+#include <PointyCloudPlugin.hpp>
 
 #include <Core/Time/Timer.hpp>
+
 
 namespace PointyCloudPlugin {
 
@@ -14,10 +16,11 @@ OrthogonalProjection::OrthogonalProjection(std::shared_ptr<NeighborsSelection> n
     m_influenceRadius(influenceRadius)
 {
     // timing
+    ON_TIMED(
     m_count = 0;
     m_timeNeighbors = 0;
     m_timeFitting = 0;
-    m_timeProjecting = 0;
+    m_timeProjecting = 0;)
 }
 
 OrthogonalProjection::~OrthogonalProjection()
@@ -29,7 +32,15 @@ void OrthogonalProjection::project(PointyCloud &upSampledCloud)
     Fit fit;
     fit.setWeightFunc(WeightFunc(m_influenceRadius));
 
+    ON_TIMED(
+    Ra::Core::Timer::TimePoint start;
+    float timeNeighbors = 0.0;
+    float timeFitting = 0.0;
+    float timeProjecting = 0.0;
+    size_t pointToFitCount = 0;
+    size_t projectionCount = 0;)
 
+    #pragma omp parallel for
     for(int i = 0; i < upSampledCloud.m_points.size(); ++i)
     {
         auto &p = upSampledCloud.m_points[i];
@@ -43,16 +54,22 @@ void OrthogonalProjection::project(PointyCloud &upSampledCloud)
             {
                 fit.init(p.pos());
 
+                ON_TIMED(start = Ra::Core::Timer::Clock::now();)
                 neighbors.clear();
                 m_selector->getNeighbors(p, neighbors);
+                ON_TIMED(timeNeighbors += Ra::Core::Timer::getIntervalMicro(start, Ra::Core::Timer::Clock::now());)
 
+                ON_TIMED(start = Ra::Core::Timer::Clock::now();)
                 for(auto &idx : neighbors) {
                     fit.addNeighbor(m_originalCloud->m_points[idx]);
                 }
+                ON_TIMED(timeFitting += Ra::Core::Timer::getIntervalMicro(start, Ra::Core::Timer::Clock::now());)
+
                 // As our fit is an OrientedSphereFit
                 // finalize should never return NEED_OTHER_PASS
                 // finalize should only return STABLE || UNSTABLE || UNDEFINED
                 // we accept result in unstable state because its good enough ;)
+                ON_TIMED(start = Ra::Core::Timer::Clock::now();)
                 if (fit.finalize() != Grenaille::UNDEFINED) {
                     auto newPos = fit.project(p.pos());
                     auto newNormal = fit.primitiveGradient(newPos);
@@ -63,64 +80,26 @@ void OrthogonalProjection::project(PointyCloud &upSampledCloud)
                 else {
                     diff = 0;
                 }
-                i++;
+                ON_TIMED(timeProjecting += Ra::Core::Timer::getIntervalMicro(start, Ra::Core::Timer::Clock::now());)
 
+                ON_TIMED(++projectionCount;)
+                i++;
+            }
+
+            ON_TIMED(++pointToFitCount;)
         }
     }
 
-// same project function for time recording
-//void OrthogonalProjection::project(PointyCloud &upSampledCloud)
-//{
-//    Fit fit;
-//    fit.setWeightFunc(WeightFunc(m_influenceRadius));
+    // update timing attributes
+    ON_TIMED(
+    m_timeNeighbors += timeNeighbors/pointToFitCount;
+    m_timeFitting += timeFitting/pointToFitCount;
+    m_timeProjecting += timeProjecting/pointToFitCount;
+    m_meanProjectionCount += projectionCount/pointToFitCount;
+    ++m_count;)
+}
 
-//    Ra::Core::Timer::TimePoint start;
-//    float timeNeighbors = 0.0;
-//    float timeFitting = 0.0;
-//    float timeProjecting = 0.0;
-//    size_t processedCount = 0;
-
-//    for(auto &p : upSampledCloud.m_points)
-//    {
-//        if (p.isEligible())
-//        {
-//            fit.init(p.pos());
-
-//            start = Ra::Core::Timer::Clock::now();
-//            std::vector<int> neighbors = m_selector->getNeighbors(p);
-//            timeNeighbors += Ra::Core::Timer::getIntervalMicro(start, Ra::Core::Timer::Clock::now());
-
-//            start = Ra::Core::Timer::Clock::now();
-//            int i = 0;
-//            int res;
-//            do
-//            {
-//                for(auto &idx : neighbors)
-//                    fit.addNeighbor(m_originalCloud->m_points[idx]);
-
-//                res = fit.finalize();
-//                i++;
-//            } while(res == Grenaille::NEED_OTHER_PASS && i<MAX_FITTING_ITERATION);
-
-//            timeFitting += Ra::Core::Timer::getIntervalMicro(start, Ra::Core::Timer::Clock::now());
-
-//            start = Ra::Core::Timer::Clock::now();
-//            auto newPos = fit.project(p.pos());
-//            APoint _p(newPos, fit.primitiveGradient(newPos), p.color());
-//            p = _p;
-//            timeProjecting += Ra::Core::Timer::getIntervalMicro(start, Ra::Core::Timer::Clock::now());
-
-//            ++processedCount;
-//        }
-//    }
-
-//    // update timing attributes
-//    m_timeNeighbors += timeNeighbors/processedCount;
-//    m_timeFitting += timeFitting/processedCount;
-//    m_timeProjecting += timeProjecting/processedCount;
-//    ++m_count;
-//}
-
+ON_TIMED(
 float OrthogonalProjection::getTimeNeighbors() const
 {
     return m_count==0 ? 0.0 : m_timeNeighbors/m_count;
@@ -145,4 +124,6 @@ int OrthogonalProjection::getMeanProjectionCount() const
 {
     return m_meanProjectionCount;
 }
+) // ON_TIMED end
+
 } // namespace PointyCloudPlugin
