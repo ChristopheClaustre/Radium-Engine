@@ -76,6 +76,10 @@ namespace PointyCloudPlugin
         Ra::Gui::Viewer * m_viewer;
         std::vector<PointyCloudComponent*> pointyCloudComponentList;
 
+        // camera attributes
+        Ra::Core::Matrix4 m_prevProjMatrix;
+        Ra::Core::Matrix4 m_prevViewMatrix;
+
         Scalar m_splatRadius;
         Scalar m_influenceRadius;
         Scalar m_beta;
@@ -87,6 +91,7 @@ namespace PointyCloudPlugin
         bool m_cuda;
         bool m_APSS;
         bool m_rendererUsed;
+        bool to_refresh;
     };
 
 } // namespace PointyCloudPlugin
