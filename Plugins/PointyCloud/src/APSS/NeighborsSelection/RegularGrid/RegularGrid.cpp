@@ -15,10 +15,8 @@ RegularGrid::~RegularGrid()
 {
 }
 
-std::vector<int> RegularGrid::query(const Ra::Core::Vector3& p, float r) const
+void RegularGrid::query(const Ra::Core::Vector3& p, float r, std::vector<int> & indices) const
 {
-    std::vector<int> indices;
-
     // point in local coordinates
     Ra::Core::Vector3 q = p - m_aabb.min();
 
@@ -32,7 +30,9 @@ std::vector<int> RegularGrid::query(const Ra::Core::Vector3& p, float r) const
 
     // search
     for(int k = kmin; k<=kmax; ++k)
+    {
         for(int j = jmin; j<=jmax; ++j)
+        {
             for(int i = imin; i<=imax; ++i)
             {
                 int idxCell = rawIndex(i, j, k);
@@ -42,12 +42,13 @@ std::vector<int> RegularGrid::query(const Ra::Core::Vector3& p, float r) const
                 for(int idx = begin; idx<begin+length; ++idx)
                 {
                     //TODO it may be faster to avoid push_back and use remove_if ?
-                    if((p - m_cloud->m_points[m_indices[idx]].pos()).norm() <= r)
+                    if((p - m_cloud->m_points[m_indices[idx]].pos()).norm() <= r) {
                         indices.push_back(m_indices[idx]);
+                    }
                 }
             }
-
-    return indices;
+        }
+    }
 }
 
 bool RegularGrid::hasNeighbors(const Ra::Core::Vector3& p, float r) const
