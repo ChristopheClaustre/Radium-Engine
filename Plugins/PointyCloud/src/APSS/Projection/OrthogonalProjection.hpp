@@ -25,7 +25,7 @@ public:
     OrthogonalProjection(std::shared_ptr<NeighborsSelection> neighborsSelection,
                          std::shared_ptr<PointyCloud> originalCloud,
                          Scalar influenceRadius);
-    ~OrthogonalProjection();
+    virtual ~OrthogonalProjection();
 
     inline void setInfluenceRadius(Scalar influenceRadius) { m_influenceRadius=influenceRadius; }
 

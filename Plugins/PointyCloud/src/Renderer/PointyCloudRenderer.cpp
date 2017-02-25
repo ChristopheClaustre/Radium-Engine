@@ -83,8 +83,9 @@ namespace PointyCloudPlugin
                     if( ro->isVisible() )
                     {
                         Ra::Engine::RenderParameters params;
-                        if(m_lights.size()>0)
+                        if(m_lights.size()>0) {
                             m_lights[0]->getRenderParameters( params );
+                        }
 
                         //TODO: peut être changer cette ajout de paramètre
                         // normalement c'est les ligthparams uniquement...
