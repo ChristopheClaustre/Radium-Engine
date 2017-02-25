@@ -77,8 +77,8 @@ void PointyCloudUI::on_m_upsamplingMethod_currentIndexChanged(int index)
         ui->label_8->setVisible(PointyCloudPlugin::UPSAMPLING_METHOD(index) == PointyCloudPlugin::FIXED_METHOD);
         ui->m_M->setVisible(PointyCloudPlugin::UPSAMPLING_METHOD(index) == PointyCloudPlugin::FIXED_METHOD);
 
-        ui->label_4->setVisible(PointyCloudPlugin::UPSAMPLING_METHOD(index) == PointyCloudPlugin::SIMPLE_METHOD);
-        ui->m_threshold->setVisible(PointyCloudPlugin::UPSAMPLING_METHOD(index) == PointyCloudPlugin::SIMPLE_METHOD);
+        ui->label_4->setVisible(PointyCloudPlugin::UPSAMPLING_METHOD(index) != PointyCloudPlugin::FIXED_METHOD);
+        ui->m_threshold->setVisible(PointyCloudPlugin::UPSAMPLING_METHOD(index) != PointyCloudPlugin::FIXED_METHOD);
 
         emit setUpsamplingMethod(PointyCloudPlugin::UPSAMPLING_METHOD(index));
 }
