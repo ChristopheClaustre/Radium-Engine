@@ -13,8 +13,11 @@ namespace Cuda {
 APSS::APSS(const Vector3* positions,
            const Vector3* normals,
            const Vector4* colors,
-           size_t size)
+           size_t size) :
+    m_grid()
 {
+    m_grid = new RegularGrid(size, positions);
+
     // device allocation
     m_sizeOriginal = size;
     CUDA_ASSERT( cudaMalloc(&m_positionOriginal, size*sizeof(Vector3)) );

@@ -5,13 +5,15 @@
 
 #include <Eigen/Core>
 
+#include <Cuda/RegularGrid.h>
+
 namespace PointyCloudPlugin {
 namespace Cuda {
 
 class APSS
 {
 public:
-    //TODO use vector of defines.h ?
+    //TODO use vector of defines.h !
     typedef float Scalar;
     typedef Eigen::Matrix<Scalar, 3, 1> Vector3;
     typedef Eigen::Matrix<Scalar, 4, 1> Vector4;
@@ -37,6 +39,8 @@ public:
 
 private:
 
+    RegularGrid* m_grid;
+
     // device arrays
 
     // original cloud
@@ -47,10 +51,10 @@ private:
     bool*    m_eligible;
 
     // selection
-    size_t m_sizeSelected; // M
-    int* m_visibility;     // A
-    int* m_visibilitySum;  // A'
-    int* m_selected;       // V
+    size_t m_sizeSelected;   // M
+    int*   m_visibility;     // A
+    int*   m_visibilitySum;  // A'
+    int*   m_selected;       // V
 
     // upsampling
     int* m_splatCount;    // C
