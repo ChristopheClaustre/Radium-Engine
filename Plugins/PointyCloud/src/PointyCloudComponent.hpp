@@ -79,11 +79,12 @@ namespace PointyCloudPlugin
         PROJECTION_METHOD m_projectionMethod;
 
         // APSS stats
+        ON_TIMED(
         size_t m_count;
         float m_timeCulling;
         float m_timeUpsampling;
         float m_timeProjecting;
-        float m_timeLoading;
+        float m_timeLoading;)
 
     }; // class PointyCloudComponent
 
