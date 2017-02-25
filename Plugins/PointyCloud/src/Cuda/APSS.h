@@ -39,6 +39,9 @@ public:
 
 private:
 
+    void updateSelectedCount();
+
+
     RegularGrid* m_grid;
 
     // device arrays
@@ -51,10 +54,10 @@ private:
     bool*    m_eligible;
 
     // selection
-    size_t m_sizeSelected;   // M
-    int*   m_visibility;     // A
-    int*   m_visibilitySum;  // A'
-    int*   m_selected;       // V
+    int  m_sizeSelected;   // M
+    int* m_visibility;     // A
+    int* m_visibilitySum;  // A'
+    int* m_selected;       // V
 
     // upsampling
     int* m_splatCount;    // C

@@ -5,6 +5,9 @@
 #include <Cuda/UpsamplingKernel.h>
 #include <Cuda/ProjectionKernel.h>
 
+#include <thrust/device_vector.h>
+#include <thrust/execution_policy.h>
+
 #include <iostream>
 
 namespace PointyCloudPlugin {
@@ -23,6 +26,10 @@ APSS::APSS(const Vector3* positions,
     CUDA_ASSERT( cudaMalloc(&m_positionOriginal, size*sizeof(Vector3)) );
     CUDA_ASSERT( cudaMalloc(&m_normalOriginal,   size*sizeof(Vector3)) );
     CUDA_ASSERT( cudaMalloc(&m_colorOriginal,    size*sizeof(Vector4)) );
+
+    CUDA_ASSERT( cudaMalloc(&m_visibility,    size*sizeof(int)) );
+    CUDA_ASSERT( cudaMalloc(&m_visibilitySum, size*sizeof(int)) );
+    CUDA_ASSERT( cudaMalloc(&m_selected,      size*sizeof(int)) );
 
     //TEST for test only
     // sizeFinal depends on generated splats count!
@@ -54,9 +61,18 @@ APSS::~APSS()
 
 void APSS::select(const Vector3 &cameraPosition, const Vector3 &cameraDirection)
 {
-    //TEST : copy original in final
-    copy<<</*numBlocks, blockSize*/1,1>>>(m_sizeOriginal, m_positionOriginal, m_normalOriginal, m_colorOriginal,
-                                          m_sizeFinal,    m_positionFinal,    m_normalFinal,    m_colorFinal, m_splatSizeFinal);
+    checkVisibility<<<1,1>>>(m_sizeOriginal, m_positionOriginal, m_normalOriginal, cameraPosition, cameraDirection, m_visibility);
+    CUDA_ASSERT( cudaPeekAtLastError() );
+    CUDA_ASSERT( cudaDeviceSynchronize() );
+
+    // prefix sum
+    thrust::device_ptr<int> devPtr = thrust::device_pointer_cast(m_visibility);
+    thrust::device_ptr<int> devPtrSum = thrust::device_pointer_cast(m_visibilitySum);
+    thrust::exclusive_scan(thrust::device, devPtr, devPtr+m_sizeOriginal, devPtrSum, 0);
+
+    updateSelectedCount();
+
+    selectVisible<<<1,1>>>(m_sizeOriginal, m_visibility, m_visibilitySum, m_selected);
     CUDA_ASSERT( cudaPeekAtLastError() );
     CUDA_ASSERT( cudaDeviceSynchronize() );
 }
@@ -70,9 +86,11 @@ void APSS::upsample(/*APSS parameters*/)
 
 void APSS::project(/*APSS parameters*/)
 {
-    //TODO
-//    kernel<<</*numBlocks, blockSize*/>>>(...);
-//    cudaDeviceSynchronize();
+    //TEST : copy original in final
+    copy<<</*numBlocks, blockSize*/1,1>>>(m_sizeOriginal, m_positionOriginal, m_normalOriginal, m_colorOriginal,
+                                          m_sizeFinal,    m_positionFinal,    m_normalFinal,    m_colorFinal, m_splatSizeFinal);
+    CUDA_ASSERT( cudaPeekAtLastError() );
+    CUDA_ASSERT( cudaDeviceSynchronize() );
 }
 
 void APSS::finalize()
@@ -84,6 +102,11 @@ void APSS::finalize()
     CUDA_ASSERT( cudaMemcpy(m_splatSizeFinalHost, m_splatSizeFinal, m_sizeFinal*sizeof(Scalar), cudaMemcpyDeviceToHost) );
 }
 
+void APSS::updateSelectedCount()
+{
+    m_sizeSelected = -1;
+    CUDA_ASSERT( cudaMemcpy(&m_sizeSelected, m_visibilitySum+m_sizeOriginal-1, sizeof(int), cudaMemcpyDeviceToHost) );
+}
 
 
 } // namespace Cuda
