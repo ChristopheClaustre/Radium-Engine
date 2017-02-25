@@ -55,7 +55,7 @@ namespace PointyCloudPlugin
 
     private:
         // set eligible flag on each points
-        void setEligible();
+        void setEligibleFlags();
 
     private:
         Ra::Core::Index m_meshIndex;
