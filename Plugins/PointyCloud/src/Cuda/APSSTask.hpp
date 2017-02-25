@@ -6,16 +6,16 @@
 #include <Cuda/APSS.h>
 
 #include <Engine/Renderer/Mesh/Mesh.hpp>
-#include <Core/Mesh/TriangleMesh.hpp>
 #include <Core/Math/LinearAlgebra.hpp>
+#include <Engine/Renderer/Camera/Camera.hpp>
 
 namespace PointyCloudPlugin {
 
     class APSSTask : public Ra::Core::Task
     {
     public:
-        APSSTask(Cuda::APSS* apss, std::shared_ptr<Ra::Engine::Mesh> mesh) :
-            m_apss(apss), m_mesh(mesh){}
+        APSSTask(Cuda::APSS* apss, std::shared_ptr<Ra::Engine::Mesh> mesh, const Ra::Engine::Camera* camera) :
+            m_apss(apss), m_mesh(mesh), m_camera(camera) {}
         ~APSSTask() {}
 
         virtual std::string getName() const override {return "APSS";}
@@ -23,7 +23,7 @@ namespace PointyCloudPlugin {
         virtual void process() override
         {
             // APSS steps
-            m_apss->select(/*APSS parameters*/);
+            m_apss->select(m_camera->getPosition(), m_camera->getDirection());
             m_apss->upsample(/*APSS parameters*/);
             m_apss->project(/*APSS parameters*/);
             m_apss->finalize();
@@ -43,6 +43,8 @@ namespace PointyCloudPlugin {
 
         Cuda::APSS* m_apss;
         std::shared_ptr<Ra::Engine::Mesh> m_mesh;
+
+        const Ra::Engine::Camera* m_camera;
     };
 
 } // namespace PointyCloudPlugin

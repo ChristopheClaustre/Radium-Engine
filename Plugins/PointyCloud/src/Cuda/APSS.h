@@ -25,7 +25,7 @@ public:
     ~APSS();
 
     // APSS steps
-    void select(/*APSS parameters*/);
+    void select(const Vector3& cameraPosition, const Vector3& cameraDirection);
     void upsample(/*APSS parameters*/);
     void project(/*APSS parameters*/);
     void finalize();

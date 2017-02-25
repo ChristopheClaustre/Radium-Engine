@@ -52,7 +52,7 @@ APSS::~APSS()
     // ...
 }
 
-void APSS::select(/*APSS parameters*/)
+void APSS::select(const Vector3 &cameraPosition, const Vector3 &cameraDirection)
 {
     //TEST : copy original in final
     copy<<</*numBlocks, blockSize*/1,1>>>(m_sizeOriginal, m_positionOriginal, m_normalOriginal, m_colorOriginal,
