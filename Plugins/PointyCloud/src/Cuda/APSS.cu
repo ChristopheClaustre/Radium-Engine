@@ -132,10 +132,10 @@ void APSS::project(Scalar splatRadius/*APSS parameters*/)
 void APSS::finalize()
 {
     // get back final data from device to host
-    CUDA_ASSERT( cudaMemcpy(m_positionFinalHost,  m_positionFinal, m_sizeFinal*sizeof(Vector3), cudaMemcpyDeviceToHost) );
-    CUDA_ASSERT( cudaMemcpy(m_normalFinalHost,    m_normalFinal, m_sizeFinal*sizeof(Vector3), cudaMemcpyDeviceToHost) );
-    CUDA_ASSERT( cudaMemcpy(m_colorFinalHost,     m_colorFinal, m_sizeFinal*sizeof(Vector4), cudaMemcpyDeviceToHost) );
-    CUDA_ASSERT( cudaMemcpy(m_splatSizeFinalHost, m_splatSizeFinal, m_sizeFinal*sizeof(Scalar), cudaMemcpyDeviceToHost) );
+    CUDA_ASSERT( cudaMemcpy(m_positionFinalHost,  m_positionFinal,  m_sizeFinal*sizeof(Vector3), cudaMemcpyDeviceToHost) );
+    CUDA_ASSERT( cudaMemcpy(m_normalFinalHost,    m_normalFinal,    m_sizeFinal*sizeof(Vector3), cudaMemcpyDeviceToHost) );
+    CUDA_ASSERT( cudaMemcpy(m_colorFinalHost,     m_colorFinal,     m_sizeFinal*sizeof(Vector4), cudaMemcpyDeviceToHost) );
+    CUDA_ASSERT( cudaMemcpy(m_splatSizeFinalHost, m_splatSizeFinal, m_sizeFinal*sizeof(Scalar),  cudaMemcpyDeviceToHost) );
 }
 
 void APSS::updateSelectedCount()

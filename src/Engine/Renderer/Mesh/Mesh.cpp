@@ -114,6 +114,8 @@ namespace Ra {
         {
             CORE_ASSERT( m_renderMode == GL_POINTS, "This function can be used only to render points");
 
+            m_numElements = size;
+
             // vertices
             m_mesh.m_vertices.assign(positions, positions+size);
 
