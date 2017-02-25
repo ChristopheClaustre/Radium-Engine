@@ -87,8 +87,14 @@ void APSS::upsample(/*APSS parameters*/)
 void APSS::project(/*APSS parameters*/)
 {
     //TEST : copy original in final
-    copy<<</*numBlocks, blockSize*/1,1>>>(m_sizeOriginal, m_positionOriginal, m_normalOriginal, m_colorOriginal,
-                                          m_sizeFinal,    m_positionFinal,    m_normalFinal,    m_colorFinal, m_splatSizeFinal);
+//    copy<<</*numBlocks, blockSize*/1,1>>>(m_sizeOriginal, m_positionOriginal, m_normalOriginal, m_colorOriginal,
+//                                          m_sizeFinal,    m_positionFinal,    m_normalFinal,    m_colorFinal, m_splatSizeFinal);
+
+    copySelected<<<1,1>>>(m_sizeSelected, m_positionOriginal, m_normalOriginal, m_colorOriginal,
+                 m_selected, m_positionFinal, m_normalFinal, m_colorFinal, m_splatSizeFinal);
+
+    m_sizeFinal = m_sizeSelected;
+
     CUDA_ASSERT( cudaPeekAtLastError() );
     CUDA_ASSERT( cudaDeviceSynchronize() );
 }

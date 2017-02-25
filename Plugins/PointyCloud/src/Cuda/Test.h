@@ -32,6 +32,29 @@ void copy(size_t sizeOriginal, Vector3* posIn,  Vector3* norIn,  Vector4* colIn,
     }
 }
 
+
+// just a kernel test that copy selected data to final one
+// no blocks or thread
+// just change the color from white to red!
+
+__global__
+void copySelected(size_t sizeSelected, Vector3* posIn,  Vector3* norIn,  Vector4* colIn,
+                  int* selected, Vector3* posOut, Vector3* norOut, Vector4* colOut, Scalar* splatSizeOut)
+{
+    for (int i = 0; i < sizeSelected; ++i)
+    {
+        float t = (float)i/(sizeSelected-1);
+
+        posOut[i] = posIn[selected[i]];
+        norOut[i] = norIn[selected[i]];
+        colOut[i][0] = 1;
+        colOut[i][1] = t;
+        colOut[i][2] = t;
+        colOut[i][3] = 1;
+        splatSizeOut[i] = 1.0;
+    }
+}
+
 } // namespace Cuda
 } // namespace PointyCloudPlugin
 
