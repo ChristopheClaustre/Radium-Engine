@@ -187,18 +187,25 @@ namespace PointyCloudPlugin
     {
         m_APSS = apss;
         if(!apss)
+        {
             for (auto comp : pointyCloudComponentList)
+            {
                 comp->resetOriginalCloud();
+            }
+        }
         to_refresh = true;
     }
 
     void PointyCloudSystem::setRenderer(bool renderer)
     {
         m_rendererUsed = renderer;
-        if(renderer)
+        if(renderer) {
             m_viewer->changeRenderer(m_rendererIndex);
+        }
         else
+        {
             m_viewer->changeRenderer(0);
+        }
         to_refresh = true;
     }
 
