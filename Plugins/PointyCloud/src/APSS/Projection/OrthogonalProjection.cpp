@@ -29,31 +29,44 @@ void OrthogonalProjection::project(PointyCloud &upSampledCloud)
     Fit fit;
     fit.setWeightFunc(WeightFunc(m_influenceRadius));
 
-    for(auto &p : upSampledCloud.m_points)
+
+    for(int i = 0; i < upSampledCloud.m_points.size(); ++i)
     {
+        auto &p = upSampledCloud.m_points[i];
         if (p.eligible())
         {
-            fit.init(p.pos());
-
-            std::vector<int> neighbors = m_selector->getNeighbors(p);
-
+            float threshold = 0.001 * p.radius();
+            float diff = p.radius();
             int i = 0;
-            int res;
-            do
+            std::vector<int> neighbors;
+            while(diff >= threshold && i < MAX_FITTING_ITERATION)
             {
-                for(auto &idx : neighbors)
+                fit.init(p.pos());
+
+                neighbors.clear();
+                m_selector->getNeighbors(p, neighbors);
+
+                for(auto &idx : neighbors) {
                     fit.addNeighbor(m_originalCloud->m_points[idx]);
-
-                res = fit.finalize();
+                }
+                // As our fit is an OrientedSphereFit
+                // finalize should never return NEED_OTHER_PASS
+                // finalize should only return STABLE || UNSTABLE || UNDEFINED
+                // we accept result in unstable state because its good enough ;)
+                if (fit.finalize() != Grenaille::UNDEFINED) {
+                    auto newPos = fit.project(p.pos());
+                    auto newNormal = fit.primitiveGradient(newPos);
+                    diff = (p.pos()-newPos).norm() + (p.normal()-newNormal).norm();
+                    p.pos() = newPos;
+                    p.normal() = newNormal;
+                }
+                else {
+                    diff = 0;
+                }
                 i++;
-            } while(res == Grenaille::NEED_OTHER_PASS && i<MAX_FITTING_ITERATION);
 
-            auto newPos = fit.project(p.pos());
-            APoint _p(newPos, fit.primitiveGradient(newPos), p.color(), p.splatSize());
-            p = _p;
         }
     }
-}
 
 // same project function for time recording
 //void OrthogonalProjection::project(PointyCloud &upSampledCloud)
@@ -128,4 +141,8 @@ int OrthogonalProjection::getCount() const
     return m_count;
 }
 
+int OrthogonalProjection::getMeanProjectionCount() const
+{
+    return m_meanProjectionCount;
+}
 } // namespace PointyCloudPlugin

@@ -36,6 +36,7 @@ public:
     float getTimeFitting() const;
     float getTimeProjecting() const;
     int getCount() const;
+    int getMeanProjectionCount() const;
 
 protected:
 
@@ -49,6 +50,7 @@ protected:
     float m_timeFitting;
     float m_timeProjecting;
     size_t m_count;
+    size_t m_meanProjectionCount;
 };
 
 
