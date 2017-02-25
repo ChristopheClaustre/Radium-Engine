@@ -42,6 +42,8 @@ private:
     void updateSelectedCount();
     void updateSampleCount();
 
+    void updateFinalMemory();
+
     RegularGrid* m_grid;
 
     // device arrays
