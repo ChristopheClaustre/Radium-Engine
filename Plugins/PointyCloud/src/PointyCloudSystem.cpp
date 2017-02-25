@@ -19,6 +19,8 @@
 #include <Renderer/PointyCloudRenderer.hpp>
 #include <ComputePointyCloudTask.hpp>
 
+#include <Cuda/APSSTask.hpp>
+
 namespace PointyCloudPlugin
 {
 
@@ -80,6 +82,18 @@ namespace PointyCloudPlugin
                 comp->handlePointyCloudLoading(data);
 
                 pointyCloudComponentList.push_back(comp);
+
+                // Cuda APSS
+                for(auto& roIdx : comp->m_renderObjects)
+                {
+                    std::shared_ptr<Ra::Engine::Mesh> mesh = Ra::Engine::RadiumEngine::getInstance()->getRenderObjectManager()->getRenderObject(roIdx)->getMesh();
+                    Cuda::APSS* apss = new Cuda::APSS(mesh->getGeometry().m_vertices.data(),
+                                                      mesh->getGeometry().m_normals.data(),
+                                                      mesh->getData(Ra::Engine::Mesh::VERTEX_COLOR).data(),
+                                                      mesh->getGeometry().m_vertices.size());
+                    m_APPS.push_back(apss);
+                    m_mesh.push_back(mesh);
+                }
             }
         }
 
@@ -92,9 +106,12 @@ namespace PointyCloudPlugin
 
     void PointyCloudSystem::generateTasks( Ra::Core::TaskQueue* taskQueue, const Ra::Engine::FrameInfo& frameInfo )
     {
-        if(m_APSS)
-            for(auto comp : pointyCloudComponentList)
-                taskQueue->registerTask(new ComputePointyCloudTask(comp));
+        for(int k=0; k<m_APPS.size(); ++k)
+            taskQueue->registerTask(new APSSTask(m_APPS[k], m_mesh[k]));
+
+//        if(m_APSS)
+//            for(auto comp : pointyCloudComponentList)
+//                taskQueue->registerTask(new ComputePointyCloudTask(comp));
     }
 
     void PointyCloudSystem::setSplatRadius(Scalar splatRadius)

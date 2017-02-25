@@ -33,6 +33,10 @@ namespace PointyCloudPlugin
 
 namespace PointyCloudPlugin
 {
+    namespace Cuda {
+        class APSS;
+    } // namespace Cuda
+
     class PointyCloudRenderer;
 
     class POINTY_PLUGIN_API PointyCloudSystem : public Ra::Engine::System
@@ -87,6 +91,9 @@ namespace PointyCloudPlugin
         bool m_cuda;
         bool m_APSS;
         bool m_rendererUsed;
+
+        std::vector<Cuda::APSS*> m_APPS;
+        std::vector<std::shared_ptr<Ra::Engine::Mesh> > m_mesh;
     };
 
 } // namespace PointyCloudPlugin
