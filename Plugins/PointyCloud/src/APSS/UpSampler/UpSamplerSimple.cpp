@@ -30,24 +30,17 @@ int UpSamplerSimple::getM(const int& indice)
 
 int UpSamplerSimple::calculEta(const int& indice)
 {
-    float facteurObliquite;
+    float facteurObliquite = m_camera.getDirection().dot(- m_cloud->m_points[indice].normal());
     Ra::Core::Vector3 distPToCam = m_cloud->m_points[indice].pos() - m_camera.getPosition();
     float dist;
     //m_point are already normalized
     if(m_camera.getProjType() == Ra::Engine::Camera::ProjType::ORTHOGRAPHIC)
     {
-        //        facteurObliquite = m_camera.getDirection().dot(m_cloud->m_points[indice].normal());
         //        float  d = m_camera.getDirection().dot(m_cloud->m_points[indice].pos());
-
-
-
-
     }
     else
     {
         //        facteurObliquite = distPToCam.normalized().dot(m_cloud->m_points[indice].normal());
-
-        //    std::cerr << "FALSE" << std::endl;
     }
     const Ra::Core::Vector3 pointCam = pointInView(m_cloud->m_points[indice].pos());
     const Ra::Core::Vector3 &extremPoint1 = (pointCam + Ra::Core::Vector3( 1.0f* m_radius * 2 / m_camera.getWidth() , 0.0f , 0.0f) ) ;
@@ -55,9 +48,8 @@ int UpSamplerSimple::calculEta(const int& indice)
 
     const Ra::Core::Vector2 extremPoint1Proj = project(extremPoint1);
     const Ra::Core::Vector2 extremPoint2Proj = project(extremPoint2);
-//    dist = (extremPoint2Proj - extremPoint1Proj).norm();
-//    std::cerr << "dist = " << ceil(dist) << std::endl;
-    return ceil((extremPoint2Proj - extremPoint1Proj).norm());
+
+    return ceil((extremPoint2Proj - extremPoint1Proj).norm() * facteurObliquite);
 }
 
 } // namespace PointyCloudPlugin
