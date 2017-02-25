@@ -257,7 +257,7 @@ namespace Ra {
                 sendGLData(m_v4Data[VERTEX_WEIGHT_IDX], MAX_MESH + MAX_VEC3 + VERTEX_WEIGHT_IDX);
 
                 // Vec1 data
-                sendGLData(m_v1Data[POINT_SPLATSIZE], MAX_MESH + MAX_VEC3 + MAX_VEC4 + POINT_SPLATSIZE);
+                sendGLData(m_v1Data[POINT_RADIUS], MAX_MESH + MAX_VEC3 + MAX_VEC4 + POINT_RADIUS);
 
                 GL_ASSERT( glBindVertexArray( 0 ) );
 

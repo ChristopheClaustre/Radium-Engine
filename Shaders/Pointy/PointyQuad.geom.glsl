@@ -7,9 +7,8 @@ layout (location = 0) in vec3 in_position[];
 layout (location = 1) in vec3 in_normal[];
 layout (location = 2) in vec4 in_color[];
 layout (location = 3) in vec3 in_eye[];
-layout (location = 4) in float in_splatSize[];
+layout (location = 4) in float in_radius[];
 
-//uniform float splatSize;
 uniform Transform transform;
 
 layout (location = 0) out vec3 out_position;
@@ -28,16 +27,16 @@ void main()
     vec3 point[4];
     vec2 uv[4];
 
-    point[0] = in_position[0]-0.5*in_splatSize[0]*(u+v);
+    point[0] = in_position[0]-in_radius[0]*(u+v);
     uv[0] = vec2(-1,-1);
 
-    point[1] = point[0] + in_splatSize[0]*u;
+    point[1] = point[0] + in_radius[0]*u*2;
     uv[1] = vec2(-1,+1);
 
-    point[2] = point[0] + in_splatSize[0]*v;
+    point[2] = point[0] + in_radius[0]*v*2;
     uv[2] = vec2(+1,-1);
 
-    point[3] = point[0] + in_splatSize[0]*(u+v);
+    point[3] = point[0] + in_radius[0]*(u+v)*2;
     uv[3] = vec2(+1,+1);
 
     for(int idx = 0; idx<4; ++idx)
