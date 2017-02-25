@@ -85,11 +85,6 @@ namespace PointyCloudPlugin
 
     }
 
-    std::vector<PointyCloudComponent*> PointyCloudSystem::getComponents()
-    {
-        return pointyCloudComponentList;
-    }
-
     void PointyCloudSystem::generateTasks( Ra::Core::TaskQueue* taskQueue, const Ra::Engine::FrameInfo& frameInfo )
     {
         if(m_APSS) {

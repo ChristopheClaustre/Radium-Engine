@@ -45,8 +45,6 @@ namespace PointyCloudPlugin
 
         virtual void generateTasks( Ra::Core::TaskQueue* taskQueue, const Ra::Engine::FrameInfo& frameInfo ) override;
 
-        std::vector<PointyCloudComponent*> getComponents();
-
         void setSplatRadius(Scalar splatRadius);
         void setInfluenceRadius(Scalar influenceRadius);
         void setThreshold(int threshold);
