@@ -57,7 +57,7 @@ Ra::Core::Vector3 UpSampler::calculU(const Ra::Core::Vector3& normal)
         u = Ra::Core::Vector3((normal[1]+normal[2]) / ( -normal[0] ),1,1 );
     else
     {
-        std::cerr << "Error normal = " << normal<< std::endl;
+        LOGP(logERROR) << "Error normal = " << normal;
         return Ra::Core::Vector3(0,0,0);
     }
     u.normalize();
