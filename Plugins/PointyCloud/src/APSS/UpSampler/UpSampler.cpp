@@ -34,6 +34,7 @@ void UpSampler::upSamplePoint(const int &m, const int& indice)
         m_newpoints.resize(n+m*m, temp);
 
         Scalar med = (m+1)/2.0;
+        #pragma omp parallel for
         for ( int i = 0 ; i < m; ++i )
         {
             int nim = n+i*m;
