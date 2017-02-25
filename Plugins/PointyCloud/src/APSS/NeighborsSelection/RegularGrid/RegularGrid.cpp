@@ -67,23 +67,42 @@ bool RegularGrid::hasNeighbors(const Ra::Core::Vector3& p, float r) const
     // neighbors count
     int res = 0;
 
+    bool enough = false;
     // search
-    for(int k = kmin; k<=kmax; ++k)
-        for(int j = jmin; j<=jmax; ++j)
-            for(int i = imin; i<=imax; ++i)
+    int k = kmin;
+    while(k<=kmax)
+    {
+        int j = jmin;
+        while(j<=jmax)
+        {
+            int i = imin;
+            while(i<=imax)
             {
                 int idxCell = rawIndex(i, j, k);
                 int begin = m_cells[idxCell].index;
                 int length = m_cells[idxCell].length;
 
-                for(int idx = begin; idx<begin+length; ++idx)
+                int idx = begin;
+                while(idx<begin+length)
+                {
                     if((p - m_cloud->m_points[m_indices[idx]].pos()).norm() <= r)
+                    {
                         ++res;
+                    }
+                    ++idx;
+                }
 
-                if(res>=6)
-                    return true;
+                // is it enough ?? (cf. Patate)
+                enough = (res>=6);
+
+                ++i;
             }
-    return false;
+            ++j;
+        }
+        ++k;
+    }
+
+    return enough;
 }
 
 float RegularGrid::getBuildTime() const {
