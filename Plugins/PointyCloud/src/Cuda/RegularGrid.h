@@ -27,13 +27,16 @@ public:
     RegularGrid(size_t size, const Vector3* positions, int ncells = 80);
     ~RegularGrid();
 
+    MULTIARCH
     inline int rawIndex(int i, int j, int k) const {
         return k*(m_nx*m_ny) + j*m_nx + i;
     }
 
+
     inline int rawIndex(const Vector3& p) const {
         return rawIndexLocal(p-m_aabb.min());
     }
+
 
     inline int rawIndexLocal(const Vector3& pLocal) const {
         return rawIndex(std::floor(pLocal[0]/m_dx),
