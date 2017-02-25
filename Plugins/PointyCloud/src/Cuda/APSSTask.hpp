@@ -24,7 +24,7 @@ namespace PointyCloudPlugin {
         {
             // APSS steps
             m_apss->select(m_camera->getPosition(), m_camera->getDirection());
-            m_apss->upsample(m_M);
+            m_apss->upsample(m_M, m_splatRadius);
             m_apss->project(m_splatRadius/*APSS parameters*/);
             m_apss->finalize();
 

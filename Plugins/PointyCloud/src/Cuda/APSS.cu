@@ -96,7 +96,7 @@ void APSS::select(const Vector3 &cameraPosition, const Vector3 &cameraDirection)
     CUDA_ASSERT( cudaDeviceSynchronize() );
 }
 
-void APSS::upsample(int m/*APSS parameters*/)
+void APSS::upsample(int m, Scalar splatRadius)
 {
     computeSampleCountFixed<<<1,1>>>(m_sizeSelected, m, m_splatCount);
     CUDA_ASSERT( cudaPeekAtLastError() );
@@ -110,22 +110,23 @@ void APSS::upsample(int m/*APSS parameters*/)
     updateSampleCount();
     updateFinalMemory();
 
-    generateSample<<<1,1>>>(m_sizeSelected, m_selected, m_splatCount, m_splatCountSum,
+    generateSample<<<1,1>>>(m_sizeSelected, splatRadius, m_selected, m_splatCount, m_splatCountSum,
                             m_positionOriginal, m_normalOriginal, m_colorOriginal,
-                            m_positionFinal, m_normalFinal, m_colorFinal);
+                            m_positionFinal, m_normalFinal, m_colorFinal, m_splatSizeFinal);
     CUDA_ASSERT( cudaPeekAtLastError() );
     CUDA_ASSERT( cudaDeviceSynchronize() );
 }
 
 void APSS::project(Scalar splatRadius/*APSS parameters*/)
 {
-    copySelected<<<1,1>>>(m_sizeSelected, m_positionOriginal, m_normalOriginal, m_colorOriginal,
-                 m_selected, m_positionFinal, m_normalFinal, m_colorFinal, m_splatSizeFinal, splatRadius);
+    // Test selected->final
+//    copySelected<<<1,1>>>(m_sizeSelected, m_positionOriginal, m_normalOriginal, m_colorOriginal,
+//                 m_selected, m_positionFinal, m_normalFinal, m_colorFinal, m_splatSizeFinal, splatRadius);
+//    m_sizeFinal = m_sizeSelected;
 
-    m_sizeFinal = m_sizeSelected;
 
-    CUDA_ASSERT( cudaPeekAtLastError() );
-    CUDA_ASSERT( cudaDeviceSynchronize() );
+//    CUDA_ASSERT( cudaPeekAtLastError() );
+//    CUDA_ASSERT( cudaDeviceSynchronize() );
 }
 
 void APSS::finalize()
