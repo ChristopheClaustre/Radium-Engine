@@ -39,7 +39,8 @@ void copy(size_t sizeOriginal, Vector3* posIn,  Vector3* norIn,  Vector4* colIn,
 
 __global__
 void copySelected(size_t sizeSelected, Vector3* posIn,  Vector3* norIn,  Vector4* colIn,
-                  int* selected, Vector3* posOut, Vector3* norOut, Vector4* colOut, Scalar* splatSizeOut)
+                  int* selected, Vector3* posOut, Vector3* norOut, Vector4* colOut, Scalar* splatSizeOut,
+                  Scalar splatRadius)
 {
     for (int i = 0; i < sizeSelected; ++i)
     {
@@ -51,7 +52,7 @@ void copySelected(size_t sizeSelected, Vector3* posIn,  Vector3* norIn,  Vector4
         colOut[i][1] = t;
         colOut[i][2] = t;
         colOut[i][3] = 1;
-        splatSizeOut[i] = 1.0;
+        splatSizeOut[i] = splatRadius;
     }
 }
 
