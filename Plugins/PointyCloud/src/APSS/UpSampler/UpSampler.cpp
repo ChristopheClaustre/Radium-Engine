@@ -29,9 +29,13 @@ void UpSampler::upSamplePoint(const int &m, const int& indice)
         const Ra::Core::Vector3 &v_pas =  v * newRadius * 2;
 
         // we are going to add mxm points
+        int n;
+#pragma omp critical
+{
         APoint temp(centerVertice,normal,color,newRadius);
-        int n = m_newpoints.size();
+        n = m_newpoints.size();
         m_newpoints.resize(n+m*m, temp);
+}
 
         Scalar med = (m-1)/2.0;
         Ra::Core::Vector3 firstVertice = centerVertice + u_pas * -med + v_pas * -med;
