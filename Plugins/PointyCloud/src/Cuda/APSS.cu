@@ -76,6 +76,8 @@ APSS::~APSS()
     free(m_normalFinalHost);
     free(m_colorFinalHost);
     free(m_splatSizeFinalHost);
+
+    m_grid->free();
 }
 
 void APSS::select(const Vector3 &cameraPosition, const Vector3 &cameraDirection)
@@ -117,16 +119,14 @@ void APSS::upsample(int m, Scalar splatRadius)
     CUDA_ASSERT( cudaDeviceSynchronize() );
 }
 
-void APSS::project(Scalar splatRadius/*APSS parameters*/)
+void APSS::project(Scalar influenceRadius)
 {
-    // Test selected->final
-//    copySelected<<<1,1>>>(m_sizeSelected, m_positionOriginal, m_normalOriginal, m_colorOriginal,
-//                 m_selected, m_positionFinal, m_normalFinal, m_colorFinal, m_splatSizeFinal, splatRadius);
-//    m_sizeFinal = m_sizeSelected;
+    projection<<<1,1>>>(m_positionOriginal, m_normalOriginal, *m_grid, influenceRadius,
+                     m_sizeFinal, m_positionFinal, m_normalFinal);
+    m_sizeFinal = m_sizeSelected;
 
-
-//    CUDA_ASSERT( cudaPeekAtLastError() );
-//    CUDA_ASSERT( cudaDeviceSynchronize() );
+    CUDA_ASSERT( cudaPeekAtLastError() );
+    CUDA_ASSERT( cudaDeviceSynchronize() );
 }
 
 void APSS::finalize()

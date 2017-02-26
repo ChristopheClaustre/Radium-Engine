@@ -108,7 +108,7 @@ namespace PointyCloudPlugin
     {
         for(int k=0; k<m_APPS.size(); ++k)
             taskQueue->registerTask(new APSSTask(m_APPS[k], m_mesh[k], m_viewer->getCameraInterface()->getCamera(),
-                                                 m_splatRadius, m_M));
+                                                 m_splatRadius, m_M, m_influenceRadius));
 
 //        if(m_APSS)
 //            for(auto comp : pointyCloudComponentList)

@@ -26,8 +26,8 @@ public:
 
     // APSS steps
     void select(const Vector3& cameraPosition, const Vector3& cameraDirection);
-    void upsample(int m, Scalar splatRadius/*APSS parameters*/);
-    void project(Scalar splatRadius/*APSS parameters*/);
+    void upsample(int m, Scalar splatRadius);
+    void project(Scalar influenceRadius);
     void finalize();
 
     // get APSS results

@@ -69,10 +69,15 @@ RegularGrid::RegularGrid(size_t size, const Vector3 *positions, int ncells)
 
 RegularGrid::~RegularGrid()
 {
+}
+
+void RegularGrid::free()
+{
     // free device memory
     CUDA_ASSERT( cudaFree(m_indices) );
     CUDA_ASSERT( cudaFree(m_cells) );
 }
+
 
 } // namespace Cuda
 } // namespace PointyCloudPlugin

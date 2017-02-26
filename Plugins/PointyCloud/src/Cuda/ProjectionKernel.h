@@ -41,7 +41,7 @@ struct AddNeighborsFunctor
 };
 
 __global__
-void project(Vector3* positionsOriginal, Vector3* normalsOriginal, RegularGrid grid, Scalar influenceRadius,
+void projection(Vector3* positionsOriginal, Vector3* normalsOriginal, RegularGrid grid, Scalar influenceRadius,
              int sizeFinal, Vector3* positionsFinal, Vector3* normalsFinal)
 {
     Fit fit;

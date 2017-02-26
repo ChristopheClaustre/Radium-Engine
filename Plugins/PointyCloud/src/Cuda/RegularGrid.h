@@ -44,6 +44,8 @@ public:
                         std::floor(pLocal[2]/m_dz));
     }
 
+    void free();
+
 //private:
 
     // bounding box
