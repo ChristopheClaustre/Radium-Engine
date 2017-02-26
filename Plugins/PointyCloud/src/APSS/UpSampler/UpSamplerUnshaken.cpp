@@ -16,6 +16,7 @@ void UpSamplerUnshaken::upSampleCloud(PointyCloud& cloud)
     m_newpoints.clear();
     const int &n = m_cloud->m_points.size() ;
 
+    #pragma omp parallel for
     for ( uint i = 0 ; i < n ; i++ )
     {
         this->upSamplePoint(m_M, i);
