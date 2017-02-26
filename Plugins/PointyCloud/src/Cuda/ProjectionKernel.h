@@ -41,8 +41,8 @@ struct AddNeighborsFunctor
 };
 
 __global__
-void projection(Vector3* positionsOriginal, Vector3* normalsOriginal, RegularGrid grid, Scalar influenceRadius,
-             int sizeFinal, Vector3* positionsFinal, Vector3* normalsFinal)
+void projection(int sizeOriginal, Vector3* positionsOriginal, Vector3* normalsOriginal, RegularGrid grid, Scalar influenceRadius,
+                int sizeFinal, Vector3* positionsFinal, Vector3* normalsFinal)
 {
     Fit fit;
     fit.setWeightFunc(WeightFunc(influenceRadius));

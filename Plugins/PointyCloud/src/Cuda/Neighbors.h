@@ -36,6 +36,14 @@ void processNeighbors(const Vector3& p, Scalar r, const RegularGrid& grid, const
             }
 }
 
+template<typename F> __device__
+void processNeighborsAll(const Vector3& p, Scalar r, int size, const Vector3* positions, F& fun)
+{
+    for (int idx = 0; idx < size; ++idx)
+        if( (p - positions[idx]).norm() <=r )
+            fun(idx);
+}
+
 } // namespace Cuda
 } // namespace PointyCloudPlugin
 
