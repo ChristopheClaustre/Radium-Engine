@@ -28,5 +28,5 @@ private:
 }; // class UsefulPointsSelection
 
 } // namespace PointyCloudPlugin
-
+#include <APSS/UsefulPointsSelection.inl>
 #endif // POINTYCLOUDPLUGIN_USEFULPOINTSSELECTION_HPP

@@ -16,8 +16,8 @@ inline Ra::Core::Vector2 UpSamplerSimple::project(const Ra::Core::Vector3& p) co
     point.head<3>() = p;
     Ra::Core::Vector4 vpPoint = m_camera.getProjMatrix() * point;
     return Ra::Core::Vector2(
-                std::max(std::min(0.5f * (vpPoint.x()/vpPoint.w() + 1), 1.0), 0.0),
-                std::max(std::min(0.5f * (1 - vpPoint.y()/vpPoint.w()), 1.0), 0.0));
+                std::max(std::min(0.5f * (vpPoint.x()/vpPoint.w() + 1), Scalar(1)), Scalar(0)),
+                std::max(std::min(0.5f * (1 - vpPoint.y()/vpPoint.w()), Scalar(1)), Scalar(0)));
 }
 
 // redefined a point from the camera position
