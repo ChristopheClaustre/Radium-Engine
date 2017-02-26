@@ -10,7 +10,9 @@
 
 namespace PointyCloudPlugin {
 
-#define MAX_FITTING_ITERATION 10
+#define MAX_FITTING_ITERATION 500
+#define THRESHOLD_NORMAL 1 // degrees
+#define THRESHOLD_POS    0.1 // % of splatRadius
 
 // Define related structure
 typedef Grenaille::DistWeightFunc<APoint, Grenaille::SmoothWeightKernel<Scalar> > WeightFunc;
@@ -34,11 +36,11 @@ public:
 
     // timing accessor
     ON_TIMED(
-    float getTimeNeighbors() const;
-    float getTimeFitting() const;
-    float getTimeProjecting() const;
-    int getCount() const;
-    int getMeanProjectionCount() const;)
+    Scalar getTimeNeighbors() const;
+    Scalar getTimeFitting() const;
+    Scalar getTimeProjecting() const;
+    size_t getCount() const;
+    size_t getMeanProjectionCount() const;)
 
 protected:
 
@@ -49,14 +51,12 @@ protected:
 
     // time stats
     ON_TIMED(
-    float m_timeNeighbors;
-    float m_timeFitting;
-    float m_timeProjecting;
+    Scalar m_timeNeighbors;
+    Scalar m_timeFitting;
+    Scalar m_timeProjecting;
     size_t m_count;
     size_t m_meanProjectionCount;)
 };
-
-
 
 } // namespace PointyCloudPlugin
 

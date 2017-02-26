@@ -20,7 +20,8 @@ OrthogonalProjection::OrthogonalProjection(std::shared_ptr<NeighborsSelection> n
     m_count = 0;
     m_timeNeighbors = 0;
     m_timeFitting = 0;
-    m_timeProjecting = 0;)
+    m_timeProjecting = 0;
+    m_meanProjectionCount = 0;)
 }
 
 OrthogonalProjection::~OrthogonalProjection()
@@ -29,31 +30,49 @@ OrthogonalProjection::~OrthogonalProjection()
 
 void OrthogonalProjection::project(PointyCloud &upSampledCloud)
 {
+#ifndef CORE_USE_OMP
     Fit fit;
     fit.setWeightFunc(WeightFunc(m_influenceRadius));
+#endif
+
+    Scalar threshold_n = cos(THRESHOLD_NORMAL * 180 / M_PI);
+    Scalar initDiff_n = threshold_n*2;
+    Scalar pourcentTs = THRESHOLD_POS/100;
 
     ON_TIMED(
     Ra::Core::Timer::TimePoint start;
-    float timeNeighbors = 0.0;
-    float timeFitting = 0.0;
-    float timeProjecting = 0.0;
-    size_t pointToFitCount = 0;
+    Scalar timeNeighbors =   0.0;
+    Scalar timeFitting =     0.0;
+    Scalar timeProjecting =  0.0;
+    Scalar pointToFitCount = 0.0;
     size_t projectionCount = 0;)
 
+#ifdef TIMED
+    #pragma omp parallel for reduction(+:timeNeighbors,timeFitting,timeProjecting,pointToFitCount,projectionCount)
+#else
     #pragma omp parallel for
+#endif
     for(int i = 0; i < upSampledCloud.m_points.size(); ++i)
     {
+#ifdef CORE_USE_OMP
+        Fit fit;
+        fit.setWeightFunc(WeightFunc(m_influenceRadius));
+#endif
+
         auto &p = upSampledCloud.m_points[i];
         if (p.eligible())
         {
-            float threshold = 0.001 * p.radius();
-            float diff = p.radius();
+            Scalar diff_n = initDiff_n;
+
+            Scalar threshold_p = pourcentTs * p.radius();
+            Scalar diff_p = threshold_p*2;
+
+            fit.init(p.pos());
+
             int i = 0;
             std::vector<int> neighbors;
-            while(diff >= threshold && i < MAX_FITTING_ITERATION)
+            while((diff_n >= threshold_n || diff_p >= threshold_p) && i < MAX_FITTING_ITERATION)
             {
-                fit.init(p.pos());
-
                 ON_TIMED(start = Ra::Core::Timer::Clock::now();)
                 neighbors.clear();
                 m_selector->getNeighbors(p, neighbors);
@@ -70,23 +89,26 @@ void OrthogonalProjection::project(PointyCloud &upSampledCloud)
                 // finalize should only return STABLE || UNSTABLE || UNDEFINED
                 // we accept result in unstable state because its good enough ;)
                 ON_TIMED(start = Ra::Core::Timer::Clock::now();)
-                if (fit.finalize() != Grenaille::UNDEFINED) {
+                if (fit.finalize() == Grenaille::STABLE) {
                     auto newPos = fit.project(p.pos());
                     auto newNormal = fit.primitiveGradient(newPos);
-                    diff = (p.pos()-newPos).norm() + (p.normal()-newNormal).norm();
+                    diff_n = p.normal().dot(newNormal);
+                    diff_p = (p.pos()-newPos).norm();
+                    // update
                     p.pos() = newPos;
                     p.normal() = newNormal;
                 }
                 else {
-                    diff = 0;
+                    diff_n = 0;
+                    diff_p = 0;
                 }
                 ON_TIMED(timeProjecting += Ra::Core::Timer::getIntervalMicro(start, Ra::Core::Timer::Clock::now());)
 
-                ON_TIMED(++projectionCount;)
-                i++;
+                ++i;
             }
-
-            ON_TIMED(++pointToFitCount;)
+            ON_TIMED(
+            projectionCount += i;
+            ++pointToFitCount;)
         }
     }
 
@@ -100,29 +122,29 @@ void OrthogonalProjection::project(PointyCloud &upSampledCloud)
 }
 
 ON_TIMED(
-float OrthogonalProjection::getTimeNeighbors() const
+Scalar OrthogonalProjection::getTimeNeighbors() const
 {
     return m_count==0 ? 0.0 : m_timeNeighbors/m_count;
 }
 
-float OrthogonalProjection::getTimeFitting() const
+Scalar OrthogonalProjection::getTimeFitting() const
 {
     return m_count==0 ? 0.0 : m_timeFitting/m_count;
 }
 
-float OrthogonalProjection::getTimeProjecting() const
+Scalar OrthogonalProjection::getTimeProjecting() const
 {
     return m_count==0 ? 0.0 : m_timeProjecting/m_count;
 }
 
-int OrthogonalProjection::getCount() const
+size_t OrthogonalProjection::getCount() const
 {
     return m_count;
 }
 
-int OrthogonalProjection::getMeanProjectionCount() const
+size_t OrthogonalProjection::getMeanProjectionCount() const
 {
-    return m_meanProjectionCount;
+    return m_count==0 ? 0 : m_meanProjectionCount/m_count;
 }
 ) // ON_TIMED end
 
