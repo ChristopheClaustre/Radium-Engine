@@ -20,20 +20,29 @@ void genSplat(int idxBegin, int splatCount, Scalar splatRadius,
               const Vector3& positionIn, const Vector3& normalIn, const Vector4& colorIn,
               Vector3* positionOut, Vector3* normalOut, Vector4* colorOut, Scalar* splatSizeOut)
 {
-    //TODO: Compute orthonormal basis U,V from normalIn
-    const Vector3 U;
-    const Vector3 V;
+    // orthonormal basis U,V normalIn
+    Vector3 U;
+    if(abs(normalIn[0])>1e-6)
+        U = Vector3(-normalIn[1]/normalIn[0], 1, 0).normalized();
+    else
+        U = Vector3(1, 0, 0);
+    Vector3 V = normalIn.cross(U).normalized();
 
-    for (int k = 0; k < splatCount; ++k)
-    {
-        //TODO: compute generated splat position
-        /* /!\ k might be replaced by i,j indices /?\ (cf upsampler)*/
-        // for now the splats are at the same position
-        positionOut[idxBegin+k] = positionIn+ k*0.1*normalIn;
-        normalOut[idxBegin+k] = normalIn;
-        colorOut[idxBegin+k] = colorIn;
-        splatSizeOut[idxBegin+k] = splatRadius;
-    }
+    // generate (m x m) splats
+    int m = sqrt((double)splatCount);
+    double newSplatRadius = splatRadius/m;
+    Vector3 corner = positionIn - splatRadius*(U+V);
+
+    int k = 0;
+    for (int i = 0; i < m; ++i)
+        for (int j = 0; j < m; ++j)
+        {
+            positionOut[idxBegin+k]  = corner + (1+2*i)*newSplatRadius*U + (1+2*j)*newSplatRadius*V;
+            normalOut[idxBegin+k]    = normalIn;
+            colorOut[idxBegin+k]     = colorIn;
+            splatSizeOut[idxBegin+k] = newSplatRadius;
+            ++k;
+        }
 }
 
 __global__
