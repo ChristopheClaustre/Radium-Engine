@@ -38,6 +38,7 @@ namespace PointyCloudPlugin
     } // namespace Cuda
 
     class PointyCloudRenderer;
+    class TimeStat;
 
     class POINTY_PLUGIN_API PointyCloudSystem : public Ra::Engine::System
     {
@@ -94,6 +95,7 @@ namespace PointyCloudPlugin
 
         std::vector<Cuda::APSS*> m_APPS;
         std::vector<std::shared_ptr<Ra::Engine::Mesh> > m_mesh;
+        std::vector<TimeStat*> m_timeStat;
     };
 
 } // namespace PointyCloudPlugin

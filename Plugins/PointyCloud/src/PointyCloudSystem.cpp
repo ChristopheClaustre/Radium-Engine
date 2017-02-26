@@ -48,6 +48,13 @@ namespace PointyCloudPlugin
 
     PointyCloudSystem::~PointyCloudSystem()
     {
+        for(auto& stat : m_timeStat)
+        {
+            if(stat->count>0)
+            {
+                LOG(logINFO) << *stat;
+            }
+        }
     }
 
     void PointyCloudSystem::handleAssetLoading( Ra::Engine::Entity* entity, const Ra::Asset::FileData* fileData )
@@ -93,6 +100,7 @@ namespace PointyCloudPlugin
                                                       mesh->getGeometry().m_vertices.size());
                     m_APPS.push_back(apss);
                     m_mesh.push_back(mesh);
+                    m_timeStat.push_back(new TimeStat());
                 }
             }
         }
@@ -107,7 +115,7 @@ namespace PointyCloudPlugin
     void PointyCloudSystem::generateTasks( Ra::Core::TaskQueue* taskQueue, const Ra::Engine::FrameInfo& frameInfo )
     {
         for(int k=0; k<m_APPS.size(); ++k)
-            taskQueue->registerTask(new APSSTask(m_APPS[k], m_mesh[k], m_viewer->getCameraInterface()->getCamera(),
+            taskQueue->registerTask(new APSSTask(m_APPS[k], m_mesh[k], m_timeStat[k], m_viewer->getCameraInterface()->getCamera(),
                                                  m_splatRadius, m_M, m_influenceRadius));
 
 //        if(m_APSS)
