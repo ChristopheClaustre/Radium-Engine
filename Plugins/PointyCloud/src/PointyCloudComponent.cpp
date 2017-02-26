@@ -41,7 +41,9 @@ namespace PointyCloudPlugin
                     << "Culling    : " << m_timeCulling/m_count << " μs\n"
                     << "Upsampling : " << m_timeUpsampling/m_count << " μs\n"
                     << "Projecting : " << m_timeProjecting/m_count << " μs\n"
-                    << "Loading    : " << m_timeLoading/m_count << " μs\n";
+                    << "Loading    : " << m_timeLoading/m_count << " μs\n"
+                    << "Total      : " << (m_timeCulling+m_timeUpsampling+m_timeProjecting+m_timeLoading)/m_count
+                                                << " μs\n";
             }
             if(m_projection.getCount()>0)
             {
