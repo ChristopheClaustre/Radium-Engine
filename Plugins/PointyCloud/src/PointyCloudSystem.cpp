@@ -120,74 +120,74 @@ namespace PointyCloudPlugin
         m_splatRadius = splatRadius;
         //TODO(xavier)Envoi au renderer à retirer
         m_renderer->setSplatSize(splatRadius);
-        for (auto comp : pointyCloudComponentList) {
-            comp->setSplatRadius(splatRadius);
-        }
+//        for (auto comp : pointyCloudComponentList) {
+//            comp->setSplatRadius(splatRadius);
+//        }
     }
 
     void PointyCloudSystem::setInfluenceRadius(Scalar influenceRadius)
     {
         m_influenceRadius = influenceRadius;
-        for (auto comp : pointyCloudComponentList) {
-            comp->setInfluenceRadius(influenceRadius);
-        }
+//        for (auto comp : pointyCloudComponentList) {
+//            comp->setInfluenceRadius(influenceRadius);
+//        }
     }
 
     void PointyCloudSystem::setThreshold(int threshold)
     {
         m_threshold = threshold;
         // TODO donner à tout les components
-        for (auto comp : pointyCloudComponentList) {
-            comp->setThreshold(threshold);
-        }
+//        for (auto comp : pointyCloudComponentList) {
+//            comp->setThreshold(threshold);
+//        }
     }
 
     void PointyCloudSystem::setM(int M)
     {
         m_M = M;
-        for (auto comp : pointyCloudComponentList) {
-            comp->setM(M);
-        }
+//        for (auto comp : pointyCloudComponentList) {
+//            comp->setM(M);
+//        }
     }
 
     void PointyCloudSystem::setUpsamplingMethod(UPSAMPLING_METHOD upsampler)
     {
         m_upsampler = upsampler;
-        for (auto comp : pointyCloudComponentList) {
-            comp->setUpsamplingMethod(upsampler);
-        }
+//        for (auto comp : pointyCloudComponentList) {
+//            comp->setUpsamplingMethod(upsampler);
+//        }
     }
 
     void PointyCloudSystem::setProjectionMethod(PROJECTION_METHOD projector)
     {
         m_projector = projector;
-        for (auto comp : pointyCloudComponentList) {
-            comp->setProjectionMethod(projector);
-        }
+//        for (auto comp : pointyCloudComponentList) {
+//            comp->setProjectionMethod(projector);
+//        }
     }
 
     void PointyCloudSystem::setOptimizationByOctree(bool octree)
     {
         m_octree = octree;
-        for (auto comp : pointyCloudComponentList) {
-            comp->setOptimizationByOctree(octree);
-        }
+//        for (auto comp : pointyCloudComponentList) {
+//            comp->setOptimizationByOctree(octree);
+//        }
     }
 
     void PointyCloudSystem::setOptimizationByCUDA(bool cuda)
     {
         m_cuda = cuda;
-        for (auto comp : pointyCloudComponentList) {
-            comp->setOptimizationByCUDA(cuda);
-        }
+//        for (auto comp : pointyCloudComponentList) {
+//            comp->setOptimizationByCUDA(cuda);
+//        }
     }
 
     void PointyCloudSystem::setAPSS(bool apss)
     {
         m_APSS = apss;
-        if(!apss)
-            for (auto comp : pointyCloudComponentList)
-                comp->resetOriginalCloud();
+//        if(!apss)
+//            for (auto comp : pointyCloudComponentList)
+//                comp->resetOriginalCloud();
     }
 
     void PointyCloudSystem::setRenderer(bool renderer)
