@@ -8,15 +8,15 @@ namespace Cuda {
 RegularGrid::RegularGrid(size_t size, const Vector3 *positions, int ncells)
 {
     // bounding box
-    Aabb aabb;
+    m_aabb.setEmpty();
     for(int k = 0; k<size; ++k)
-        aabb.extend(positions[k]);
+        m_aabb.extend(positions[k]);
 
     // add extra space at corners
-    const Scalar epsilon = 1e-5;
+    const Scalar epsilon = Scalar(1e-5);
     Vector3 e(epsilon, epsilon, epsilon);
-    aabb.extend(aabb.max()+e);
-    aabb.extend(aabb.min()-e);
+    m_aabb.extend(m_aabb.max()+e);
+    m_aabb.extend(m_aabb.min()-e);
 
     // fixed cells count along the 3 axis
     m_nx = ncells;
@@ -38,7 +38,7 @@ RegularGrid::RegularGrid(size_t size, const Vector3 *positions, int ncells)
 
     // fill
     std::vector<int>::iterator begin = indices.begin();
-    for(int k = 0; k < indices.size();++k)
+    for(int k = 0; k < size;++k)
     {
         // corresponding cell
         int idxCell = rawIndex(positions[k]);
