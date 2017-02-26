@@ -15,7 +15,7 @@ class UpSamplerUnshaken : public UpSampler
 {
 public :
     UpSamplerUnshaken(int M);
-    ~UpSamplerUnshaken();
+    virtual ~UpSamplerUnshaken();
     virtual void upSampleCloud(PointyCloud& cloud);
 
     void setM(int M) { m_M = M; }

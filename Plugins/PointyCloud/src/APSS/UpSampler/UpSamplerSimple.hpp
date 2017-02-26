@@ -11,7 +11,7 @@ class UpSamplerSimple:public UpSampler
 {
 public:
     UpSamplerSimple(Scalar threshold, const Ra::Engine::Camera& camera);
-    ~UpSamplerSimple();
+    virtual ~UpSamplerSimple();
     virtual void upSampleCloud(PointyCloud& cloud);
 
     void setThreshold(int ts) { m_threshold = ts; }

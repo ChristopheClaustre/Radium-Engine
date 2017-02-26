@@ -15,7 +15,7 @@ class UpSampler
 {
 public :
     UpSampler();
-    ~UpSampler();
+    virtual ~UpSampler();
     virtual void upSampleCloud(PointyCloud& cloud)=0;
 
 protected :
