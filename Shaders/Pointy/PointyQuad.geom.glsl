@@ -28,16 +28,16 @@ void main()
     vec3 point[4];
     vec2 uv[4];
 
-    point[0] = in_position[0]-0.5*in_splatSize[0]*(u+v);
+    point[0] = in_position[0]-in_splatSize[0]*(u+v);
     uv[0] = vec2(-1,-1);
 
-    point[1] = point[0] + in_splatSize[0]*u;
+    point[1] = point[0] + 2*in_splatSize[0]*u;
     uv[1] = vec2(-1,+1);
 
-    point[2] = point[0] + in_splatSize[0]*v;
+    point[2] = point[0] + 2*in_splatSize[0]*v;
     uv[2] = vec2(+1,-1);
 
-    point[3] = point[0] + in_splatSize[0]*(u+v);
+    point[3] = point[0] + 2*in_splatSize[0]*(u+v);
     uv[3] = vec2(+1,+1);
 
     for(int idx = 0; idx<4; ++idx)
