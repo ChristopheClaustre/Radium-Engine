@@ -130,6 +130,10 @@ void APSS::upsample(int m, Scalar splatRadius)
 
 void APSS::project(Scalar influenceRadius)
 {
+    // memory configuration
+    int threadsPerBlock = 256;
+    int blocksPerGrid = (m_sizeFinal + threadsPerBlock - 1) / threadsPerBlock;
+
     // TEST //////////////////////////////
 //    copySelected<<<1,1>>>(m_sizeSelected, m_positionOriginal, m_normalOriginal, m_colorOriginal, m_selected,
 //                 m_positionFinal, m_normalFinal, m_colorFinal, m_splatSizeFinal, influenceRadius);
@@ -137,10 +141,10 @@ void APSS::project(Scalar influenceRadius)
     //////////////////////////////////////
 
     // actual projection code:
-//    projection<<<1,1>>>(m_sizeOriginal, m_positionOriginal, m_normalOriginal, *m_grid, influenceRadius,
-//                        m_sizeFinal,    m_positionFinal,    m_normalFinal);
-//    CUDA_ASSERT( cudaPeekAtLastError() );
-//    CUDA_ASSERT( cudaDeviceSynchronize() );
+    projection<<<threadsPerBlock,blocksPerGrid>>>(m_sizeOriginal, m_positionOriginal, m_normalOriginal, *m_grid, influenceRadius,
+                        m_sizeFinal,    m_positionFinal,    m_normalFinal);
+    CUDA_ASSERT( cudaPeekAtLastError() );
+    CUDA_ASSERT( cudaDeviceSynchronize() );
 }
 
 void APSS::finalize()

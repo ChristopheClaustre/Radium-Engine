@@ -44,21 +44,22 @@ __global__
 void projection(int sizeOriginal, Vector3* positionsOriginal, Vector3* normalsOriginal, RegularGrid grid, Scalar influenceRadius,
                 int sizeFinal, Vector3* positionsFinal, Vector3* normalsFinal)
 {
-    Fit fit;
-    fit.setWeightFunc(WeightFunc(influenceRadius));
-
-    AddNeighborsFunctor functor(&fit, positionsOriginal, normalsOriginal);
-
-    for(int k = 0; k<sizeFinal; ++k)
+    int i = blockDim.x*blockIdx.x + threadIdx.x;
+    if(i<sizeFinal)
     {
-        fit.init(positionsFinal[k]);
+        Fit fit;
+        fit.setWeightFunc(WeightFunc(influenceRadius));
 
-        processNeighbors(positionsFinal[k], influenceRadius, grid, positionsOriginal, functor);
+        AddNeighborsFunctor functor(&fit, positionsOriginal, normalsOriginal);
+
+        fit.init(positionsFinal[i]);
+
+        processNeighbors(positionsFinal[i], influenceRadius, grid, positionsOriginal, functor);
 
         fit.finalize();
 
-        positionsFinal[k] = fit.project(positionsFinal[k]);
-        normalsFinal[k]   = fit.primitiveGradient(positionsFinal[k]);
+        positionsFinal[i] = fit.project(positionsFinal[i]);
+        normalsFinal[i]   = fit.primitiveGradient(positionsFinal[i]);
     }
 }
 
