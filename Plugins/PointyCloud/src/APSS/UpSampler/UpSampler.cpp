@@ -33,14 +33,14 @@ void UpSampler::upSamplePoint(const int &m, const int& indice)
         int n = m_newpoints.size();
         m_newpoints.resize(n+m*m, temp);
 
-        Scalar med = (m+1)/2.0;
-        #pragma omp parallel for
+        Scalar med = (m-1)/2.0;
+        Ra::Core::Vector3 firstVertice = centerVertice + u_pas * -med + v_pas * -med;
         for ( int i = 0 ; i < m; ++i )
         {
             int nim = n+i*m;
             for ( int j = 0 ; j < m ; ++j )
             {
-                m_newpoints[nim+j].pos() = Ra::Core::Vector3( (i-med) * u_pas + (j-med) * v_pas) + centerVertice;
+                m_newpoints[nim+j].pos() = firstVertice + i * u_pas + j * v_pas;
             }
         }
     }
