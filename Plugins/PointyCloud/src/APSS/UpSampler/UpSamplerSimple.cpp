@@ -24,41 +24,37 @@ void UpSamplerSimple::upSampleCloud(PointyCloud& cloud)
     m_cloud->m_points = m_newpoints;
 }
 
-int UpSamplerSimple::getM(const int& indice)
+// return the number of pixel that takes an splat of radius 1 at the position of the indice_th pixel
+Scalar UpSamplerSimple::computeEta(const int& indice)
 {
-    return round(calculEta(indice) * m_radius/ m_threshold);
-}
-
-int UpSamplerSimple::calculEta(const int& indice)
-{
-    float facteurObliquite;
-    Ra::Core::Vector3 distPToCam = m_cloud->m_points[indice].pos() - m_camera.getPosition();
-    float dist;
-    //m_point are already normalized
+    APoint& point = m_cloud->m_points[indice];
+    Scalar skewFactor;
+    // m_point are already normalized
     if(m_camera.getProjType() == Ra::Engine::Camera::ProjType::ORTHOGRAPHIC)
     {
-        //        facteurObliquite = m_camera.getDirection().dot(m_cloud->m_points[indice].normal());
-        //        float  d = m_camera.getDirection().dot(m_cloud->m_points[indice].pos());
-
-
-
-
+        skewFactor = abs( m_camera.getDirection().dot(point.normal()) );
     }
     else
     {
-        //        facteurObliquite = distPToCam.normalized().dot(m_cloud->m_points[indice].normal());
-
-        //    std::cerr << "FALSE" << std::endl;
+        Ra::Core::Vector3 distPToCam = point.pos() - m_camera.getPosition();
+        skewFactor = abs( distPToCam.normalized().dot(point.normal()) );
     }
-    const Ra::Core::Vector3 pointCam = pointInView(m_cloud->m_points[indice].pos());
-    const Ra::Core::Vector3 &extremPoint1 = (pointCam + Ra::Core::Vector3( 1.0f* m_radius * 2 / m_camera.getWidth() , 0.0f , 0.0f) ) ;
-    const Ra::Core::Vector3 &extremPoint2 = (pointCam + Ra::Core::Vector3(-1.0f* m_radius * 2 / m_camera.getWidth() , 0.0f , 0.0f) )  ;
+    const Ra::Core::Vector3 originalPointInView = pointInView(point.pos());
+    const Ra::Core::Vector3 extremPoint =
+            (originalPointInView + Ra::Core::Vector3( 1.0, 0.0, 0.0 ));
 
-    const Ra::Core::Vector2 extremPoint1Proj = project(extremPoint1);
-    const Ra::Core::Vector2 extremPoint2Proj = project(extremPoint2);
-//    dist = (extremPoint2Proj - extremPoint1Proj).norm();
-//    std::cerr << "dist = " << ceil(dist) << std::endl;
-    return ceil((extremPoint2Proj - extremPoint1Proj).norm());
+    const Ra::Core::Vector2 extremPointProj = project(extremPoint);
+    const Ra::Core::Vector2 originalPointProj = project(originalPointInView);
+
+    Ra::Core::Vector2 diff = originalPointProj - extremPointProj;
+    diff[0] *= m_camera.getWidth();
+    diff[1] *= m_camera.getHeight();
+    Scalar diameterInProj = diff.norm() * 2;
+
+    return skewFactor * diameterInProj * diameterInProj;
+
+    // exact compute should be : area of splat * skew factor
+    // but this is enough for our use and easier to compute
 }
 
 } // namespace PointyCloudPlugin
