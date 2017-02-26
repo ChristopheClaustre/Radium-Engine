@@ -14,12 +14,12 @@ void processNeighbors(const Vector3& p, Scalar r, const RegularGrid& grid, const
     Vector3 q = p - grid.m_aabb.min();
 
     // searching limits of a cube centered at q of length r
-    int imin = fmax(floor((q[0]-r)/grid.m_dx), 0);
-    int jmin = fmax(floor((q[1]-r)/grid.m_dy), 0);
-    int kmin = fmax(floor((q[2]-r)/grid.m_dz), 0);
-    int imax = fmin(floor((q[0]+r)/grid.m_dx), grid.m_nx-1);
-    int jmax = fmin(floor((q[1]+r)/grid.m_dy), grid.m_ny-1);
-    int kmax = fmin(floor((q[2]+r)/grid.m_dz), grid.m_nz-1);
+    int imin = fmax(floor((double)(q[0]-r)/grid.m_dx), 0.0);
+    int jmin = fmax(floor((double)(q[1]-r)/grid.m_dy), 0.0);
+    int kmin = fmax(floor((double)(q[2]-r)/grid.m_dz), 0.0);
+    int imax = fmin(floor((double)(q[0]+r)/grid.m_dx), grid.m_nx-1.0);
+    int jmax = fmin(floor((double)(q[1]+r)/grid.m_dy), grid.m_ny-1.0);
+    int kmax = fmin(floor((double)(q[2]+r)/grid.m_dz), grid.m_nz-1.0);
 
     // search
     for(int k = kmin; k<=kmax; ++k)
@@ -32,7 +32,7 @@ void processNeighbors(const Vector3& p, Scalar r, const RegularGrid& grid, const
 
                 for(int idx = begin; idx<begin+length; ++idx)
                     if((p - positions[grid.m_indices[idx]]).norm() <= r)
-                        fun(idx);
+                        fun(grid.m_indices[idx]);
             }
 }
 
