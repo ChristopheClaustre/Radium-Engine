@@ -20,7 +20,7 @@ namespace PointyCloudPlugin
           m_selector(std::make_shared<NeighborsSelection>(m_originalCloud, 3)),
           m_projection(OrthogonalProjection(m_selector, m_originalCloud, 3))
     {
-        m_upsampler.reset(new UpSamplerUnshaken(3,1));
+        m_upsampler.reset(new UpSamplerUnshaken(1));
 
         // APSS stats
         ON_TIMED(
@@ -159,7 +159,6 @@ namespace PointyCloudPlugin
     void PointyCloudComponent::setInfluenceRadius(Scalar influenceRadius) {
         m_projection.setInfluenceRadius(influenceRadius);
         m_selector->setInfluenceRadius(influenceRadius);
-        m_upsampler->setRadius(influenceRadius);
         setEligibleFlags();
     }
 
@@ -196,10 +195,10 @@ namespace PointyCloudPlugin
         auto sys = static_cast<PointyCloudSystem*>(m_system);
 
         if ( m_upsamplingMethod == FIXED_METHOD ){
-            m_upsampler.reset(new UpSamplerUnshaken(sys->getInfluenceRadius(), sys->getM()));
+            m_upsampler.reset(new UpSamplerUnshaken(sys->getM()));
         }
         else if ( m_upsamplingMethod == SIMPLE_METHOD ){
-            m_upsampler.reset(new UpSamplerSimple(sys->getInfluenceRadius(),sys->getThreshold(),*m_camera));
+            m_upsampler.reset(new UpSamplerSimple(sys->getThreshold(), *m_camera));
         }
         // TODO the last method (but not the least)
     }

@@ -85,7 +85,7 @@ namespace PointyCloudTests
             // create APSS stuff
             std::shared_ptr<NeighborsSelection> selector = std::make_shared<NeighborsSelection>(cloud, r);
             UsefulPointsSelection selection(cloud, &camera);
-            UpSamplerUnshaken upsampler(r, M);
+            UpSamplerUnshaken upsampler(M);
             OrthogonalProjection projection(selector, cloud, r);
 
             // test parameters
