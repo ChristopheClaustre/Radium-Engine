@@ -50,7 +50,10 @@ void UpSampler::upSamplePoint(const int &m, const int& index)
     }
     else
     {
+#pragma omp critical
+{
         m_newpoints.push_back(originalPoint);
+}
     }
 }
 
