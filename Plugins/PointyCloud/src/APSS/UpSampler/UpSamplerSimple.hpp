@@ -10,7 +10,7 @@ namespace PointyCloudPlugin {
 class UpSamplerSimple:public UpSampler
 {
 public:
-    UpSamplerSimple(float rayon, float threshold, const Ra::Engine::Camera& camera);
+    UpSamplerSimple(Scalar threshold, const Ra::Engine::Camera& camera);
     ~UpSamplerSimple();
     virtual void upSampleCloud(PointyCloud& cloud);
 

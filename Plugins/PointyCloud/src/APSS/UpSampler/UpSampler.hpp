@@ -14,14 +14,11 @@ namespace PointyCloudPlugin
 class UpSampler
 {
 public :
-    UpSampler(Scalar radius);
+    UpSampler();
     ~UpSampler();
     virtual void upSampleCloud(PointyCloud& cloud)=0;
 
-    inline void setRadius(Scalar radius) { m_radius = radius; }
-
 protected :
-    Scalar m_radius;
     std::vector<APoint> m_newpoints;
     PointyCloud* m_cloud;
 

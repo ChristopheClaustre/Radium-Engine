@@ -14,7 +14,7 @@ namespace PointyCloudPlugin{
 class UpSamplerUnshaken : public UpSampler
 {
 public :
-    UpSamplerUnshaken(Scalar radius, int M);
+    UpSamplerUnshaken(int M);
     ~UpSamplerUnshaken();
     virtual void upSampleCloud(PointyCloud& cloud);
 

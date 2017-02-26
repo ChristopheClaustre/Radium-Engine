@@ -3,7 +3,7 @@
 namespace PointyCloudPlugin
 {
 
-UpSampler::UpSampler(Scalar radius) : m_radius(radius), m_cloud( nullptr)
+UpSampler::UpSampler() : m_cloud( nullptr)
 {
 }
 

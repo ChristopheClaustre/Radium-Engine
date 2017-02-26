@@ -2,7 +2,7 @@
 
 namespace PointyCloudPlugin {
 
-UpSamplerUnshaken::UpSamplerUnshaken(Scalar radius, int M) : UpSampler(radius), m_M(M)
+UpSamplerUnshaken::UpSamplerUnshaken(int M) : UpSampler(), m_M(M)
 {
 }
 
