@@ -51,20 +51,20 @@ RegularGrid::RegularGrid(size_t size, const Vector3 *positions, int ncells)
         std::rotate(begin+pos, begin+k,begin+k+1);
 
         // update current cell (increment length)
-        ++cells[idxCell].length;
+        cells[idxCell].length += 1;
 
         // increment all next cells index
         for(std::vector<Cell>::iterator cellIt = cells.begin()+idxCell+1; cellIt!=cells.end(); ++cellIt)
-            ++(cellIt->begin);
+            cellIt->begin += 1;
     }
 
     // allocate device memory
     CUDA_ASSERT( cudaMalloc(&m_indices, size*sizeof(int)) );
-    CUDA_ASSERT( cudaMalloc(&m_cells,   size*sizeof(Cell)) );
+    CUDA_ASSERT( cudaMalloc(&m_cells,   m_nx*m_ny*m_nz*sizeof(Cell)) );
 
     // send data
-    CUDA_ASSERT( cudaMemcpy(m_indices, indices.data(), size*sizeof(int) ,cudaMemcpyHostToDevice) );
-    CUDA_ASSERT( cudaMemcpy(m_cells,   cells.data(),   size*sizeof(Cell),cudaMemcpyHostToDevice) );
+    CUDA_ASSERT( cudaMemcpy(m_indices, indices.data(), size*sizeof(int) ,           cudaMemcpyHostToDevice) );
+    CUDA_ASSERT( cudaMemcpy(m_cells,   cells.data(),   m_nx*m_ny*m_nz*sizeof(Cell), cudaMemcpyHostToDevice) );
 }
 
 RegularGrid::~RegularGrid()

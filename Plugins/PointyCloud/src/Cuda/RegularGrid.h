@@ -24,7 +24,7 @@ public:
         int length;
     };
 
-    RegularGrid(size_t size, const Vector3* positions, int ncells = 80);
+    RegularGrid(size_t size, const Vector3* positions, int ncells = 70);
     ~RegularGrid();
 
     MULTIARCH
