@@ -106,15 +106,15 @@ namespace PointyCloudPlugin
 
         m_originalCloud->loadFromMesh(m_workingCloud.get());
 
-        setSplatRadius(sys->getSplatRadius());
-        setEligible();
+//        setSplatRadius(sys->getSplatRadius());
+//        setEligible();
 
         LOGP(logINFO) << "cloud " << m_cloudName << " has " << m_originalCloud->m_points.size() << " point(s).";
 
-        setUpsamplingMethod(sys->getUpsamplingMethod());
-        setProjectionMethod(sys->getProjectionMethod());
-        setOptimizationByOctree(sys->isOptimizedByOctree());
-        setOptimizationByCUDA(sys->isOptimizedByCUDA());
+//        setUpsamplingMethod(sys->getUpsamplingMethod());
+//        setProjectionMethod(sys->getProjectionMethod());
+//        setOptimizationByOctree(sys->isOptimizedByOctree());
+//        setOptimizationByCUDA(sys->isOptimizedByCUDA());
 
 // FOR APSS TEST (comment computePointyCloud's body)
 //        PointyCloud points = m_culling.selectUsefulPoints();
