@@ -44,9 +44,10 @@ private:
 
     void updateFinalMemory();
 
+    // regular grid for neighbors query
     RegularGrid* m_grid;
 
-    // device arrays
+    //// device arrays
 
     // original cloud
     size_t   m_sizeOriginal;     // N
@@ -72,8 +73,9 @@ private:
     Vector4* m_colorFinal;
     Scalar*  m_splatSizeFinal;
 
-    // host arrays
+    //// host arrays
 
+    // final cloud
     Vector3* m_positionFinalHost;
     Vector3* m_normalFinalHost;
     Vector4* m_colorFinalHost;

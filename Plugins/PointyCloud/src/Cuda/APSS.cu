@@ -82,7 +82,12 @@ APSS::~APSS()
 
 void APSS::select(const Vector3 &cameraPosition, const Vector3 &cameraDirection)
 {
-    checkVisibility<<<1,1>>>(m_sizeOriginal, m_positionOriginal, m_normalOriginal, cameraPosition, cameraDirection, m_visibility);
+    // memory configuration
+    int threadsPerBlock = 256;
+    int blocksPerGrid = (m_sizeOriginal + threadsPerBlock - 1) / threadsPerBlock;
+
+    checkVisibility<<<blocksPerGrid, threadsPerBlock>>>(m_sizeOriginal, m_positionOriginal, m_normalOriginal,
+                             cameraPosition, cameraDirection, m_visibility);
     CUDA_ASSERT( cudaPeekAtLastError() );
     CUDA_ASSERT( cudaDeviceSynchronize() );
 
@@ -93,7 +98,7 @@ void APSS::select(const Vector3 &cameraPosition, const Vector3 &cameraDirection)
 
     updateSelectedCount();
 
-    selectVisible<<<1,1>>>(m_sizeOriginal, m_visibility, m_visibilitySum, m_selected);
+    selectVisible<<<blocksPerGrid, threadsPerBlock>>>(m_sizeOriginal, m_visibility, m_visibilitySum, m_selected);
     CUDA_ASSERT( cudaPeekAtLastError() );
     CUDA_ASSERT( cudaDeviceSynchronize() );
 }
@@ -121,11 +126,17 @@ void APSS::upsample(int m, Scalar splatRadius)
 
 void APSS::project(Scalar influenceRadius)
 {
-    projection<<<1,1>>>(m_sizeOriginal, m_positionOriginal, m_normalOriginal, *m_grid, influenceRadius,
-                        m_sizeFinal,    m_positionFinal,    m_normalFinal);
+    // TEST //////////////////////////////
+    copySelected<<<1,1>>>(m_sizeSelected, m_positionOriginal, m_normalOriginal, m_colorOriginal, m_selected,
+                 m_positionFinal, m_normalFinal, m_colorFinal, m_splatSizeFinal, influenceRadius);
+    m_sizeFinal = m_sizeSelected;
+    //////////////////////////////////////
 
-    CUDA_ASSERT( cudaPeekAtLastError() );
-    CUDA_ASSERT( cudaDeviceSynchronize() );
+    // actual projection code:
+//    projection<<<1,1>>>(m_sizeOriginal, m_positionOriginal, m_normalOriginal, *m_grid, influenceRadius,
+//                        m_sizeFinal,    m_positionFinal,    m_normalFinal);
+//    CUDA_ASSERT( cudaPeekAtLastError() );
+//    CUDA_ASSERT( cudaDeviceSynchronize() );
 }
 
 void APSS::finalize()
