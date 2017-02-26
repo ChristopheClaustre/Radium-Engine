@@ -9,7 +9,8 @@ namespace Cuda {
 __global__
 void computeSampleCountFixed(int sizeSelected, int m, int* splatCount)
 {
-    for (int i = 0; i < sizeSelected; ++i)
+    int i = blockDim.x*blockIdx.x + threadIdx.x;
+    if(i<sizeSelected)
         splatCount[i] = m*m;
 }
 
@@ -40,7 +41,8 @@ void generateSample(int sizeSelected, Scalar splatRadius, int* selected, int* sp
                     Vector3* positionOriginal, Vector3* normalOriginal, Vector4* colorOriginal,
                     Vector3* positionFinal,     Vector3* normalFinal,    Vector4* colorFinal, Scalar* splatSizeFinal)
 {
-    for (int i = 0; i < sizeSelected; ++i)
+    int i = blockDim.x*blockIdx.x + threadIdx.x;
+    if(i<sizeSelected)
     {
         int idx = selected[i];
         genSplat(splatCountSum[i], splatCount[i], splatRadius,

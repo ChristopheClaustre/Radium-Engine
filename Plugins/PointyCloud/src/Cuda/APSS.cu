@@ -105,7 +105,11 @@ void APSS::select(const Vector3 &cameraPosition, const Vector3 &cameraDirection)
 
 void APSS::upsample(int m, Scalar splatRadius)
 {
-    computeSampleCountFixed<<<1,1>>>(m_sizeSelected, m, m_splatCount);
+    // memory configuration
+    int threadsPerBlock = 256;
+    int blocksPerGrid = (m_sizeSelected + threadsPerBlock - 1) / threadsPerBlock;
+
+    computeSampleCountFixed<<<threadsPerBlock, blocksPerGrid>>>(m_sizeSelected, m, m_splatCount);
     CUDA_ASSERT( cudaPeekAtLastError() );
     CUDA_ASSERT( cudaDeviceSynchronize() );
 
@@ -117,7 +121,7 @@ void APSS::upsample(int m, Scalar splatRadius)
     updateSampleCount();
     updateFinalMemory();
 
-    generateSample<<<1,1>>>(m_sizeSelected, splatRadius, m_selected, m_splatCount, m_splatCountSum,
+    generateSample<<<threadsPerBlock, blocksPerGrid>>>(m_sizeSelected, splatRadius, m_selected, m_splatCount, m_splatCountSum,
                             m_positionOriginal, m_normalOriginal, m_colorOriginal,
                             m_positionFinal, m_normalFinal, m_colorFinal, m_splatSizeFinal);
     CUDA_ASSERT( cudaPeekAtLastError() );
@@ -127,9 +131,9 @@ void APSS::upsample(int m, Scalar splatRadius)
 void APSS::project(Scalar influenceRadius)
 {
     // TEST //////////////////////////////
-    copySelected<<<1,1>>>(m_sizeSelected, m_positionOriginal, m_normalOriginal, m_colorOriginal, m_selected,
-                 m_positionFinal, m_normalFinal, m_colorFinal, m_splatSizeFinal, influenceRadius);
-    m_sizeFinal = m_sizeSelected;
+//    copySelected<<<1,1>>>(m_sizeSelected, m_positionOriginal, m_normalOriginal, m_colorOriginal, m_selected,
+//                 m_positionFinal, m_normalFinal, m_colorFinal, m_splatSizeFinal, influenceRadius);
+//    m_sizeFinal = m_sizeSelected;
     //////////////////////////////////////
 
     // actual projection code:
