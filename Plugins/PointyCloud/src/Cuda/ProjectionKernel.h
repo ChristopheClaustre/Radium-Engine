@@ -32,7 +32,6 @@ typedef Grenaille::Basket<Point, WeightFunc, Grenaille::AlgebraicSphere, Grenail
 struct AddNeighborsFunctor
 {
     MULTIARCH inline AddNeighborsFunctor(Fit* fit, Vector3* positions, Vector3* normals) : fit_(fit), positions_(positions), normals_(normals) {}
-
     MULTIARCH inline void operator() (int idx) {fit_->addNeighbor(Point(positions_, normals_, idx));}
 
     Fit*     fit_;
@@ -47,17 +46,17 @@ void projection(int sizeOriginal, Vector3* positionsOriginal, Vector3* normalsOr
     int i = blockDim.x*blockIdx.x + threadIdx.x;
     if(i<sizeFinal)
     {
+        // init fitting
         Fit fit;
         fit.setWeightFunc(WeightFunc(influenceRadius));
-
-        AddNeighborsFunctor functor(&fit, positionsOriginal, normalsOriginal);
-
         fit.init(positionsFinal[i]);
 
+        // add neighbors
+        AddNeighborsFunctor functor(&fit, positionsOriginal, normalsOriginal);
         processNeighbors(positionsFinal[i], influenceRadius, grid, positionsOriginal, functor);
 
+        // finalize and update
         fit.finalize();
-
         positionsFinal[i] = fit.project(positionsFinal[i]);
         normalsFinal[i]   = fit.primitiveGradient(positionsFinal[i]);
     }
