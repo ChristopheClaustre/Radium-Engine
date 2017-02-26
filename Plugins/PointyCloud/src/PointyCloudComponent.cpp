@@ -114,7 +114,6 @@ namespace PointyCloudPlugin
         m_originalCloud->loadFromMesh(m_workingCloud.get());
 
         setSplatRadius(sys->getSplatRadius());
-        setEligibleFlags();
 
         LOGP(logINFO) << "cloud " << m_cloudName << " has " << m_originalCloud->m_points.size() << " point(s).";
 
@@ -122,6 +121,8 @@ namespace PointyCloudPlugin
         setProjectionMethod(sys->getProjectionMethod());
         setOptimizationByOctree(sys->isOptimizedByOctree());
         setOptimizationByCUDA(sys->isOptimizedByCUDA());
+        setEligibleFlags();
+
 
 // FOR APSS TEST (comment computePointyCloud's body)
 //        PointyCloud points = m_culling.selectUsefulPoints();
