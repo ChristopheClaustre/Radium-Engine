@@ -69,15 +69,17 @@ void PointyCloudUI::on_m_threshold_valueChanged(int value)
 
 void PointyCloudUI::on_m_M_valueChanged(int value)
 {
+    ui->label_xM->setText( ( "x "+std::to_string(value) ).c_str() );
     emit setM(value);
 }
 
 void PointyCloudUI::on_m_upsamplingMethod_currentIndexChanged(int index)
 {
-        ui->label_8->setVisible(PointyCloudPlugin::UPSAMPLING_METHOD(index) == PointyCloudPlugin::FIXED_METHOD);
+        ui->label_M->setVisible(PointyCloudPlugin::UPSAMPLING_METHOD(index) == PointyCloudPlugin::FIXED_METHOD);
+        ui->label_xM->setVisible(PointyCloudPlugin::UPSAMPLING_METHOD(index) == PointyCloudPlugin::FIXED_METHOD);
         ui->m_M->setVisible(PointyCloudPlugin::UPSAMPLING_METHOD(index) == PointyCloudPlugin::FIXED_METHOD);
 
-        ui->label_4->setVisible(PointyCloudPlugin::UPSAMPLING_METHOD(index) != PointyCloudPlugin::FIXED_METHOD);
+        ui->label_Ts->setVisible(PointyCloudPlugin::UPSAMPLING_METHOD(index) != PointyCloudPlugin::FIXED_METHOD);
         ui->m_threshold->setVisible(PointyCloudPlugin::UPSAMPLING_METHOD(index) != PointyCloudPlugin::FIXED_METHOD);
 
         emit setUpsamplingMethod(PointyCloudPlugin::UPSAMPLING_METHOD(index));

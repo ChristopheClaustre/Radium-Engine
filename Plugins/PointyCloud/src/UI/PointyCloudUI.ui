@@ -57,8 +57,11 @@
          <bold>false</bold>
         </font>
        </property>
+       <property name="toolTip">
+        <string>radius of each original splat in world's unit</string>
+       </property>
        <property name="text">
-        <string>Splat radius :</string>
+        <string>Splat radius :     </string>
        </property>
       </widget>
      </item>
@@ -98,6 +101,9 @@
          <bold>false</bold>
         </font>
        </property>
+       <property name="toolTip">
+        <string>maximum distance in world's unit at which two points are considerated neighbors</string>
+       </property>
        <property name="text">
         <string>Influence radius :</string>
        </property>
@@ -132,6 +138,9 @@
        <bold>false</bold>
       </font>
      </property>
+     <property name="toolTip">
+      <string>method of upsampling used</string>
+     </property>
      <property name="text">
       <string>Upsampling method :</string>
      </property>
@@ -141,26 +150,20 @@
     <widget class="QComboBox" name="m_upsamplingMethod"/>
    </item>
    <item>
-    <layout class="QFormLayout" name="formLayout_2">
-     <property name="fieldGrowthPolicy">
-      <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-     </property>
-     <property name="labelAlignment">
-      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-     </property>
-     <property name="formAlignment">
-      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-     </property>
-     <item row="0" column="0">
-      <widget class="QLabel" name="label_8">
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_Ts">
        <property name="font">
         <font>
          <weight>50</weight>
          <bold>false</bold>
         </font>
        </property>
+       <property name="toolTip">
+        <string>area in pixel of each new splat</string>
+       </property>
        <property name="text">
-        <string># of sample (m x m) :</string>
+        <string>Threshold :            </string>
        </property>
       </widget>
      </item>
@@ -171,20 +174,30 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="label_4">
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_M">
        <property name="font">
         <font>
          <weight>50</weight>
          <bold>false</bold>
         </font>
        </property>
+       <property name="toolTip">
+        <string>number of new splat in each dimension for each original splat</string>
+       </property>
        <property name="text">
-        <string>Threshold :</string>
+        <string>Number of sample :</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
+     <item row="0" column="2">
+      <widget class="QLabel" name="label_xM">
+       <property name="text">
+        <string>x 0</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1" colspan="2">
       <widget class="QSpinBox" name="m_threshold">
        <property name="layoutDirection">
         <enum>Qt::LeftToRight</enum>
@@ -209,6 +222,9 @@
        <weight>50</weight>
        <bold>false</bold>
       </font>
+     </property>
+     <property name="toolTip">
+      <string>method of projection used</string>
      </property>
      <property name="text">
       <string>Projection method :</string>
@@ -235,6 +251,9 @@
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QCheckBox" name="m_octree">
+       <property name="toolTip">
+        <string>use the regular grid or not (really effective for &gt;30k points)</string>
+       </property>
        <property name="text">
         <string>Octree</string>
        </property>
@@ -242,6 +261,9 @@
      </item>
      <item>
       <widget class="QCheckBox" name="m_cuda">
+       <property name="toolTip">
+        <string>use cuda optimisation or not (not yet implemented)</string>
+       </property>
        <property name="text">
         <string>CUDA</string>
        </property>
@@ -252,7 +274,7 @@
    <item>
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>Other options ;</string>
+      <string>Other options :</string>
      </property>
     </widget>
    </item>
@@ -260,6 +282,9 @@
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
       <widget class="QCheckBox" name="m_APSS">
+       <property name="toolTip">
+        <string>activate the APSS or not</string>
+       </property>
        <property name="text">
         <string>APSS</string>
        </property>
@@ -267,6 +292,9 @@
      </item>
      <item>
       <widget class="QCheckBox" name="m_renderer">
+       <property name="toolTip">
+        <string>use our renderer or not (not safe for your integrity)</string>
+       </property>
        <property name="text">
         <string>Renderer</string>
        </property>
