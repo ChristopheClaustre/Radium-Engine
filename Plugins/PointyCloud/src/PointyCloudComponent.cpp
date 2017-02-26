@@ -154,8 +154,9 @@ namespace PointyCloudPlugin
     }
 
     void PointyCloudComponent::setEligibleFlags() {
-        for (auto it = m_originalCloud->m_points.begin(); it != m_originalCloud->m_points.end(); ++it) {
-            it->eligible() = (m_selector->isEligible(*it));
+        #pragma omp parallel for
+        for (int i = 0; i < m_originalCloud->m_points.size(); ++i) {
+            m_originalCloud->m_points[i].eligible() = (m_selector->isEligible(m_originalCloud->m_points[i]));
         }
     }
 
