@@ -12,9 +12,9 @@ UpSampler::~UpSampler()
 }
 
 // m x m = nb de splats
-void UpSampler::upSamplePoint(const int &m, const int& indice)
+void UpSampler::upSamplePoint(const int &m, const int& index)
 {
-    APoint originalPoint = m_cloud->m_points[indice];
+    APoint originalPoint = m_cloud->m_points[index];
     if (originalPoint.eligible() && m > 1)
     {
         const Ra::Core::Vector3 &centerVertice = originalPoint.pos();

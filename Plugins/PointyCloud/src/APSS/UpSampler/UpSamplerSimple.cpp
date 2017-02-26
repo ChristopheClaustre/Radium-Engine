@@ -25,10 +25,10 @@ void UpSamplerSimple::upSampleCloud(PointyCloud& cloud)
     m_cloud->m_points = m_newpoints;
 }
 
-// return the number of pixel that takes an splat of radius 1 at the position of the indice_th pixel
-Scalar UpSamplerSimple::computeEta(const int& indice)
+// return the number of pixel that takes an splat of radius 1 at the position of the index_th pixel
+Scalar UpSamplerSimple::computeEta(const int& index)
 {
-    APoint& point = m_cloud->m_points[indice];
+    APoint& point = m_cloud->m_points[index];
     Scalar skewFactor;
     // m_point are already normalized
     if(m_camera.getProjType() == Ra::Engine::Camera::ProjType::ORTHOGRAPHIC)

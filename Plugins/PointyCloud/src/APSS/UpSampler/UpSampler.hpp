@@ -22,7 +22,7 @@ protected :
     std::vector<APoint> m_newpoints;
     PointyCloud* m_cloud;
 
-    void upSamplePoint(const int& m, const int& indice);
+    void upSamplePoint(const int& m, const int& index);
     Ra::Core::Vector3 calculU(const Ra::Core::Vector3& normal);
     Ra::Core::Vector3 calculV(const Ra::Core::Vector3& normal,const Ra::Core::Vector3& u);
 
