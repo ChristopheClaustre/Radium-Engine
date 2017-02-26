@@ -122,8 +122,7 @@ void APSS::upsample(int m, Scalar splatRadius)
 void APSS::project(Scalar influenceRadius)
 {
     projection<<<1,1>>>(m_sizeOriginal, m_positionOriginal, m_normalOriginal, *m_grid, influenceRadius,
-                     m_sizeFinal, m_positionFinal, m_normalFinal);
-    m_sizeFinal = m_sizeSelected;
+                        m_sizeFinal,    m_positionFinal,    m_normalFinal);
 
     CUDA_ASSERT( cudaPeekAtLastError() );
     CUDA_ASSERT( cudaDeviceSynchronize() );
