@@ -26,7 +26,6 @@ namespace PointyCloudPlugin
         : Ra::Engine::System(), m_viewer(viewer),
           m_splatRadius(PointyCloudPluginC::splatRadiusInit.init),
           m_influenceRadius(PointyCloudPluginC::influenceInit.init),
-          m_beta(PointyCloudPluginC::betaInit.init),
           m_threshold(PointyCloudPluginC::thresholdInit.init),
           m_M(PointyCloudPluginC::mInit.init),
           m_upsampler(FIXED_METHOD), m_projector(ORTHOGONAL_METHOD),

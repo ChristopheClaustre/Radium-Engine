@@ -58,7 +58,6 @@ namespace PointyCloudPlugin
 
         inline const Scalar& getSplatRadius() const { return m_splatRadius; }
         inline const Scalar& getInfluenceRadius()  const { return m_influenceRadius; }
-        inline const Scalar& getBeta() const { return m_beta; }
         inline const int& getThreshold() const { return m_threshold; }
         inline const int& getM() const { return m_M; }
         inline const UPSAMPLING_METHOD& getUpsamplingMethod() const { return m_upsampler; }
@@ -80,7 +79,6 @@ namespace PointyCloudPlugin
 
         Scalar m_splatRadius;
         Scalar m_influenceRadius;
-        Scalar m_beta;
         int m_threshold;
         int m_M;
         UPSAMPLING_METHOD m_upsampler;
