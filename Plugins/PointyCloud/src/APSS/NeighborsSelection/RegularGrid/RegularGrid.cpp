@@ -1,6 +1,7 @@
 #include "RegularGrid.hpp"
 
 #include <APSS/PointyCloud.hpp>
+#include <APSS/NeighborsSelection/NeighborsProcessor.hpp>
 
 #include <Core/Log/Log.hpp>
 #include <sstream>
@@ -44,6 +45,42 @@ void RegularGrid::query(const Ra::Core::Vector3& p, float r, std::vector<int> & 
                     //TODO it may be faster to avoid push_back and use remove_if ?
                     if((p - m_cloud->m_points[m_indices[idx]].pos()).norm() <= r) {
                         indices.push_back(m_indices[idx]);
+                    }
+                }
+            }
+        }
+    }
+}
+
+void RegularGrid::process(const Ra::Core::Vector3& p, float r, NeighborsProcessor& f) const
+{
+    // point in local coordinates
+    Ra::Core::Vector3 q = p - m_aabb.min();
+
+    // searching limits of a cube centered at q of length r
+    int imin = std::max((int)std::floor((q[0]-r)/m_dx), 0);
+    int jmin = std::max((int)std::floor((q[1]-r)/m_dy), 0);
+    int kmin = std::max((int)std::floor((q[2]-r)/m_dz), 0);
+    int imax = std::min((int)std::floor((q[0]+r)/m_dx), m_nx-1);
+    int jmax = std::min((int)std::floor((q[1]+r)/m_dy), m_ny-1);
+    int kmax = std::min((int)std::floor((q[2]+r)/m_dz), m_nz-1);
+
+    // search
+    for(int k = kmin; k<=kmax; ++k)
+    {
+        for(int j = jmin; j<=jmax; ++j)
+        {
+            for(int i = imin; i<=imax; ++i)
+            {
+                int idxCell = rawIndex(i, j, k);
+                int begin = m_cells[idxCell].index;
+                int length = m_cells[idxCell].length;
+
+                for(int idx = begin; idx<begin+length; ++idx)
+                {
+                    //TODO it may be faster to avoid push_back and use remove_if ?
+                    if((p - m_cloud->m_points[m_indices[idx]].pos()).norm() <= r) {
+                        f(m_indices[idx]);
                     }
                 }
             }

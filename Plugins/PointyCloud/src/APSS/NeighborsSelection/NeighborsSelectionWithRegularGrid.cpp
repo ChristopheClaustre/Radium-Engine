@@ -20,6 +20,12 @@ void NeighborsSelectionWithRegularGrid::getNeighbors(const APoint &point, std::v
     m_grid->query(point.pos(), m_influenceRadius, indexSelected);
 }
 
+
+void NeighborsSelectionWithRegularGrid::processNeighbors(const APoint& point, NeighborsProcessor& f) const
+{
+    m_grid->process(point.pos(), m_influenceRadius, f);
+}
+
 bool NeighborsSelectionWithRegularGrid::isEligible(const APoint& point) const
 {
     return m_grid->hasNeighbors(point.pos(), m_influenceRadius);
