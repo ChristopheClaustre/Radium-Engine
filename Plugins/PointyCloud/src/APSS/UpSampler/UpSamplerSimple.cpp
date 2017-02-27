@@ -41,7 +41,7 @@ Scalar UpSamplerSimple::computeEta(const int& index)
         skewFactor = distPToCam.normalized().dot(point.normal());
     }
     skewFactor = 1-std::abs(skewFactor);
-    // The skewFactor is always compute to be between 0 en 1.
+    // The skewFactor is always compute to be between 0 and 1.
     // 0 means splat is afront of us.
 
     const Ra::Core::Vector3 originalPointInView = pointInView(point.pos());
