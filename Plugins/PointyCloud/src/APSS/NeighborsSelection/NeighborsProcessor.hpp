@@ -1,8 +1,6 @@
 #ifndef POINTYCLOUDPLUGIN_NEIGHBORSPROCESSOR_HPP
 #define POINTYCLOUDPLUGIN_NEIGHBORSPROCESSOR_HPP
 
-#include <APSS/PointyCloud.hpp>
-
 namespace PointyCloudPlugin
 {
 
