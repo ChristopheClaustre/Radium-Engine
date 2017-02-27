@@ -1,5 +1,7 @@
 #include "NeighborsSelection.hpp"
 
+#include <APSS/NeighborsSelection/NeighborsProcessor.hpp>
+
 namespace PointyCloudPlugin
 {
 
@@ -20,6 +22,19 @@ void NeighborsSelection::getNeighbors(const APoint& point, std::vector<int> & in
         if ((m_cloud->at(i).pos() - point.pos()).norm() <= m_influenceRadius)
         {
             indexSelected.push_back(i);
+        }
+    }
+}
+
+void NeighborsSelection::processNeighbors(const APoint& point, NeighborsProcessor& f) const
+{
+    auto beginIt = m_cloud->m_points.begin();
+
+    for (auto currentIt = beginIt; currentIt != m_cloud->m_points.end(); ++currentIt)
+    {
+        if ((currentIt->pos() - point.pos()).norm() <= m_influenceRadius)
+        {
+            f(currentIt-beginIt);
         }
     }
 }

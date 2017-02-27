@@ -32,6 +32,7 @@ void OrthogonalProjection::project(PointyCloud &upSampledCloud)
 #ifndef CORE_USE_OMP
     Fit fit;
     fit.setWeightFunc(WeightFunc(m_influenceRadius));
+    AddFun addFun(&fit, m_originalCloud.get());
 #endif
 
     Scalar threshold_n = cos(THRESHOLD_NORMAL * 180 / M_PI);
@@ -56,6 +57,7 @@ void OrthogonalProjection::project(PointyCloud &upSampledCloud)
 #ifdef CORE_USE_OMP
         Fit fit;
         fit.setWeightFunc(WeightFunc(m_influenceRadius));
+        AddFun addFun(&fit, m_originalCloud.get());
 #endif
 
         auto &p = upSampledCloud[i];
@@ -69,19 +71,12 @@ void OrthogonalProjection::project(PointyCloud &upSampledCloud)
             fit.init(p.pos());
 
             int i = 0;
-            std::vector<int> neighbors;
             while((diff_n >= threshold_n || diff_p >= threshold_p) && i < MAX_FITTING_ITERATION)
             {
                 ON_TIMED(start = Ra::Core::Timer::Clock::now();)
-                neighbors.clear();
-                m_selector->getNeighbors(p, neighbors);
+                m_selector->processNeighbors(p, addFun);
                 ON_TIMED(timeNeighbors += Ra::Core::Timer::getIntervalMicro(start, Ra::Core::Timer::Clock::now());)
-
-                ON_TIMED(start = Ra::Core::Timer::Clock::now();)
-                for(auto &idx : neighbors) {
-                    fit.addNeighbor(m_originalCloud->at(idx));
-                }
-                ON_TIMED(timeFitting += Ra::Core::Timer::getIntervalMicro(start, Ra::Core::Timer::Clock::now());)
+                ON_TIMED(timeFitting   += Ra::Core::Timer::getIntervalMicro(start, Ra::Core::Timer::Clock::now());)
 
                 // As our fit is an OrientedSphereFit
                 // finalize should never return NEED_OTHER_PASS
