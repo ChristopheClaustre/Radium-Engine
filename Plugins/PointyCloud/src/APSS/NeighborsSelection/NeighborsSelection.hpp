@@ -7,6 +7,8 @@
 namespace PointyCloudPlugin
 {
 
+    class NeighborsProcessor;
+
     class NeighborsSelection
     {
     public:
@@ -14,6 +16,7 @@ namespace PointyCloudPlugin
         virtual ~NeighborsSelection();
 
         virtual void getNeighbors(const APoint& point, std::vector<int> & indexSelected) const;
+        virtual void processNeighbors(const APoint& point, NeighborsProcessor& f) const;
         virtual bool isEligible(const APoint& point) const;
 
         void setInfluenceRadius(Scalar influenceRadius) { m_influenceRadius = influenceRadius; }
