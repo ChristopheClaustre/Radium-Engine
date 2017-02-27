@@ -2,8 +2,8 @@
 
 namespace  PointyCloudPlugin {
 
-UpSamplerSimple::UpSamplerSimple(Scalar threshold, const Ra::Engine::Camera & camera)
-    : UpSampler(), m_threshold(threshold), m_camera(camera)
+UpSamplerSimple::UpSamplerSimple(std::shared_ptr<PointyCloud> originalCloud, Scalar threshold, const Ra::Engine::Camera & camera)
+    : UpSampler(originalCloud), m_threshold(threshold), m_camera(camera)
 {
 }
 
@@ -11,16 +11,10 @@ UpSamplerSimple::~UpSamplerSimple()
 {
 }
 
-void UpSamplerSimple::upSampleCloud(const PointyCloud& usefulPointCloud, int N)
+void UpSamplerSimple::upSamplePointMaster(int index)
 {
-    m_cloud.clear();
-
-    #pragma omp parallel for
-    for ( uint i = 0 ; i < N ; i++ )
-    {
-        const APoint& point = usefulPointCloud[i];
-        this->upSamplePoint(getM(point), point);
-    }
+    const APoint& point = m_originalCloud->at(index);
+    this->upSamplePoint(getM(point), point, index);
 }
 
 // return the number of pixel that takes an splat of radius 1 at the position of the index_th pixel

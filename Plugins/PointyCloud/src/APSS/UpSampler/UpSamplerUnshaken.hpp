@@ -14,11 +14,14 @@ namespace PointyCloudPlugin{
 class UpSamplerUnshaken : public UpSampler
 {
 public :
-    UpSamplerUnshaken(int M);
+    UpSamplerUnshaken(std::shared_ptr<PointyCloud> originalCloud, int UpsamplingInfo);
     virtual ~UpSamplerUnshaken();
-    virtual void upSampleCloud(const PointyCloud& usefulPointCloud, int N);
 
     void setM(int M) { m_M = M; }
+
+protected:
+    void upSamplePointMaster(int index);
+
 private :
     int m_M;
 }; // class UpSamplerUnshaken

@@ -70,8 +70,8 @@ void OrthogonalProjection::project(PointyCloud &upSampledCloud)
 
             fit.init(p.pos());
 
-            int i = 0;
-            while((diff_n >= threshold_n || diff_p >= threshold_p) && i < MAX_FITTING_ITERATION)
+            int j = 0;
+            while((diff_n >= threshold_n || diff_p >= threshold_p) && j < MAX_FITTING_ITERATION)
             {
                 ON_TIMED(start = Ra::Core::Timer::Clock::now();)
                 m_selector->processNeighbors(p, addFun);
@@ -98,10 +98,10 @@ void OrthogonalProjection::project(PointyCloud &upSampledCloud)
                 }
                 ON_TIMED(timeProjecting += Ra::Core::Timer::getIntervalMicro(start, Ra::Core::Timer::Clock::now());)
 
-                ++i;
+                ++j;
             }
             ON_TIMED(
-            projectionCount += i;
+            projectionCount += j;
             ++pointToFitCount;)
         }
     }

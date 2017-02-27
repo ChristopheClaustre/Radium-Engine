@@ -13,16 +13,17 @@ namespace PointyCloudPlugin
 class UsefulPointsSelection
 {
 public:
-    UsefulPointsSelection(PointyCloud& originalCloud, const Ra::Engine::Camera* camera);
+    UsefulPointsSelection(std::shared_ptr<PointyCloud> originalCloud, const Ra::Engine::Camera* camera);
     ~UsefulPointsSelection();
 
     void selectUsefulPoints();
-    inline PointyCloud& getUsefulPoints() { return m_cloud; }
-    inline size_t getN() { return m_N; }
+    inline const std::vector<unsigned int>& getIndices() const { return m_indices; }
+    inline size_t getN() const { return m_N; }
 
 private:
     /// a cloud where the useful points are the this->N first points
-    PointyCloud m_cloud;
+    std::shared_ptr<PointyCloud> m_originalCloud;
+    std::vector<unsigned int> m_indices;
     /// number of points to take care of, may be lower than m_cloud.size()
     size_t m_N;
 

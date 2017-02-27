@@ -84,8 +84,8 @@ namespace PointyCloudTests
 
             // create APSS stuff
             std::shared_ptr<NeighborsSelection> selector = std::make_shared<NeighborsSelection>(cloud, r);
-            UsefulPointsSelection selection(*cloud.get(), &camera);
-            UpSamplerUnshaken upsampler(M);
+            UsefulPointsSelection selection(cloud, &camera);
+            UpSamplerUnshaken upsampler(cloud, M);
             OrthogonalProjection projection(selector, cloud, r);
 
             // test parameters
@@ -108,13 +108,12 @@ namespace PointyCloudTests
                 t0 = Ra::Core::Timer::Clock::now();
 
                 selection.selectUsefulPoints();
-                PointyCloud& points = selection.getUsefulPoints();
-                npoints = points.size();
+                npoints = selection.getN();
 
                 t1 = Ra::Core::Timer::Clock::now();
 
-                upsampler.upSampleCloud(points, selection.getN());
-                points = upsampler.getUpsampledCloud();
+                upsampler.upSampleCloud(selection.getIndices(), selection.getN());
+                PointyCloud& points = upsampler.getUpsampledCloud();
 
                 t2 = Ra::Core::Timer::Clock::now();
 

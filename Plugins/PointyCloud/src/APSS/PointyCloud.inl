@@ -58,12 +58,12 @@ inline void PointyCloud::resize(int n, APoint init) {
     m_points.resize(n, init);
 }
 
-inline void PointyCloud::clear() {
-    m_points.clear();
+inline void PointyCloud::reserve(int n) {
+    m_points.reserve(n);
 }
 
-inline void PointyCloud::swap(int indice1, int indice2) {
-    std::swap(m_points[indice1], m_points[indice2]);
+inline void PointyCloud::clear() {
+    m_points.clear();
 }
 
 } // namespace PointyCloudPlugin

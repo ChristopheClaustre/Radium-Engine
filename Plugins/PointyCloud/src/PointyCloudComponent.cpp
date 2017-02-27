@@ -19,7 +19,7 @@ namespace PointyCloudPlugin
           m_selector(std::make_shared<NeighborsSelection>(m_originalCloud, 3)),
           m_projection(OrthogonalProjection(m_selector, m_originalCloud, 3))
     {
-        m_upsampler.reset(new UpSamplerUnshaken(1));
+        m_upsampler.reset(new UpSamplerUnshaken(m_originalCloud,1));
 
         // APSS stats
         ON_TIMED(
@@ -113,7 +113,7 @@ namespace PointyCloudPlugin
         m_originalCloud->loadFromMesh(m_workingCloud.get());
 
         setSplatRadius(sys->getSplatRadius());
-        m_culling = new UsefulPointsSelection(*m_originalCloud.get(), m_camera);
+        m_culling = new UsefulPointsSelection(m_originalCloud, m_camera);
 
         LOGP(logINFO) << "cloud " << m_cloudName << " has " << m_originalCloud->size() << " point(s).";
 
@@ -138,7 +138,7 @@ namespace PointyCloudPlugin
         ON_TIMED(auto t0 = Ra::Core::Timer::Clock::now());
         m_culling->selectUsefulPoints();
         ON_TIMED(auto t1 = Ra::Core::Timer::Clock::now());
-        m_upsampler->upSampleCloud(m_culling->getUsefulPoints(), m_culling->getN());
+        m_upsampler->upSampleCloud(m_culling->getIndices(), m_culling->getN());
         ON_TIMED(auto t2 = Ra::Core::Timer::Clock::now());
         PointyCloud& aCloud = m_upsampler->getUpsampledCloud();
         m_projection.project(aCloud);
@@ -172,12 +172,13 @@ namespace PointyCloudPlugin
         for (int i = 0; i < m_originalCloud->size(); ++i) {
             m_originalCloud->at(i).radius() = splatRadius;
         }
-        m_culling = new UsefulPointsSelection(*m_originalCloud.get(), m_camera);
 
         auto sys = static_cast<PointyCloudSystem*>(m_system);
         if (!sys->isAPSSused()) {
             resetWorkingCloud();
         }
+
+        m_upsampler->resetUpsamplingInfo();
     }
 
     void PointyCloudComponent::setThreshold(int threshold) {
@@ -207,10 +208,10 @@ namespace PointyCloudPlugin
         auto sys = static_cast<PointyCloudSystem*>(m_system);
 
         if ( m_upsamplingMethod == FIXED_METHOD ){
-            m_upsampler.reset(new UpSamplerUnshaken(sys->getM()));
+            m_upsampler.reset(new UpSamplerUnshaken(m_originalCloud, sys->getM()));
         }
         else if ( m_upsamplingMethod == SIMPLE_METHOD ){
-            m_upsampler.reset(new UpSamplerSimple(sys->getThreshold(), *m_camera));
+            m_upsampler.reset(new UpSamplerSimple(m_originalCloud, sys->getThreshold(), *m_camera));
         }
         // TODO the last method (but not the least)
     }

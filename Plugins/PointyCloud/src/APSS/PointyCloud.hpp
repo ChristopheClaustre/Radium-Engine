@@ -91,11 +91,11 @@ public:
     inline void resize(int n);
     inline void resize(int n, APoint init);
 
+    /// shortcut for reserve on m_points
+    inline void reserve(int n);
+
     /// shortcut for clear method on m_points
     inline void clear();
-
-    /// swap two APoint
-    inline void swap(int indice1, int indice2);
 
 public:
     /// vector of APoints
