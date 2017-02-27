@@ -10,7 +10,7 @@
 
 namespace PointyCloudPlugin {
 
-#define MAX_FITTING_ITERATION 5
+#define MAX_FITTING_ITERATION 10
 #define THRESHOLD_NORMAL 1 // degrees
 #define THRESHOLD_POS    0.1 // % of splatRadius
 
