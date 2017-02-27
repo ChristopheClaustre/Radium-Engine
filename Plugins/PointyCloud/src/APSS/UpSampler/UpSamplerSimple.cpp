@@ -33,13 +33,15 @@ Scalar UpSamplerSimple::computeEta(const int& index)
     // m_point are already normalized
     if(m_camera.getProjType() == Ra::Engine::Camera::ProjType::ORTHOGRAPHIC)
     {
-        skewFactor = abs( m_camera.getDirection().dot(point.normal()) );
+        skewFactor = m_camera.getDirection().dot(point.normal());
     }
     else
     {
         Ra::Core::Vector3 distPToCam = point.pos() - m_camera.getPosition();
-        skewFactor = abs( distPToCam.normalized().dot(point.normal()) );
+        skewFactor = distPToCam.normalized().dot(point.normal());
     }
+    skewFactor = std::max(skewFactor+1,Scalar(0));
+
     const Ra::Core::Vector3 originalPointInView = pointInView(point.pos());
     const Ra::Core::Vector3 extremPoint =
             (originalPointInView + Ra::Core::Vector3( 1.0, 0.0, 0.0 ));
