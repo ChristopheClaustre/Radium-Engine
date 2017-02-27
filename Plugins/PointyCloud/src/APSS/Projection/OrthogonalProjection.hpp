@@ -3,7 +3,7 @@
 
 #include <APSS/PointyCloud.hpp>
 #include <PointyCloudPlugin.hpp>
-
+#include <APSS/NeighborsSelection/NeighborsProcessor.hpp>
 #include <grenaille.h>
 
 #include <memory>
@@ -57,6 +57,20 @@ protected:
     size_t m_count;
     size_t m_meanProjectionCount;)
 };
+
+class AddFun : public NeighborsProcessor
+{
+public:
+    AddFun(Fit* fit, const PointyCloud* cloud) :
+        m_fit(fit), m_cloud(cloud) {}
+    virtual ~AddFun(){}
+    virtual inline void operator()(int idx) override {m_fit->addNeighbor(m_cloud->m_points[idx]);}
+
+private:
+    Fit* m_fit;
+    const PointyCloud* m_cloud;
+};
+
 
 } // namespace PointyCloudPlugin
 
