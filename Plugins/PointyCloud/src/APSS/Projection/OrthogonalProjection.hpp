@@ -35,12 +35,11 @@ public:
     void project(PointyCloud& upSampledCloud);
 
     // timing accessor
-    ON_TIMED(
     Scalar getTimeNeighbors() const;
     Scalar getTimeFitting() const;
     Scalar getTimeProjecting() const;
     size_t getCount() const;
-    size_t getMeanProjectionCount() const;)
+    size_t getMeanProjectionCount() const;
 
 protected:
 
@@ -50,12 +49,11 @@ protected:
     Scalar m_influenceRadius;
 
     // time stats
-    ON_TIMED(
     Scalar m_timeNeighbors;
     Scalar m_timeFitting;
     Scalar m_timeProjecting;
     size_t m_count;
-    size_t m_meanProjectionCount;)
+    size_t m_meanProjectionCount;
 };
 
 } // namespace PointyCloudPlugin

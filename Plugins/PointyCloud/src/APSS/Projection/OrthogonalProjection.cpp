@@ -16,12 +16,11 @@ OrthogonalProjection::OrthogonalProjection(std::shared_ptr<NeighborsSelection> n
     m_influenceRadius(influenceRadius)
 {
     // timing
-    ON_TIMED(
     m_count = 0;
     m_timeNeighbors = 0;
     m_timeFitting = 0;
     m_timeProjecting = 0;
-    m_meanProjectionCount = 0;)
+    m_meanProjectionCount = 0;
 }
 
 OrthogonalProjection::~OrthogonalProjection()
@@ -121,7 +120,6 @@ void OrthogonalProjection::project(PointyCloud &upSampledCloud)
     ++m_count;)
 }
 
-ON_TIMED(
 Scalar OrthogonalProjection::getTimeNeighbors() const
 {
     return m_count==0 ? 0.0 : m_timeNeighbors/m_count;
@@ -146,6 +144,5 @@ size_t OrthogonalProjection::getMeanProjectionCount() const
 {
     return m_count==0 ? 0 : m_meanProjectionCount/m_count;
 }
-) // ON_TIMED end
 
 } // namespace PointyCloudPlugin
