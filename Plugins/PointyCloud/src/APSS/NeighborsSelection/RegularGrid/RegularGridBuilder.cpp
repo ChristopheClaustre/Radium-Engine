@@ -53,6 +53,7 @@ void RegularGridBuilder::initialize(std::shared_ptr<PointyCloud> cloud,  Regular
 void RegularGridBuilder::fill(std::shared_ptr<PointyCloud> cloud, RegularGrid &grid)
 {
     auto begin = grid.m_indices.begin();
+    #pragma omp parallel for
     for(int k = 0; k < grid.m_indices.size();++k)
     {
         // corresponding cell
@@ -77,6 +78,7 @@ Ra::Core::Aabb RegularGridBuilder::computeAabb(std::shared_ptr<PointyCloud> clou
 {
     Ra::Core::Aabb aabb;
 
+    #pragma omp parallel for
     for(int i = 0; i < cloud->size(); ++i) {
         aabb.extend(cloud->at(i).pos());
     }
