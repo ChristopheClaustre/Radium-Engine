@@ -42,7 +42,8 @@ public:
     inline bool& eligible()             { return m_eligible; }
 
 private:
-    VectorType m_pos, m_normal;
+    VectorType m_pos;
+    VectorType m_normal;
     Ra::Core::Vector4 m_color;
     Scalar m_radius;
     bool m_eligible;
@@ -61,6 +62,10 @@ public:
     PointyCloud( const PointyCloud& ) = default;
     PointyCloud& operator= ( const PointyCloud& ) = default;
 
+    /// getter on m_points
+    inline Ra::Core::AlignedStdVector<APoint>& points() { return m_points; }
+    inline const Ra::Core::AlignedStdVector<APoint>& points() const { return m_points; }
+
     /// Appends another pointycloud to this one.
     inline void append( const PointyCloud& other );
 
@@ -68,11 +73,36 @@ public:
     inline void loadFromMesh(const Ra::Engine::Mesh *);
 
     /// Load the point cloud into a Mesh
-    inline void loadToMesh(Ra::Engine::Mesh *);
+    inline void loadToMesh(Ra::Engine::Mesh *) const;
+
+    /// subscript operator (shortcut for m_point's subscript operator)
+    inline APoint& operator[](const int& i) { return m_points[i]; }
+    inline APoint& at(const int& i)  { return m_points[i]; }
+    inline const APoint& operator[](const int& i) const  { return m_points[i]; }
+    inline const APoint& at(const int& i) const  { return m_points[i]; }
+
+    /// shortcut for size method on m_points
+    inline size_t size() { return m_points.size(); }
+
+    /// shortcut for push_back on m_points
+    inline void push_back(APoint p);
+
+    /// shortcut for resize method on m_points
+    inline void resize(int n);
+    inline void resize(int n, APoint init);
+
+    /// shortcut for clear method on m_points
+    inline void clear();
+
+    /// swap two APoint
+    inline void swap(int indice1, int indice2);
 
 public:
-    std::vector<APoint> m_points;
-};
+    /// vector of APoints
+    Ra::Core::AlignedStdVector<APoint> m_points;
+}; // class PointyCloud
+
+
 
 } // namespace PointyCloudPlugin
 

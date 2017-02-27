@@ -19,7 +19,7 @@ inline void PointyCloud::loadFromMesh(const Ra::Engine::Mesh * mesh) {
     }
 }
 
-inline void PointyCloud::loadToMesh(Ra::Engine::Mesh * mesh) {
+inline void PointyCloud::loadToMesh(Ra::Engine::Mesh * mesh) const {
 
     size_t size = m_points.size();
 
@@ -31,8 +31,8 @@ inline void PointyCloud::loadToMesh(Ra::Engine::Mesh * mesh) {
     for (int i = 0; i < size; ++i)
     {
         vertices[i] = m_points[i].pos();
-        normals[i] = m_points[i].normal();
-        colors[i] = m_points[i].color();
+        normals[i] =  m_points[i].normal();
+        colors[i] =   m_points[i].color();
         radiuses[i] = m_points[i].radius();
     }
 
@@ -44,6 +44,26 @@ inline void PointyCloud::loadToMesh(Ra::Engine::Mesh * mesh) {
 inline void PointyCloud::append( const PointyCloud& other )
 {
     m_points.insert( m_points.end(), other.m_points.cbegin(), other.m_points.cend() );
+}
+
+inline void PointyCloud::push_back(APoint p) {
+    m_points.push_back(p);
+}
+
+inline void PointyCloud::resize(int n) {
+    m_points.resize(n);
+}
+
+inline void PointyCloud::resize(int n, APoint init) {
+    m_points.resize(n, init);
+}
+
+inline void PointyCloud::clear() {
+    m_points.clear();
+}
+
+inline void PointyCloud::swap(int indice1, int indice2) {
+    std::swap(m_points[indice1], m_points[indice2]);
 }
 
 } // namespace PointyCloudPlugin

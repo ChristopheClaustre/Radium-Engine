@@ -5,9 +5,8 @@
 namespace PointyCloudPlugin
 {
 
-UsefulPointsSelection::UsefulPointsSelection(std::shared_ptr<PointyCloud> originalCloud, const Ra::Engine::Camera* camera) :
-    m_originalCloud(originalCloud),
-    m_camera(camera)
+UsefulPointsSelection::UsefulPointsSelection(PointyCloud& originalCloud, const Ra::Engine::Camera* camera) :
+    m_cloud(originalCloud), m_camera(camera)
 {
 }
 
@@ -15,39 +14,26 @@ UsefulPointsSelection::~UsefulPointsSelection()
 {
 }
 
-PointyCloud UsefulPointsSelection::selectUsefulPoints()
+void UsefulPointsSelection::selectUsefulPoints()
 {
     // check visibility from camera
-    PointyCloud visiblePoints(*m_originalCloud.get());
-    selectFromVisibility(visiblePoints);
+    selectFromVisibility();
 
     // this method must return at least 1 point
-    if (visiblePoints.m_points.size() == 0)
-        visiblePoints.m_points.push_back(m_originalCloud->m_points[0]);
+    if (m_N == 0 && m_cloud.size() > 0) {
+        m_N = 1;
+    }
+    int number_of_visible = m_cloud.size();
 
     // check orientation
-    PointyCloud wellOrientedPoints(visiblePoints);
-    selectFromOrientation(wellOrientedPoints);
+    selectFromOrientation();
 
-    // camera must be inside the cloud
+    // camera may be inside the cloud
     // if it is the case we must return the opposite face of the "mesh"
     //   (the not well oriented one (all the visible in fact))
-    if (wellOrientedPoints.m_points.size() == 0)
-        return visiblePoints;
-
-    return wellOrientedPoints;
+    if (m_N == 0 && m_cloud.size() > number_of_visible) {
+        m_N = number_of_visible;
+    }
 }
 
 } // namespace PointyCloudPlugin
-
-
-
-
-
-
-
-
-
-
-
-

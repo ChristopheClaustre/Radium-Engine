@@ -42,7 +42,7 @@ void RegularGrid::query(const Ra::Core::Vector3& p, float r, std::vector<int> & 
                 for(int idx = begin; idx<begin+length; ++idx)
                 {
                     //TODO it may be faster to avoid push_back and use remove_if ?
-                    if((p - m_cloud->m_points[m_indices[idx]].pos()).norm() <= r) {
+                    if((p - m_cloud->at(m_indices[idx]).pos()).norm() <= r) {
                         indices.push_back(m_indices[idx]);
                     }
                 }
@@ -85,7 +85,7 @@ bool RegularGrid::hasNeighbors(const Ra::Core::Vector3& p, float r) const
                 int idx = begin;
                 while(idx<begin+length)
                 {
-                    if((p - m_cloud->m_points[m_indices[idx]].pos()).norm() <= r)
+                    if((p - m_cloud->at(m_indices[idx]).pos()).norm() <= r)
                     {
                         ++res;
                     }

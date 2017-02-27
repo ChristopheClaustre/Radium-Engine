@@ -184,7 +184,7 @@ namespace PointyCloudPlugin
         {
             for (auto comp : pointyCloudComponentList)
             {
-                comp->resetOriginalCloud();
+                comp->resetWorkingCloud();
             }
         }
         to_refresh = true;

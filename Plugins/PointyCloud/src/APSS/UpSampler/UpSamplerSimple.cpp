@@ -11,24 +11,21 @@ UpSamplerSimple::~UpSamplerSimple()
 {
 }
 
-void UpSamplerSimple::upSampleCloud(PointyCloud& cloud)
+void UpSamplerSimple::upSampleCloud(const PointyCloud& usefulPointCloud, int N)
 {
-    m_cloud = &cloud;
-    m_newpoints.clear();
-    const int &n = m_cloud->m_points.size() ;
+    m_cloud.clear();
 
     #pragma omp parallel for
-    for ( uint i = 0 ; i < n ; i++ )
+    for ( uint i = 0 ; i < N ; i++ )
     {
-        this->upSamplePoint(getM(i), i);
+        const APoint& point = usefulPointCloud[i];
+        this->upSamplePoint(getM(point), point);
     }
-    m_cloud->m_points = m_newpoints;
 }
 
 // return the number of pixel that takes an splat of radius 1 at the position of the index_th pixel
-Scalar UpSamplerSimple::computeEta(const int& index)
+Scalar UpSamplerSimple::computeEta(const APoint& point)
 {
-    APoint& point = m_cloud->m_points[index];
     Scalar skewFactor;
     // m_point are already normalized
     if(m_camera.getProjType() == Ra::Engine::Camera::ProjType::ORTHOGRAPHIC)

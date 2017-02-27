@@ -15,29 +15,26 @@ NeighborsSelection::~NeighborsSelection()
 
 void NeighborsSelection::getNeighbors(const APoint& point, std::vector<int> & indexSelected) const
 {
-   auto beginIt = m_cloud->m_points.begin();
-
-   for (auto currentIt = beginIt; currentIt != m_cloud->m_points.end(); ++currentIt)
-   {
-       if ((currentIt->pos() - point.pos()).norm() <= m_influenceRadius)
-       {
-           indexSelected.push_back(currentIt-beginIt);
-       }
-   }
+    for(int i = 0; i < m_cloud->size(); ++i)
+    {
+        if ((m_cloud->at(i).pos() - point.pos()).norm() <= m_influenceRadius)
+        {
+            indexSelected.push_back(i);
+        }
+    }
 }
 
 bool NeighborsSelection::isEligible(const APoint& point) const
 {
    int neighbors = 0;
-   auto beginIt = m_cloud->m_points.begin();
-   auto currentIt = beginIt;
-   while (currentIt != m_cloud->m_points.end() && neighbors < 6)
+   int i = 0;
+   while (i < m_cloud->size() && neighbors < 6)
    {
-       if ((currentIt->pos() - point.pos()).norm() <= m_influenceRadius)
+       if ((m_cloud->at(i).pos() - point.pos()).norm() <= m_influenceRadius)
        {
            ++neighbors;
        }
-       ++currentIt;
+       ++i;
    }
    return (neighbors >=6);
 }

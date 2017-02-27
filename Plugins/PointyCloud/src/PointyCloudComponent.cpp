@@ -16,7 +16,6 @@ namespace PointyCloudPlugin
     PointyCloudComponent::PointyCloudComponent(const std::string& name, const Ra::Engine::Camera *camera)
         : Ra::Engine::Component( name ), m_camera( camera ),
           m_originalCloud(std::make_shared<PointyCloud>()),
-          m_culling(UsefulPointsSelection(m_originalCloud, m_camera)),
           m_selector(std::make_shared<NeighborsSelection>(m_originalCloud, 3)),
           m_projection(OrthogonalProjection(m_selector, m_originalCloud, 3))
     {
@@ -114,8 +113,9 @@ namespace PointyCloudPlugin
         m_originalCloud->loadFromMesh(m_workingCloud.get());
 
         setSplatRadius(sys->getSplatRadius());
+        m_culling = new UsefulPointsSelection(*m_originalCloud.get(), m_camera);
 
-        LOGP(logINFO) << "cloud " << m_cloudName << " has " << m_originalCloud->m_points.size() << " point(s).";
+        LOGP(logINFO) << "cloud " << m_cloudName << " has " << m_originalCloud->size() << " point(s).";
 
         setUpsamplingMethod(sys->getUpsamplingMethod());
         setProjectionMethod(sys->getProjectionMethod());
@@ -136,13 +136,14 @@ namespace PointyCloudPlugin
     {
 
         ON_TIMED(auto t0 = Ra::Core::Timer::Clock::now());
-        PointyCloud points = m_culling.selectUsefulPoints();
+        m_culling->selectUsefulPoints();
         ON_TIMED(auto t1 = Ra::Core::Timer::Clock::now());
-        m_upsampler->upSampleCloud(points);
+        m_upsampler->upSampleCloud(m_culling->getUsefulPoints(), m_culling->getN());
         ON_TIMED(auto t2 = Ra::Core::Timer::Clock::now());
-        m_projection.project(points);
+        PointyCloud& aCloud = m_upsampler->getUpsampledCloud();
+        m_projection.project(aCloud);
         ON_TIMED(auto t3 = Ra::Core::Timer::Clock::now());
-        points.loadToMesh(m_workingCloud.get());
+        aCloud.loadToMesh(m_workingCloud.get());
         ON_TIMED(auto t4 = Ra::Core::Timer::Clock::now());
 
         ON_TIMED(
@@ -155,8 +156,8 @@ namespace PointyCloudPlugin
 
     void PointyCloudComponent::setEligibleFlags() {
         #pragma omp parallel for
-        for (int i = 0; i < m_originalCloud->m_points.size(); ++i) {
-            m_originalCloud->m_points[i].eligible() = (m_selector->isEligible(m_originalCloud->m_points[i]));
+        for (int i = 0; i < m_originalCloud->size(); ++i) {
+            m_originalCloud->at(i).eligible() = (m_selector->isEligible(m_originalCloud->at(i)));
         }
     }
 
@@ -167,8 +168,15 @@ namespace PointyCloudPlugin
     }
 
     void PointyCloudComponent::setSplatRadius(Scalar splatRadius) {
-        for (auto it = m_originalCloud->m_points.begin(); it != m_originalCloud->m_points.end(); ++it) {
-            it->radius() = splatRadius;
+        #pragma omp parallel for
+        for (int i = 0; i < m_originalCloud->size(); ++i) {
+            m_originalCloud->at(i).radius() = splatRadius;
+        }
+        m_culling = new UsefulPointsSelection(*m_originalCloud.get(), m_camera);
+
+        auto sys = static_cast<PointyCloudSystem*>(m_system);
+        if (!sys->isAPSSused()) {
+            resetWorkingCloud();
         }
     }
 
@@ -238,7 +246,7 @@ namespace PointyCloudPlugin
         // TODO donner à tout le monde ???
     }
 
-    void PointyCloudComponent::resetOriginalCloud()
+    void PointyCloudComponent::resetWorkingCloud()
     {
         m_originalCloud->loadToMesh(m_workingCloud.get());
     }

@@ -10,18 +10,14 @@ UpSamplerUnshaken::~UpSamplerUnshaken()
 {
 }
 
-void UpSamplerUnshaken::upSampleCloud(PointyCloud& cloud)
+void UpSamplerUnshaken::upSampleCloud(const PointyCloud &usefulPointCloud, int N)
 {
-    m_cloud = &cloud;
-    m_newpoints.clear();
-    const int &n = m_cloud->m_points.size() ;
-
-    #pragma omp parallel for
-    for ( uint i = 0 ; i < n ; i++ )
+    m_cloud.clear();
+    #pragma omp parallel for num_threads(4)
+    for ( uint i = 0 ; i < N ; i++ )
     {
-        this->upSamplePoint(m_M, i);
+        this->upSamplePoint(m_M, usefulPointCloud[i]);
     }
-    m_cloud->m_points = m_newpoints;
 }
 
 } // namespace PointyCloudPlugin

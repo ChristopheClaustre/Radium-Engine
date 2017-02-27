@@ -52,14 +52,14 @@ void OrthogonalProjection::project(PointyCloud &upSampledCloud)
 #else
     #pragma omp parallel for
 #endif
-    for(int i = 0; i < upSampledCloud.m_points.size(); ++i)
+    for(int i = 0; i < upSampledCloud.size(); ++i)
     {
 #ifdef CORE_USE_OMP
         Fit fit;
         fit.setWeightFunc(WeightFunc(m_influenceRadius));
 #endif
 
-        auto &p = upSampledCloud.m_points[i];
+        auto &p = upSampledCloud[i];
         if (p.eligible())
         {
             Scalar diff_n = initDiff_n;
@@ -80,7 +80,7 @@ void OrthogonalProjection::project(PointyCloud &upSampledCloud)
 
                 ON_TIMED(start = Ra::Core::Timer::Clock::now();)
                 for(auto &idx : neighbors) {
-                    fit.addNeighbor(m_originalCloud->m_points[idx]);
+                    fit.addNeighbor(m_originalCloud->at(idx));
                 }
                 ON_TIMED(timeFitting += Ra::Core::Timer::getIntervalMicro(start, Ra::Core::Timer::Clock::now());)
 

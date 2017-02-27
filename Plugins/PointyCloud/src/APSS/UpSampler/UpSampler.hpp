@@ -16,15 +16,15 @@ class UpSampler
 public :
     UpSampler();
     virtual ~UpSampler();
-    virtual void upSampleCloud(PointyCloud& cloud)=0;
+    virtual void upSampleCloud(const PointyCloud& usefulPointCloud, int N)=0;
+    inline PointyCloud& getUpsampledCloud() { return m_cloud; }
 
 protected :
-    std::vector<APoint> m_newpoints;
-    PointyCloud* m_cloud;
+    PointyCloud m_cloud;
 
-    void upSamplePoint(const int& m, const int& index);
-    Ra::Core::Vector3 calculU(const Ra::Core::Vector3& normal);
-    Ra::Core::Vector3 calculV(const Ra::Core::Vector3& normal,const Ra::Core::Vector3& u);
+    void upSamplePoint(const int& m, const APoint& point);
+    static Ra::Core::Vector3 calculU(const Ra::Core::Vector3& normal);
+    static Ra::Core::Vector3 calculV(const Ra::Core::Vector3& normal, const Ra::Core::Vector3& u);
 
 }; // class Upsampler
 

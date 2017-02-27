@@ -2,9 +2,9 @@
 
 namespace PointyCloudPlugin {
 
-inline int UpSamplerSimple::getM(const int& index)
+inline int UpSamplerSimple::getM(const APoint& point)
 {
-    return round(sqrt(computeEta(index) * m_cloud->m_points[index].radius()/ m_threshold));
+    return round(sqrt(computeEta(point) * point.radius()/ m_threshold));
     // sqrt because this result gives mxm
 }
 

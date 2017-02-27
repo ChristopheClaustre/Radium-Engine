@@ -3,7 +3,7 @@
 namespace PointyCloudPlugin
 {
 
-UpSampler::UpSampler() : m_cloud( nullptr)
+UpSampler::UpSampler() : m_cloud(PointyCloud())
 {
 }
 
@@ -12,9 +12,8 @@ UpSampler::~UpSampler()
 }
 
 // m x m = nb de splats
-void UpSampler::upSamplePoint(const int &m, const int& index)
+void UpSampler::upSamplePoint(const int& m, const APoint& originalPoint)
 {
-    APoint originalPoint = m_cloud->m_points[index];
     if (originalPoint.eligible() && m > 1)
     {
         const Ra::Core::Vector3 &centerVertice = originalPoint.pos();
@@ -33,8 +32,8 @@ void UpSampler::upSamplePoint(const int &m, const int& index)
 #pragma omp critical
 {
         APoint temp(centerVertice,normal,color,newRadius);
-        n = m_newpoints.size();
-        m_newpoints.resize(n+m*m, temp);
+        n =  m_cloud.size();
+        m_cloud.resize(n+m*m, temp);
 }
 
         Scalar med = (m-1)/2.0;
@@ -44,7 +43,7 @@ void UpSampler::upSamplePoint(const int &m, const int& index)
             int nim = n+i*m;
             for ( int j = 0 ; j < m ; ++j )
             {
-                m_newpoints[nim+j].pos() = firstVertice + i * u_pas + j * v_pas;
+                 m_cloud[nim+j].pos() = firstVertice + i * u_pas + j * v_pas;
             }
         }
     }
@@ -52,7 +51,7 @@ void UpSampler::upSamplePoint(const int &m, const int& index)
     {
 #pragma omp critical
 {
-        m_newpoints.push_back(originalPoint);
+         m_cloud.push_back(originalPoint);
 }
     }
 }

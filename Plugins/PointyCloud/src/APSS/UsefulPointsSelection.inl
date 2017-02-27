@@ -3,16 +3,15 @@
 namespace PointyCloudPlugin
 {
 
-inline void UsefulPointsSelection::selectFromVisibility(PointyCloud& pc)
+inline void UsefulPointsSelection::selectFromVisibility()
 {
     Ra::Core::Matrix4 VP = m_camera->getProjMatrix() * m_camera->getViewMatrix();
 
-    auto pointsFirst = pc.m_points.begin();
-    auto pointsEnd = pc.m_points.end();
-    for(auto pointsIt = pc.m_points.begin(); pointsIt!=pointsEnd; ++pointsIt)
+    int indiceVisible = 0;
+    for(int i = 0; i < m_cloud.size(); ++i)
     {
         Ra::Core::Vector4 point = Ra::Core::Vector4::Ones();
-        point.head<3>() = pointsIt->pos();
+        point.head<3>() = m_cloud[i].pos();
         auto vpPoint = VP * point;
 
         auto X = vpPoint[0] / vpPoint[3];
@@ -20,38 +19,42 @@ inline void UsefulPointsSelection::selectFromVisibility(PointyCloud& pc)
         auto Z = vpPoint[2] / vpPoint[3];
         if (X <= 1 && Y <= 1 && Z <= 1 && X >= -1 && Y >= -1 && Z >= -1)
         {
-            *pointsFirst++ = *pointsIt;
+            m_cloud.swap(indiceVisible,i);
+            ++indiceVisible;
         }
     }
 
-    pc.m_points.erase(pointsFirst, pointsEnd);
+    m_N = indiceVisible;
 }
 
-inline void UsefulPointsSelection::selectFromOrientation(PointyCloud& pc)
+inline void UsefulPointsSelection::selectFromOrientation()
 {
     Ra::Core::Vector3 view = m_camera->getDirection();
 
-    auto pointsFirst = pc.m_points.begin();
-    auto pointsEnd = pc.m_points.end();
+    int indiceWellOriented = 0;
     if(m_camera->getProjType() == Ra::Engine::Camera::ProjType::ORTHOGRAPHIC)
     {
-        for(auto pointsIt = pc.m_points.begin(); pointsIt!=pointsEnd; ++pointsIt)
+        for(int i = 0; i < m_cloud.size(); ++i)
         {
-            if(view.dot(pointsIt->normal()) < 0)
-                *pointsFirst++ = *pointsIt;
+            if(view.dot(m_cloud[i].normal()) < 0) {
+                m_cloud.swap(indiceWellOriented, i);
+                ++indiceWellOriented;
+            }
         }
     }
     else
     {
-        for(auto pointsIt = pc.m_points.begin(); pointsIt!=pointsEnd; ++pointsIt)
+        for(int i = 0; i < m_cloud.size(); ++i)
         {
-            Ra::Core::Vector3 vecteurCameraPoint(pointsIt->pos() - m_camera->getPosition());
-            if(vecteurCameraPoint.dot(pointsIt->normal()) < 0)
-                *pointsFirst++ = *pointsIt;
+            Ra::Core::Vector3 vecteurCameraPoint(m_cloud[i].pos() - m_camera->getPosition());
+            if(vecteurCameraPoint.dot(m_cloud[i].normal()) < 0) {
+                m_cloud.swap(indiceWellOriented, i);
+                ++indiceWellOriented;
+            }
         }
     }
 
-    pc.m_points.erase(pointsFirst, pointsEnd);
+    m_N = indiceWellOriented;
 }
 
 } // namespace PointyCloudPlugin
