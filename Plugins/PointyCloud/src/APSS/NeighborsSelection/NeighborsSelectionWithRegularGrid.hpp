@@ -10,7 +10,7 @@ namespace PointyCloudPlugin {
     class NeighborsSelectionWithRegularGrid : public NeighborsSelection
     {
     public:
-        NeighborsSelectionWithRegularGrid(std::shared_ptr<PointyCloud> cloud, float influenceRadius, int nCell = 100);
+        NeighborsSelectionWithRegularGrid(std::shared_ptr<PointyCloud> cloud, float influenceRadius, int nCell = 70);
         ~NeighborsSelectionWithRegularGrid();
 
         virtual void getNeighbors(const APoint& point, std::vector<int>& indexSelected) const override;
