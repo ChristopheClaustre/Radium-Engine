@@ -2,10 +2,11 @@
 #define POINTYCLOUDPLUGIN_APSS_H
 
 #include <Cuda/defines.h>
+#include <Cuda/RegularGrid.h>
 
 #include <Eigen/Core>
 
-#include <Cuda/RegularGrid.h>
+#define CUDA_THREADS 1024
 
 namespace PointyCloudPlugin {
 namespace Cuda {

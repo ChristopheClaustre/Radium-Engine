@@ -1,6 +1,5 @@
 #include <Cuda/APSS.h>
 
-#include <Cuda/Test.h> // TODO: delete this include
 #include <Cuda/SelectionKernel.h>
 #include <Cuda/UpsamplingKernel.h>
 #include <Cuda/ProjectionKernel.h>
@@ -83,7 +82,7 @@ APSS::~APSS()
 void APSS::select(const Vector3 &cameraPosition, const Vector3 &cameraDirection)
 {
     // memory configuration
-    int threadsPerBlock = 256;
+    int threadsPerBlock = CUDA_THREADS;
     int blocksPerGrid = (m_sizeOriginal + threadsPerBlock - 1) / threadsPerBlock;
 
     checkVisibility<<<blocksPerGrid, threadsPerBlock>>>(m_sizeOriginal, m_positionOriginal, m_normalOriginal,
@@ -106,7 +105,7 @@ void APSS::select(const Vector3 &cameraPosition, const Vector3 &cameraDirection)
 void APSS::upsample(int m, Scalar splatRadius)
 {
     // memory configuration
-    int threadsPerBlock = 256;
+    int threadsPerBlock = CUDA_THREADS;
     int blocksPerGrid = (m_sizeSelected + threadsPerBlock - 1) / threadsPerBlock;
 
     computeSampleCountFixed<<<threadsPerBlock, blocksPerGrid>>>(m_sizeSelected, m, m_splatCount);
@@ -131,16 +130,9 @@ void APSS::upsample(int m, Scalar splatRadius)
 void APSS::project(Scalar influenceRadius)
 {
     // memory configuration
-    int threadsPerBlock = 256;
+    int threadsPerBlock = CUDA_THREADS;
     int blocksPerGrid = (m_sizeFinal + threadsPerBlock - 1) / threadsPerBlock;
 
-    // TEST //////////////////////////////
-//    copySelected<<<1,1>>>(m_sizeSelected, m_positionOriginal, m_normalOriginal, m_colorOriginal, m_selected,
-//                 m_positionFinal, m_normalFinal, m_colorFinal, m_splatSizeFinal, influenceRadius);
-//    m_sizeFinal = m_sizeSelected;
-    //////////////////////////////////////
-
-    // actual projection code:
     projection<<<threadsPerBlock,blocksPerGrid>>>(m_sizeOriginal, m_positionOriginal, m_normalOriginal, *m_grid, influenceRadius,
                         m_sizeFinal,    m_positionFinal,    m_normalFinal);
     CUDA_ASSERT( cudaPeekAtLastError() );
