@@ -24,7 +24,8 @@ public :
     void upSampleCloud(const std::vector<unsigned int>& indices, int m_count);
     inline PointyCloud& getUpsampledCloud() { return *m_prevCloud; }
 
-    inline void resetUpsamplingInfo() { m_prevUpsamplingInfo->clear(); m_upsamplingInfo->clear(); }
+    inline void resetUpsamplingInfo()
+        { m_prevUpsamplingInfo->clear(); m_upsamplingInfo->clear(); m_prevCloud->clear(); m_cloud->clear(); }
 
 protected:
     void upSamplePoint(const int& m, const APoint& point, int index);
@@ -38,8 +39,6 @@ protected :
     PointyCloud* m_prevCloud;
     std::map<unsigned int, UpsamplingInfo> * m_upsamplingInfo;
     std::map<unsigned int, UpsamplingInfo> * m_prevUpsamplingInfo;
-
-    int m_count;
 }; // class Upsampler
 
 } // namespace PointyCloudPlugin
