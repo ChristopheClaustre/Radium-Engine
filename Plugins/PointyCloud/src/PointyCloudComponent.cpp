@@ -165,6 +165,7 @@ namespace PointyCloudPlugin
         m_projection.setInfluenceRadius(influenceRadius);
         m_selector->setInfluenceRadius(influenceRadius);
         setEligibleFlags();
+        m_upsampler->resetUpsamplingInfo();
     }
 
     void PointyCloudComponent::setSplatRadius(Scalar splatRadius) {
