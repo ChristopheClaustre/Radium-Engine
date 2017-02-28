@@ -99,13 +99,13 @@ namespace PointyCloudPlugin
                                                       mesh->getGeometry().m_normals.data(),
                                                       mesh->getData(Ra::Engine::Mesh::VERTEX_COLOR).data(),
                                                       mesh->getGeometry().m_vertices.size());
+                    // stack: APSS Cuda class + associated target mesh + timing statistics
                     m_APPS.push_back(apss);
                     m_mesh.push_back(mesh);
                     m_timeStat.push_back(new TimeStat());
                 }
             }
         }
-
     }
 
     std::vector<PointyCloudComponent*> PointyCloudSystem::getComponents()
