@@ -1,7 +1,7 @@
 #ifndef POINTYCLOUDPLUGIN_SELECTIONKERNEL_H
 #define POINTYCLOUDPLUGIN_SELECTIONKERNEL_H
 
-#include <defines.h>
+#include <Cuda/defines.h>
 
 namespace PointyCloudPlugin {
 namespace Cuda {

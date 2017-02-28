@@ -1,10 +1,7 @@
 #ifndef POINTYCLOUDPLUGIN_POINT_H
 #define POINTYCLOUDPLUGIN_POINT_H
 
-#include "defines.h"
-
 #include <Core/Math/LinearAlgebra.hpp>
-
 
 namespace PointyCloudPlugin {
 
@@ -20,7 +17,7 @@ public:
     typedef ForPatate::_Scalar Scalar;
     typedef ForPatate::_VectorType VectorType;
 
-    MULTIARCH inline APoint(  const VectorType& _pos =  VectorType::Zero(),
+    inline APoint(  const VectorType& _pos =  VectorType::Zero(),
                     const VectorType& _normal =         VectorType::Zero(),
                     const Ra::Core::Vector4& _color =   Ra::Core::Vector4::Zero(),
                     const Scalar& _splatSize =          0.,
@@ -28,17 +25,17 @@ public:
                     )
         : m_pos(_pos), m_normal(_normal), m_color(_color), m_splatSize(_splatSize), m_eligible(_eligible) {}
 
-    MULTIARCH inline const VectorType& pos()          const { return m_pos; }
-    MULTIARCH inline const VectorType& normal()       const { return m_normal; }
-    MULTIARCH inline const Ra::Core::Vector4& color() const { return m_color; }
-    MULTIARCH inline const Scalar& splatSize()        const { return m_splatSize; }
-    MULTIARCH inline const bool& eligible()           const { return m_eligible; }
+    inline const VectorType& pos()          const { return m_pos; }
+    inline const VectorType& normal()       const { return m_normal; }
+    inline const Ra::Core::Vector4& color() const { return m_color; }
+    inline const Scalar& splatSize()        const { return m_splatSize; }
+    inline const bool& eligible()           const { return m_eligible; }
 
-    MULTIARCH inline VectorType& pos()            { return m_pos; }
-    MULTIARCH inline VectorType& normal()         { return m_normal; }
-    MULTIARCH inline Ra::Core::Vector4& color()   { return m_color; }
-    MULTIARCH inline Scalar& splatSize()          { return m_splatSize; }
-    MULTIARCH inline bool& eligible()             { return m_eligible; }
+    inline VectorType& pos()            { return m_pos; }
+    inline VectorType& normal()         { return m_normal; }
+    inline Ra::Core::Vector4& color()   { return m_color; }
+    inline Scalar& splatSize()          { return m_splatSize; }
+    inline bool& eligible()             { return m_eligible; }
 
 private:
     VectorType m_pos, m_normal;

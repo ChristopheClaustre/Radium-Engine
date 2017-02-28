@@ -1,6 +1,9 @@
 #ifndef POINTYCLOUDPLUGIN_DEFINES_H
 #define POINTYCLOUDPLUGIN_DEFINES_H
 
+#include <cuda_runtime.h>
+#include <driver_types.h>
+
 #include <stdio.h>
 #include <Eigen/Core>
 

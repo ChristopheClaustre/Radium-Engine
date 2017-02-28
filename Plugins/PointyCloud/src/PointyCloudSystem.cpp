@@ -15,11 +15,12 @@
 #include <GuiBase/Viewer/CameraInterface.hpp>
 #include <GuiBase/Viewer/Viewer.hpp>
 
+#include <Cuda/APSSTask.hpp>
+
 #include <PointyCloudComponent.hpp>
 #include <Renderer/PointyCloudRenderer.hpp>
 #include <ComputePointyCloudTask.hpp>
 
-#include <Cuda/APSSTask.hpp>
 
 namespace PointyCloudPlugin
 {
