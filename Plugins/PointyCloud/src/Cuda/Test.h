@@ -7,17 +7,15 @@
 namespace PointyCloudPlugin {
 namespace Cuda {
 
-// just a kernel test that copy original data to final one
+// just a simple kernel that copy original data to final one
 // no blocks or thread
 // just change the color from white to red!
+// not used in practice
 
 __global__
 void copy(size_t sizeOriginal, Vector3* posIn,  Vector3* norIn,  Vector4* colIn,
           size_t sizeFinal,    Vector3* posOut, Vector3* norOut, Vector4* colOut, Scalar* splatSizeOut)
 {
-//    int index = blockIdx.x * blockDim.x + threadIdx.x;
-//    int stride = blockDim.x * gridDim.x;
-
     for (int i = 0; i < sizeOriginal; ++i)
     {
         float t = (float)i/(sizeOriginal-1);
@@ -33,9 +31,10 @@ void copy(size_t sizeOriginal, Vector3* posIn,  Vector3* norIn,  Vector4* colIn,
 }
 
 
-// just a kernel test that copy selected data to final one
+// just a simple kernel that copy selected data to final one
 // no blocks or thread
 // just change the color from white to red!
+// not used in practice
 
 __global__
 void copySelected(size_t sizeSelected, Vector3* posIn,  Vector3* norIn,  Vector4* colIn,

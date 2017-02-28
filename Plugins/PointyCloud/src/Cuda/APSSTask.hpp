@@ -35,13 +35,13 @@ namespace PointyCloudPlugin {
     std::ostream& operator<<(std::ostream& os, const TimeStat& s) {
         float total = s.timeSelection+s.timeUpsampling+s.timeProjection+s.timeFinalization+s.timeLoading;
         float totalMean = total/s.count;
-        os << "Timing statistics (for " << s.count <<" frames):\n" <<
+        os << "Timing statistics in μs (for " << s.count <<" frames):\n" <<
             "selection    : " << s.timeSelection /s.count    << " (" << s.timeSelection/total*100 << "%)\n" <<
             "upsampling   : " << s.timeUpsampling /s.count   << " (" << s.timeUpsampling/total*100 << "%)\n" <<
             "projection   : " << s.timeProjection /s.count   << " (" << s.timeProjection/total*100 << "%)\n" <<
             "finalization : " << s.timeFinalization /s.count << " (" << s.timeFinalization/total*100 << "%)\n" <<
             "loading      : " << s.timeLoading /s.count      << " (" << s.timeLoading/total*100 << "%)\n" <<
-            "===TOTAL===  : " << totalMean;
+            "total        : " << totalMean;
         return os;
     }
 
@@ -54,25 +54,6 @@ namespace PointyCloudPlugin {
         ~APSSTask() {}
 
         virtual std::string getName() const override {return "APSS";}
-
-//        virtual void process() override
-//        {
-//            // APSS steps
-//            m_apss->select(m_camera->getPosition(), m_camera->getDirection());
-//            m_apss->upsample(m_M, m_splatRadius);
-//            m_apss->project(m_influenceRadius);
-//            m_apss->finalize();
-
-//            // get results
-//            size_t size = m_apss->sizeFinal();
-//            const Ra::Core::Vector3* positions = m_apss->positionFinal();
-//            const Ra::Core::Vector3* normals = m_apss->normalFinal();
-//            const Ra::Core::Vector4* colors = m_apss->colorFinal();
-//            const Scalar* splatSizes = m_apss->splatSizeFinal();
-
-//            // send results to target mesh
-//            m_mesh->loadPointyCloud(size, positions, normals, colors, splatSizes);
-//        }
 
         virtual void process() override
         {
@@ -111,14 +92,20 @@ namespace PointyCloudPlugin {
 
     private:
 
+        // Cuda kernel calls
         Cuda::APSS* m_apss;
+
+        // target mesh for rendering
         std::shared_ptr<Ra::Engine::Mesh> m_mesh;
+
+        // timing statistics
         TimeStat* m_stat;
 
+        // parameters
         const Ra::Engine::Camera* m_camera;
-        Scalar m_splatRadius;
-        int m_M;
-        Scalar m_influenceRadius;
+        Scalar                    m_splatRadius;
+        int                       m_M;
+        Scalar                    m_influenceRadius;
     };
 
 } // namespace PointyCloudPlugin

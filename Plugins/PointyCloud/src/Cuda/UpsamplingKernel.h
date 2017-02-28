@@ -31,6 +31,8 @@ void genSplat(int idxBegin, int splatCount, Scalar splatRadius,
     // generate (m x m) splats
     int m = sqrt((double)splatCount);
     double newSplatRadius = splatRadius/m;
+
+    // "lower left" splat corner
     Vector3 corner = positionIn - splatRadius*(U+V);
 
     int k = 0;

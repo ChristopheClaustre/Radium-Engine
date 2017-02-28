@@ -44,8 +44,6 @@ APSS::APSS(const Vector3* positions,
     m_colorFinalHost     = new Vector4[size];
     m_splatSizeFinalHost = new Scalar[size];
 
-    //TODO: set eligibility ...
-
     // device transfert
     CUDA_ASSERT( cudaMemcpy(m_positionOriginal, positions, size*sizeof(Vector3), cudaMemcpyHostToDevice) );
     CUDA_ASSERT( cudaMemcpy(m_normalOriginal,   normals,   size*sizeof(Vector3), cudaMemcpyHostToDevice) );
@@ -86,7 +84,8 @@ void APSS::select(const Vector3 &cameraPosition, const Vector3 &cameraDirection)
     int blocksPerGrid = (m_sizeOriginal + threadsPerBlock - 1) / threadsPerBlock;
 
     checkVisibility<<<blocksPerGrid, threadsPerBlock>>>(m_sizeOriginal, m_positionOriginal, m_normalOriginal,
-                             cameraPosition, cameraDirection, m_visibility);
+                                                        cameraPosition, cameraDirection, m_visibility);
+
     CUDA_ASSERT( cudaPeekAtLastError() );
     CUDA_ASSERT( cudaDeviceSynchronize() );
 
@@ -98,6 +97,7 @@ void APSS::select(const Vector3 &cameraPosition, const Vector3 &cameraDirection)
     updateSelectedCount();
 
     selectVisible<<<blocksPerGrid, threadsPerBlock>>>(m_sizeOriginal, m_visibility, m_visibilitySum, m_selected);
+
     CUDA_ASSERT( cudaPeekAtLastError() );
     CUDA_ASSERT( cudaDeviceSynchronize() );
 }
@@ -109,6 +109,7 @@ void APSS::upsample(int m, Scalar splatRadius)
     int blocksPerGrid = (m_sizeSelected + threadsPerBlock - 1) / threadsPerBlock;
 
     computeSampleCountFixed<<<threadsPerBlock, blocksPerGrid>>>(m_sizeSelected, m, m_splatCount);
+
     CUDA_ASSERT( cudaPeekAtLastError() );
     CUDA_ASSERT( cudaDeviceSynchronize() );
 
@@ -121,8 +122,9 @@ void APSS::upsample(int m, Scalar splatRadius)
     updateFinalMemory();
 
     generateSample<<<threadsPerBlock, blocksPerGrid>>>(m_sizeSelected, splatRadius, m_selected, m_splatCount, m_splatCountSum,
-                            m_positionOriginal, m_normalOriginal, m_colorOriginal,
-                            m_positionFinal, m_normalFinal, m_colorFinal, m_splatSizeFinal);
+                                                       m_positionOriginal, m_normalOriginal, m_colorOriginal,
+                                                       m_positionFinal, m_normalFinal, m_colorFinal, m_splatSizeFinal);
+
     CUDA_ASSERT( cudaPeekAtLastError() );
     CUDA_ASSERT( cudaDeviceSynchronize() );
 }
@@ -134,7 +136,7 @@ void APSS::project(Scalar influenceRadius)
     int blocksPerGrid = (m_sizeFinal + threadsPerBlock - 1) / threadsPerBlock;
 
     projection<<<threadsPerBlock,blocksPerGrid>>>(m_sizeOriginal, m_positionOriginal, m_normalOriginal, *m_grid, influenceRadius,
-                        m_sizeFinal,    m_positionFinal,    m_normalFinal);
+                                                  m_sizeFinal,    m_positionFinal,    m_normalFinal);
     CUDA_ASSERT( cudaPeekAtLastError() );
     CUDA_ASSERT( cudaDeviceSynchronize() );
 }
@@ -150,13 +152,11 @@ void APSS::finalize()
 
 void APSS::updateSelectedCount()
 {
-    m_sizeSelected = -1;
     CUDA_ASSERT( cudaMemcpy(&m_sizeSelected, m_visibilitySum+m_sizeOriginal-1, sizeof(int), cudaMemcpyDeviceToHost) );
 }
 
 void APSS::updateSampleCount()
 {
-    m_sizeFinal = -1;
     CUDA_ASSERT( cudaMemcpy(&m_sizeFinal, m_splatCountSum+m_sizeSelected-1, sizeof(int), cudaMemcpyDeviceToHost) );
 }
 
@@ -182,5 +182,4 @@ void APSS::updateFinalMemory()
 }
 
 } // namespace Cuda
-
 } // namespace PointyCloudPlugin

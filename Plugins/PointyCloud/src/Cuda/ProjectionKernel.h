@@ -10,6 +10,7 @@
 namespace PointyCloudPlugin {
 namespace Cuda {
 
+// point concept
 struct Point {
     typedef float Scalar;
     typedef Vector3 VectorType;
@@ -26,9 +27,11 @@ private:
     const VectorType* m_normal;
 };
 
+// fitting data structure
 typedef Grenaille::DistWeightFunc<Point, Grenaille::SmoothWeightKernel<Scalar> > WeightFunc;
 typedef Grenaille::Basket<Point, WeightFunc, Grenaille::AlgebraicSphere, Grenaille::OrientedSphereFit> Fit;
 
+// functor to process neighbors
 struct AddNeighborsFunctor
 {
     MULTIARCH inline AddNeighborsFunctor(Fit* fit, Vector3* positions, Vector3* normals) : fit_(fit), positions_(positions), normals_(normals) {}
