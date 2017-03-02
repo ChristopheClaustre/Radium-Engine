@@ -255,7 +255,7 @@
         <string>use the regular grid or not (really effective for &gt;30k points)</string>
        </property>
        <property name="text">
-        <string>Octree</string>
+        <string>Regular Grid</string>
        </property>
       </widget>
      </item>
