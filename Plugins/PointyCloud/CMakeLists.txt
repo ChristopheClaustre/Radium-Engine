@@ -37,15 +37,20 @@ find_package( Qt5Widgets REQUIRED )
 # CUDA
 set(CUDA_HOST_COMPILER /usr/bin/gcc-4.9)
 find_package( CUDA REQUIRED )
-include_directories( ${CUDA_TOOLKIT_ROOT_DIR}/include )
-message("Found CUDA " ${CUDA_VERSION_STRING} " in " ${CUDA_TOOLKIT_ROOT_DIR})
-set( PLUGIN_FLAGS "-fexceptions" )
-set( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${PLUGIN_FLAGS}" )
+
+if(${CUDA_FOUND})
+    message("Found CUDA " ${CUDA_VERSION_STRING} " in " ${CUDA_TOOLKIT_ROOT_DIR})
+    include_directories( ${CUDA_TOOLKIT_ROOT_DIR}/include )
+    set( PLUGIN_FLAGS "-fexceptions" )
+    set( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${PLUGIN_FLAGS}" )
+    file( GLOB_RECURSE cuda    src/*.cu src/*.h )
+else()
+    message("CUDA not found...")
+endif(${CUDA_FOUND})
 
 file( GLOB_RECURSE sources src/*.cpp )
 file( GLOB_RECURSE headers src/*.hpp )
 file( GLOB_RECURSE inlines src/*.inl )
-file( GLOB_RECURSE cuda    src/*.cu src/*.h )
 
 file(GLOB_RECURSE app_uis *.ui)
 qt5_wrap_ui(app_uis_moc ${app_uis})
@@ -66,7 +71,11 @@ include_directories(
     ${ASSIMP_INC}
     )
 
-CUDA_ADD_LIBRARY( PointyCloud SHARED ${sources} ${headers} ${inlines} ${cuda} ${app_uis})
+if(${CUDA_FOUND})
+    CUDA_ADD_LIBRARY( PointyCloud SHARED ${sources} ${headers} ${inlines} ${cuda} ${app_uis})
+else()
+    add_library( PointyCloud SHARED ${sources} ${headers} ${inlines} ${app_uis})
+endif(${CUDA_FOUND})
 
 add_dependencies( PointyCloud radiumCore radiumEngine radiumGuiBase )
 
