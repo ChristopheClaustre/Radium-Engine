@@ -93,11 +93,15 @@ namespace PointyCloudPlugin
         bool m_APSS;
         bool m_rendererUsed;
 
+        bool to_refresh;
+
+#ifdef APSS_CUDA
         std::vector<Cuda::APSS*> m_APSSalgo;
         std::vector<std::shared_ptr<Ra::Engine::Mesh> > m_mesh;
         std::vector<TimeStat*> m_timeStat;
+#endif
 
-        bool to_refresh;
+
     };
 
 } // namespace PointyCloudPlugin

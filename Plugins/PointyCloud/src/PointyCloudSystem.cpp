@@ -15,7 +15,9 @@
 #include <GuiBase/Viewer/CameraInterface.hpp>
 #include <GuiBase/Viewer/Viewer.hpp>
 
-#include <Cuda/APSSTask.hpp>
+#ifdef APSS_CUDA
+    #include <Cuda/APSSTask.hpp>
+#endif
 
 #include <PointyCloudComponent.hpp>
 #include <Renderer/PointyCloudRenderer.hpp>
@@ -48,6 +50,7 @@ namespace PointyCloudPlugin
 
     PointyCloudSystem::~PointyCloudSystem()
     {
+#ifdef APSS_CUDA
         for(auto& stat : m_timeStat)
         {
             if(stat->count>0)
@@ -55,6 +58,7 @@ namespace PointyCloudPlugin
                 LOG(logINFO) << *stat;
             }
         }
+#endif
     }
 
     void PointyCloudSystem::handleAssetLoading( Ra::Engine::Entity* entity, const Ra::Asset::FileData* fileData )
@@ -90,6 +94,7 @@ namespace PointyCloudPlugin
 
                 pointyCloudComponentList.push_back(comp);
 
+#ifdef APSS_CUDA
                 // Cuda APSS
                 for(auto& roIdx : comp->m_renderObjects)
                 {
@@ -103,6 +108,7 @@ namespace PointyCloudPlugin
                     m_mesh.push_back(mesh);
                     m_timeStat.push_back(new TimeStat());
                 }
+#endif
             }
         }
     }
@@ -118,9 +124,11 @@ namespace PointyCloudPlugin
             {
                 if(m_cuda)
                 {
+#ifdef APSS_CUDA
                     for(int k=0; k<m_APSSalgo.size(); ++k)
                         taskQueue->registerTask(new APSSTask(m_APSSalgo[k], m_mesh[k], m_timeStat[k], m_viewer->getCameraInterface()->getCamera(),
                                                              m_splatRadius, m_M, m_influenceRadius));
+#endif
                 }
                 else
                 {
@@ -202,11 +210,15 @@ namespace PointyCloudPlugin
 
     void PointyCloudSystem::setOptimizationByCUDA(bool cuda)
     {
+#ifdef APSS_CUDA
         m_cuda = cuda;
         for (auto comp : pointyCloudComponentList) {
             comp->setOptimizationByCUDA(cuda);
         }
         to_refresh = true;
+#else
+        LOGP(logWARNING) << "CUDA not available : the option has no effect...";
+#endif
     }
 
     void PointyCloudSystem::setAPSS(bool apss)
