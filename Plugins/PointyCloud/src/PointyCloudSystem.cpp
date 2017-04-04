@@ -115,13 +115,20 @@ namespace PointyCloudPlugin
 
     void PointyCloudSystem::generateTasks( Ra::Core::TaskQueue* taskQueue, const Ra::Engine::FrameInfo& frameInfo )
     {
-        for(int k=0; k<m_APSSalgo.size(); ++k)
-            taskQueue->registerTask(new APSSTask(m_APSSalgo[k], m_mesh[k], m_timeStat[k], m_viewer->getCameraInterface()->getCamera(),
-                                                 m_splatRadius, m_M, m_influenceRadius));
-
-//        if(m_APSS)
-//            for(auto comp : pointyCloudComponentList)
-//                taskQueue->registerTask(new ComputePointyCloudTask(comp));
+        if(m_APSS)
+        {
+            if(m_cuda)
+            {
+                for(int k=0; k<m_APSSalgo.size(); ++k)
+                    taskQueue->registerTask(new APSSTask(m_APSSalgo[k], m_mesh[k], m_timeStat[k], m_viewer->getCameraInterface()->getCamera(),
+                                                         m_splatRadius, m_M, m_influenceRadius));
+            }
+            else
+            {
+                for(auto comp : pointyCloudComponentList)
+                    taskQueue->registerTask(new ComputePointyCloudTask(comp));
+            }
+        }
     }
 
     void PointyCloudSystem::setSplatRadius(Scalar splatRadius)
