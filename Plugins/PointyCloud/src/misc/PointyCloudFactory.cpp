@@ -31,7 +31,7 @@ std::shared_ptr<PointyCloud> PointyCloudFactory::makeDenseCube(int n, double dl)
 
     size_t size = n*n*n;
 
-    cloud->m_points.resize(size);
+    cloud->resize(size);
 
     int p = 0;
 
@@ -50,9 +50,9 @@ std::shared_ptr<PointyCloud> PointyCloudFactory::makeDenseCube(int n, double dl)
             {
                 pos[2] = k*dl;
                 col[2] = (float)k/(n-1);
-                cloud->m_points[p].pos() = pos;
-                cloud->m_points[p].normal() = Ra::Core::Vector3::Ones().normalized();
-                cloud->m_points[p].color() = col;
+                cloud->at(p).pos() = pos;
+                cloud->at(p).normal() = Ra::Core::Vector3::Ones().normalized();
+                cloud->at(p).color() = col;
             }
         }
     }
@@ -66,7 +66,7 @@ std::shared_ptr<PointyCloud> PointyCloudFactory::makeSphere(double radius, int n
 
     size_t size = n*(m-2)+2; // -2/+2 for poles
 
-    cloud->m_points.resize(size);
+    cloud->resize(size);
 
     double dTheta = 2.0*M_PI/n;
     double dPhi = M_PI/(m-1);
@@ -93,20 +93,20 @@ std::shared_ptr<PointyCloud> PointyCloudFactory::makeSphere(double radius, int n
 
             nor = pos.normalized();
 
-            cloud->m_points[p].pos() = pos;
-            cloud->m_points[p].normal() = nor;
-            cloud->m_points[p].color() = col;
+            cloud->at(p).pos() = pos;
+            cloud->at(p).normal() = nor;
+            cloud->at(p).color() = col;
         }
     }
 
     // add poles
-    cloud->m_points[size-2].pos() = Ra::Core::Vector3(0.0, 0.0, radius);
-    cloud->m_points[size-2].normal() = Ra::Core::Vector3(0.0, 0.0, +1.0);
-    cloud->m_points[size-2].color() = Ra::Core::Vector4(0.5, 1.0, 0.5, 1.0);
+    cloud->at(size-2).pos() = Ra::Core::Vector3(0.0, 0.0, radius);
+    cloud->at(size-2).normal() = Ra::Core::Vector3(0.0, 0.0, +1.0);
+    cloud->at(size-2).color() = Ra::Core::Vector4(0.5, 1.0, 0.5, 1.0);
 
-    cloud->m_points[size-1].pos() = Ra::Core::Vector3(0.0,0.0,-radius);
-    cloud->m_points[size-1].normal() = Ra::Core::Vector3(0.0, 0.0, -1.0);
-    cloud->m_points[size-1].color() = Ra::Core::Vector4(0.5, 0.0, 0.5, 1.0);
+    cloud->at(size-1).pos() = Ra::Core::Vector3(0.0,0.0,-radius);
+    cloud->at(size-1).normal() = Ra::Core::Vector3(0.0, 0.0, -1.0);
+    cloud->at(size-1).color() = Ra::Core::Vector4(0.5, 0.0, 0.5, 1.0);
 
     return cloud;
 }
@@ -115,7 +115,7 @@ std::shared_ptr<PointyCloud> PointyCloudFactory::makeRandom(int n, float xmin, f
 {
     std::shared_ptr<PointyCloud> cloud = std::make_shared<PointyCloud>();
 
-    cloud->m_points.resize(n);
+    cloud->resize(n);
 
     Eigen::Array3f min;
     min << xmin, ymin, zmin;
@@ -125,8 +125,8 @@ std::shared_ptr<PointyCloud> PointyCloudFactory::makeRandom(int n, float xmin, f
     for(int i=0; i<n; ++i)
     {
 //        cloud->m_points[i].pos() = (0.5*(Ra::Core::Vector3::Random()+Ra::Core::Vector3::Ones()).array()*(max-min)+min).matrix();
-        cloud->m_points[i].normal() = Ra::Core::Vector3::Random().normalized();
-        cloud->m_points[i].color() = 0.5*( Ra::Core::Vector4::Random() + Ra::Core::Vector4::Ones() );
+        cloud->at(i).normal() = Ra::Core::Vector3::Random().normalized();
+        cloud->at(i).color() = 0.5*( Ra::Core::Vector4::Random() + Ra::Core::Vector4::Ones() );
     }
 
     return cloud;

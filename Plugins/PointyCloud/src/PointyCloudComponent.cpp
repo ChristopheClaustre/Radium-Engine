@@ -16,38 +16,44 @@ namespace PointyCloudPlugin
     PointyCloudComponent::PointyCloudComponent(const std::string& name, const Ra::Engine::Camera *camera)
         : Ra::Engine::Component( name ), m_camera( camera ),
           m_originalCloud(std::make_shared<PointyCloud>()),
-          m_culling(UsefulPointsSelection(m_originalCloud, m_camera)),
           m_selector(std::make_shared<NeighborsSelection>(m_originalCloud, 3)),
           m_projection(OrthogonalProjection(m_selector, m_originalCloud, 3))
     {
-        m_upsampler.reset(new UpSamplerUnshaken(3,1));
+        m_upsampler.reset(new UpSamplerUnshaken(m_originalCloud,1));
 
         // APSS stats
+        ON_TIMED(
         m_count = 0;
         m_timeCulling = 0;
         m_timeUpsampling = 0;
         m_timeProjecting = 0;
-        m_timeLoading = 0;
+        m_timeLoading = 0;)
     }
 
     PointyCloudComponent::~PointyCloudComponent()
     {
-        if(m_count>0)
-        {
-            LOGP(logINFO) << "\n===Timing computePointyCloud()===\n" <<
-                             "Culling    : " << m_timeCulling/m_count << " μs\n" <<
-                             "Upsampling : " << m_timeUpsampling/m_count << " μs\n" <<
-                             "Projecting : " << m_timeProjecting/m_count << " μs\n" <<
-                             "Loading    : " << m_timeLoading/m_count << " μs\n";
-
-        }
-        if(m_projection.getCount()>0)
-        {
-            LOGP(logINFO) << "\n===Timing project()===\n" <<
-                             "Neighbors query  : " << m_projection.getTimeNeighbors() << " μs\n" <<
-                             "Sphere fitting   : " << m_projection.getTimeFitting() << " μs\n" <<
-                             "Point projection : " << m_projection.getTimeProjecting() << " μs" ;
-        }
+        ON_TIMED(
+            if(m_count>0)
+            {
+                LOGP(logINFO)
+                    << "\n===Timing computePointyCloud() - " << m_cloudName << "===\n"
+                    << "Culling    : " << m_timeCulling/m_count << " μs\n"
+                    << "Upsampling : " << m_timeUpsampling/m_count << " μs\n"
+                    << "Projecting : " << m_timeProjecting/m_count << " μs\n"
+                    << "Loading    : " << m_timeLoading/m_count << " μs\n"
+                    << "Total      : " << (m_timeCulling+m_timeUpsampling+m_timeProjecting+m_timeLoading)/m_count
+                                                << " μs\n";
+            }
+            if(m_projection.getCount()>0)
+            {
+                LOGP(logINFO)
+                    << "\n===Timing project() - " << m_cloudName << "===\n"
+                    << "Neighbors query  : " << m_projection.getTimeNeighbors() << " μs\n"
+                    << "Sphere fitting   : " << m_projection.getTimeFitting() << " μs\n"
+                    << "Point projection : " << m_projection.getTimeProjecting() << " μs\n"
+                    << "Mean projection number : " << m_projection.getMeanProjectionCount();
+            }
+        )
     }
 
     void PointyCloudComponent::initialize()
@@ -89,11 +95,11 @@ namespace PointyCloudPlugin
             LOGP(logINFO) << "cloud " << m_cloudName << " has no color. Creation of colors.";
             colors.resize(vertices.size(), Ra::Core::Color::Ones());
         }
-        Ra::Core::Vector1Array splatSizes;
-        splatSizes.resize(vertices.size(), 1.0);
+        Ra::Core::Vector1Array radiuses;
+        radiuses.resize(vertices.size(), 1.0);
 
         m_workingCloud->addData( Ra::Engine::Mesh::VERTEX_COLOR, colors);
-        m_workingCloud->addData( Ra::Engine::Mesh::POINT_SPLATSIZE, splatSizes);
+        m_workingCloud->addData( Ra::Engine::Mesh::POINT_RADIUS, radiuses);
 
         auto config = Ra::Engine::ShaderConfigurationFactory::getConfiguration("Pointy");
 
@@ -107,14 +113,16 @@ namespace PointyCloudPlugin
         m_originalCloud->loadFromMesh(m_workingCloud.get());
 
         setSplatRadius(sys->getSplatRadius());
-        setEligible();
+        m_culling = new UsefulPointsSelection(m_originalCloud, m_camera);
 
-        LOGP(logINFO) << "cloud " << m_cloudName << " has " << m_originalCloud->m_points.size() << " point(s).";
+        LOGP(logINFO) << "cloud " << m_cloudName << " has " << m_originalCloud->size() << " point(s).";
 
         setUpsamplingMethod(sys->getUpsamplingMethod());
         setProjectionMethod(sys->getProjectionMethod());
         setOptimizationByOctree(sys->isOptimizedByOctree());
         setOptimizationByCUDA(sys->isOptimizedByCUDA());
+        setEligibleFlags();
+
 
 // FOR APSS TEST (comment computePointyCloud's body)
 //        PointyCloud points = m_culling.selectUsefulPoints();
@@ -126,51 +134,52 @@ namespace PointyCloudPlugin
 
     void PointyCloudComponent::computePointyCloud()
     {
-        PointyCloud points = m_culling.selectUsefulPoints();
-        m_upsampler->upSampleCloud(points);
-        m_projection.project(points);
-        points.loadToMesh(m_workingCloud.get());
+
+        ON_TIMED(auto t0 = Ra::Core::Timer::Clock::now());
+        m_culling->selectUsefulPoints();
+        ON_TIMED(auto t1 = Ra::Core::Timer::Clock::now());
+        m_upsampler->upSampleCloud(m_culling->getIndices(), m_culling->getN());
+        ON_TIMED(auto t2 = Ra::Core::Timer::Clock::now());
+        PointyCloud& aCloud = m_upsampler->getUpsampledCloud();
+        m_projection.project(aCloud);
+        ON_TIMED(auto t3 = Ra::Core::Timer::Clock::now());
+        aCloud.loadToMesh(m_workingCloud.get());
+        ON_TIMED(auto t4 = Ra::Core::Timer::Clock::now());
+
+        ON_TIMED(
+        m_timeCulling += Ra::Core::Timer::getIntervalMicro(t0, t1);
+        m_timeUpsampling += Ra::Core::Timer::getIntervalMicro(t1, t2);
+        m_timeProjecting += Ra::Core::Timer::getIntervalMicro(t2, t3);
+        m_timeLoading += Ra::Core::Timer::getIntervalMicro(t3, t4);
+        ++m_count;)
     }
 
-    // record timing statistics printed in destructor
-//    void PointyCloudComponent::computePointyCloud()
-//    {
-//        Ra::Core::Timer::TimePoint t0, t1, t2, t3, t4;
-
-//        t0 = Ra::Core::Timer::Clock::now();
-//        PointyCloud points = m_culling.selectUsefulPoints();
-//        t1 = Ra::Core::Timer::Clock::now();
-//        m_upsampler->upSampleCloud(points);
-//        t2 = Ra::Core::Timer::Clock::now();
-//        m_projection.project(points);
-//        t3 = Ra::Core::Timer::Clock::now();
-//        points.loadToMesh(m_workingCloud.get());
-//        t4 = Ra::Core::Timer::Clock::now();
-
-//        m_timeCulling += Ra::Core::Timer::getIntervalMicro(t0, t1);
-//        m_timeUpsampling += Ra::Core::Timer::getIntervalMicro(t1, t2);
-//        m_timeProjecting += Ra::Core::Timer::getIntervalMicro(t2, t3);
-//        m_timeLoading += Ra::Core::Timer::getIntervalMicro(t3, t4);
-//        ++m_count;
-//    }
-
-    void PointyCloudComponent::setEligible() {
-        for (auto it = m_originalCloud->m_points.begin(); it != m_originalCloud->m_points.end(); ++it) {
-            it->eligible() = (m_selector->isEligible(*it));
+    void PointyCloudComponent::setEligibleFlags() {
+        #pragma omp parallel for
+        for (int i = 0; i < m_originalCloud->size(); ++i) {
+            m_originalCloud->at(i).eligible() = (m_selector->isEligible(m_originalCloud->at(i)));
         }
     }
 
     void PointyCloudComponent::setInfluenceRadius(Scalar influenceRadius) {
         m_projection.setInfluenceRadius(influenceRadius);
         m_selector->setInfluenceRadius(influenceRadius);
-        m_upsampler->setRadius(influenceRadius);
-        setEligible();
+        setEligibleFlags();
+        m_upsampler->resetUpsamplingInfo();
     }
 
     void PointyCloudComponent::setSplatRadius(Scalar splatRadius) {
-        for (auto it = m_originalCloud->m_points.begin(); it != m_originalCloud->m_points.end(); ++it) {
-            it->splatSize() = splatRadius;
+        #pragma omp parallel for
+        for (int i = 0; i < m_originalCloud->size(); ++i) {
+            m_originalCloud->at(i).radius() = splatRadius;
         }
+
+        auto sys = static_cast<PointyCloudSystem*>(m_system);
+        if (!sys->isAPSSused()) {
+            resetWorkingCloud();
+        }
+
+        m_upsampler->resetUpsamplingInfo();
     }
 
     void PointyCloudComponent::setThreshold(int threshold) {
@@ -200,10 +209,10 @@ namespace PointyCloudPlugin
         auto sys = static_cast<PointyCloudSystem*>(m_system);
 
         if ( m_upsamplingMethod == FIXED_METHOD ){
-            m_upsampler.reset(new UpSamplerUnshaken(sys->getInfluenceRadius(), sys->getM()));
+            m_upsampler.reset(new UpSamplerUnshaken(m_originalCloud, sys->getM()));
         }
         else if ( m_upsamplingMethod == SIMPLE_METHOD ){
-            m_upsampler.reset(new UpSamplerSimple(sys->getInfluenceRadius(),sys->getThreshold(),*m_camera));
+            m_upsampler.reset(new UpSamplerSimple(m_originalCloud, sys->getThreshold(), *m_camera));
         }
         // TODO the last method (but not the least)
     }
@@ -239,7 +248,7 @@ namespace PointyCloudPlugin
         // TODO donner à tout le monde ???
     }
 
-    void PointyCloudComponent::resetOriginalCloud()
+    void PointyCloudComponent::resetWorkingCloud()
     {
         m_originalCloud->loadToMesh(m_workingCloud.get());
     }

@@ -6,7 +6,6 @@
 #include <misc/PointyCloudFactory.hpp>
 #include <APSS/NeighborsSelection/NeighborsSelection.hpp>
 #include <APSS/NeighborsSelection/NeighborsSelectionWithRegularGrid.hpp>
-#include <APSS/Point.h>
 
 #include <cstdlib>
 
@@ -31,6 +30,7 @@ namespace PointyCloudTests
 
             // number of selection test
             const int testCount = 100;
+            bool sameNeighbors = true;
 
             for(int itest = 0; itest<testCount; itest++)
             {
@@ -46,17 +46,18 @@ namespace PointyCloudTests
 
                 APoint p(pos, nor, col);
 
-                std::vector<int> resRef  = selectorRef.getNeighbors(p);
-                std::vector<int> resTest = selectorTest.getNeighbors(p);
+                std::vector<int> resRef;
+                selectorRef.getNeighbors(p, resRef);
+                std::vector<int> resTest;
+                selectorTest.getNeighbors(p, resTest);
 
-                RA_UNIT_TEST(resRef.size()==resTest.size(), "Wrong neigbors count");
+                sameNeighbors &= (resRef.size()==resTest.size());
 
-                bool sameNeighbors = true;
                 for(auto& idxRef : resRef)
                     sameNeighbors &= (std::find(resTest.begin(), resTest.end(), idxRef)!=resTest.end());
 
-                RA_UNIT_TEST(sameNeighbors, "Wrong neighbors");
             }
+            RA_UNIT_TEST(sameNeighbors, "Wrong neighbors");
         }
     };
     RA_TEST_CLASS(NeighborsSelectionTest);

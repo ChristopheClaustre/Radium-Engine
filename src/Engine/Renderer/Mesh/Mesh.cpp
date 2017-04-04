@@ -131,11 +131,11 @@ namespace Ra {
             m_v4Data[static_cast<uint>(VERTEX_COLOR)].assign(colors, colors+size);
 
             // splats sizes
-            m_v1Data[static_cast<uint>(POINT_SPLATSIZE)].assign(splatSizes, splatSizes+size);
+            m_v1Data[static_cast<uint>(POINT_RADIUS)].assign(splatSizes, splatSizes+size);
 
             // mark mesh as dirty
             m_dataDirty[MAX_MESH + MAX_VEC3 + static_cast<uint>(VERTEX_COLOR)] = true;
-            m_dataDirty[MAX_MESH + MAX_VEC3 + MAX_VEC4 + static_cast<uint>(POINT_SPLATSIZE)] = true;
+            m_dataDirty[MAX_MESH + MAX_VEC3 + MAX_VEC4 + static_cast<uint>(POINT_RADIUS)] = true;
             for (uint i = 0; i < MAX_MESH; ++i)
                 m_dataDirty[i] = true;
             m_isDirty = true;
@@ -290,7 +290,7 @@ namespace Ra {
                 sendGLData(m_v4Data[VERTEX_WEIGHT_IDX], MAX_MESH + MAX_VEC3 + VERTEX_WEIGHT_IDX);
 
                 // Vec1 data
-                sendGLData(m_v1Data[POINT_SPLATSIZE], MAX_MESH + MAX_VEC3 + MAX_VEC4 + POINT_SPLATSIZE);
+                sendGLData(m_v1Data[POINT_RADIUS], MAX_MESH + MAX_VEC3 + MAX_VEC4 + POINT_RADIUS);
 
                 GL_ASSERT( glBindVertexArray( 0 ) );
 

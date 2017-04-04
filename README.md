@@ -7,7 +7,7 @@ for an overview of the project.
 ## Dependencies 
 * Eigen 3.2 (in repository)
 * Assimp 3.2 (included as a submodule)
-* Patate 0.5 (included as a submodule (branch apss_metric)
+* Patate 0.5 (included as a submodule (branch apss_metric))
 * OpenGL 3+ / GLSL 330
 * Qt Core, Qt Widgets and Qt OpenGL v5.4+ 
 * GLEW (used on Windows only for now)

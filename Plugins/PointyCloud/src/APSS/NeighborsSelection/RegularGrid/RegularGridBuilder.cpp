@@ -41,7 +41,7 @@ void RegularGridBuilder::initialize(std::shared_ptr<PointyCloud> cloud,  Regular
     grid.m_dz = grid.m_aabb.diagonal()[2]/grid.m_nz;
 
     // initialize indices from 0 to size-1
-    size_t size = cloud->m_points.size();
+    size_t size = cloud->size();
     grid.m_indices.resize(size);
     for(int idx = 0; idx<size; ++idx)
         grid.m_indices[idx] = idx;
@@ -53,10 +53,11 @@ void RegularGridBuilder::initialize(std::shared_ptr<PointyCloud> cloud,  Regular
 void RegularGridBuilder::fill(std::shared_ptr<PointyCloud> cloud, RegularGrid &grid)
 {
     auto begin = grid.m_indices.begin();
+    #pragma omp parallel for
     for(int k = 0; k < grid.m_indices.size();++k)
     {
         // corresponding cell
-        int idxCell = grid.rawIndex(cloud->m_points[k].pos());
+        int idxCell = grid.rawIndex(cloud->at(k).pos());
 
         // index in m_indices
         int pos = grid.m_cells[idxCell].index + grid.m_cells[idxCell].length;
@@ -77,8 +78,10 @@ Ra::Core::Aabb RegularGridBuilder::computeAabb(std::shared_ptr<PointyCloud> clou
 {
     Ra::Core::Aabb aabb;
 
-    for(auto& p : cloud->m_points)
-        aabb.extend(p.pos());
+    #pragma omp parallel for
+    for(int i = 0; i < cloud->size(); ++i) {
+        aabb.extend(cloud->at(i).pos());
+    }
 
     // add an extra space at corners
     const float epsilon = 1e-5;

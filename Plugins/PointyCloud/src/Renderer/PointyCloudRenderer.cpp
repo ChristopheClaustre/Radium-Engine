@@ -28,9 +28,8 @@ namespace PointyCloudPlugin
             };
         }
 
-        PointyCloudRenderer::PointyCloudRenderer(uint width, uint height , Scalar splatSize) :
-            Ra::Engine::Renderer(width, height),
-            m_splatSize(splatSize)
+        PointyCloudRenderer::PointyCloudRenderer(uint width, uint height) :
+            Ra::Engine::Renderer(width, height)
         {
 
         }
@@ -60,8 +59,6 @@ namespace PointyCloudPlugin
         {
             m_fbo->useAsTarget(m_width, m_height);
             {
-//                glPointSize(m_splatSize);
-
                 GL_ASSERT( glDepthMask( GL_TRUE ) );
                 GL_ASSERT( glColorMask( 1, 1, 1, 1 ) );
                 GL_ASSERT( glDrawBuffers( 1, buffers ) );
@@ -83,13 +80,10 @@ namespace PointyCloudPlugin
                     if( ro->isVisible() )
                     {
                         Ra::Engine::RenderParameters params;
-                        if(m_lights.size()>0)
+                        if(m_lights.size()>0) {
                             m_lights[0]->getRenderParameters( params );
+                        }
 
-                        //TODO: peut être changer cette ajout de paramètre
-                        // normalement c'est les ligthparams uniquement...
-                        // mais bon j'ai l'impression qu'il n'existe aucun autre moyen...
-                        params.addParameter("splatSize", m_splatSize);
                         ro->render(params, renderData);
                     }
             }

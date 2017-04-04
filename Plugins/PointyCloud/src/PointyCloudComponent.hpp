@@ -51,18 +51,18 @@ namespace PointyCloudPlugin
         void setOptimizationByOctree(bool);
         void setOptimizationByCUDA(bool);
 
-        void resetOriginalCloud();
+        void resetWorkingCloud();
 
     private:
         // set eligible flag on each points
-        void setEligible();
+        void setEligibleFlags();
 
     private:
         Ra::Core::Index m_meshIndex;
         std::string m_contentName;
         std::string m_cloudName;
 
-        const Ra::Engine::Camera *m_camera;
+        const Ra::Engine::Camera* m_camera;
 
         // the data
         std::shared_ptr<PointyCloud> m_originalCloud;
@@ -70,7 +70,7 @@ namespace PointyCloudPlugin
 
         // class for the APSS
         std::unique_ptr<UpSampler> m_upsampler;
-        UsefulPointsSelection m_culling;
+        UsefulPointsSelection* m_culling;
         std::shared_ptr<NeighborsSelection> m_selector;
         OrthogonalProjection m_projection;
 

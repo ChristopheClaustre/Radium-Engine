@@ -2,7 +2,8 @@
 #define POINTYCLOUDPLUGIN_ORTHOGONALPROJECTION_HPP
 
 #include <APSS/PointyCloud.hpp>
-
+#include <PointyCloudPlugin.hpp>
+#include <APSS/NeighborsSelection/NeighborsProcessor.hpp>
 #include <grenaille.h>
 
 #include <memory>
@@ -10,6 +11,8 @@
 namespace PointyCloudPlugin {
 
 #define MAX_FITTING_ITERATION 10
+#define THRESHOLD_NORMAL 1 // degrees
+#define THRESHOLD_POS    0.1 // % of splatRadius
 
 // Define related structure
 typedef Grenaille::DistWeightFunc<APoint, Grenaille::SmoothWeightKernel<Scalar> > WeightFunc;
@@ -25,17 +28,18 @@ public:
     OrthogonalProjection(std::shared_ptr<NeighborsSelection> neighborsSelection,
                          std::shared_ptr<PointyCloud> originalCloud,
                          Scalar influenceRadius);
-    ~OrthogonalProjection();
+    virtual ~OrthogonalProjection();
 
     inline void setInfluenceRadius(Scalar influenceRadius) { m_influenceRadius=influenceRadius; }
 
     void project(PointyCloud& upSampledCloud);
 
     // timing accessor
-    float getTimeNeighbors() const;
-    float getTimeFitting() const;
-    float getTimeProjecting() const;
-    int getCount() const;
+    Scalar getTimeNeighbors() const;
+    Scalar getTimeFitting() const;
+    Scalar getTimeProjecting() const;
+    size_t getCount() const;
+    size_t getMeanProjectionCount() const;
 
 protected:
 
@@ -45,12 +49,25 @@ protected:
     Scalar m_influenceRadius;
 
     // time stats
-    float m_timeNeighbors;
-    float m_timeFitting;
-    float m_timeProjecting;
+    Scalar m_timeNeighbors;
+    Scalar m_timeFitting;
+    Scalar m_timeProjecting;
     size_t m_count;
+    size_t m_meanProjectionCount;
 };
 
+class AddFun : public NeighborsProcessor
+{
+public:
+    AddFun(Fit* fit, const PointyCloud* cloud) :
+        m_fit(fit), m_cloud(cloud) {}
+    virtual ~AddFun(){}
+    virtual inline void operator()(int idx) override {m_fit->addNeighbor(m_cloud->m_points[idx]);}
+
+private:
+    Fit* m_fit;
+    const PointyCloud* m_cloud;
+};
 
 
 } // namespace PointyCloudPlugin

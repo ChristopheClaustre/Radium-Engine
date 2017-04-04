@@ -1,6 +1,5 @@
 #include "NeighborsSelectionWithRegularGrid.hpp"
 
-#include <APSS/Point.h>
 #include <APSS/NeighborsSelection/RegularGrid/RegularGridBuilder.hpp>
 #include <APSS/NeighborsSelection/RegularGrid/RegularGrid.hpp>
 
@@ -16,9 +15,15 @@ NeighborsSelectionWithRegularGrid::~NeighborsSelectionWithRegularGrid()
 {
 }
 
-std::vector<int> NeighborsSelectionWithRegularGrid::getNeighbors(const APoint &point) const
+void NeighborsSelectionWithRegularGrid::getNeighbors(const APoint &point, std::vector<int> & indexSelected) const
 {
-    return m_grid->query(point.pos(), m_influenceRadius);
+    m_grid->query(point.pos(), m_influenceRadius, indexSelected);
+}
+
+
+void NeighborsSelectionWithRegularGrid::processNeighbors(const APoint& point, NeighborsProcessor& f) const
+{
+    m_grid->process(point.pos(), m_influenceRadius, f);
 }
 
 bool NeighborsSelectionWithRegularGrid::isEligible(const APoint& point) const

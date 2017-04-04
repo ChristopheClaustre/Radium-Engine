@@ -11,24 +11,34 @@
 namespace PointyCloudPlugin
 {
 
+typedef struct {
+    int m_M;
+    int m_begin;
+} UpsamplingInfo;
+
 class UpSampler
 {
 public :
-    UpSampler(Scalar radius);
-    ~UpSampler();
-    virtual void upSampleCloud(PointyCloud& cloud)=0;
+    UpSampler(std::shared_ptr<PointyCloud> originalCloud);
+    virtual ~UpSampler();
+    void upSampleCloud(const std::vector<unsigned int>& indices, int m_count);
+    inline PointyCloud& getUpsampledCloud() { return *m_prevCloud; }
 
-    inline void setRadius(Scalar radius) { m_radius = radius; }
+    inline void resetUpsamplingInfo()
+        { m_prevUpsamplingInfo->clear(); m_upsamplingInfo->clear(); m_prevCloud->clear(); m_cloud->clear(); }
+
+protected:
+    void upSamplePoint(const int& m, const APoint& point, int index);
+    virtual void upSamplePointMaster(int indice)=0;
+    static Ra::Core::Vector3 calculU(const Ra::Core::Vector3& normal);
+    static Ra::Core::Vector3 calculV(const Ra::Core::Vector3& normal, const Ra::Core::Vector3& u);
 
 protected :
-    Scalar m_radius;
-    std::vector<APoint> m_newpoints;
+    std::shared_ptr<PointyCloud> m_originalCloud;
     PointyCloud* m_cloud;
-
-    void upSamplePoint(const int& m, const int& indice);
-    Ra::Core::Vector3 calculU(const Ra::Core::Vector3& normal);
-    Ra::Core::Vector3 calculV(const Ra::Core::Vector3& normal,const Ra::Core::Vector3& u);
-
+    PointyCloud* m_prevCloud;
+    std::map<unsigned int, UpsamplingInfo> * m_upsamplingInfo;
+    std::map<unsigned int, UpsamplingInfo> * m_prevUpsamplingInfo;
 }; // class Upsampler
 
 } // namespace PointyCloudPlugin

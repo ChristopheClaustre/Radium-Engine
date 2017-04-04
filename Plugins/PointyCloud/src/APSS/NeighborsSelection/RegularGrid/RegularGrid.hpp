@@ -9,6 +9,7 @@
 namespace PointyCloudPlugin {
 
     class PointyCloud;
+    class NeighborsProcessor;
 
     class RegularGrid
     {
@@ -25,7 +26,8 @@ namespace PointyCloudPlugin {
     public:
         ~RegularGrid();
 
-        std::vector<int> query(const Ra::Core::Vector3& p, float r) const;
+        void query(const Ra::Core::Vector3& p, float r, std::vector<int> & indices) const;
+        void process(const Ra::Core::Vector3& p, float r, NeighborsProcessor& f) const;
 
         bool hasNeighbors(const Ra::Core::Vector3& p, float r) const;
 

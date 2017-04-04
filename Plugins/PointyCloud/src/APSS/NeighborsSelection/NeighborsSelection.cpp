@@ -1,7 +1,6 @@
 #include "NeighborsSelection.hpp"
 
-#include "APSS/Point.h"
-#include "APSS/PointyCloud.hpp"
+#include <APSS/NeighborsSelection/NeighborsProcessor.hpp>
 
 namespace PointyCloudPlugin
 {
@@ -16,33 +15,41 @@ NeighborsSelection::~NeighborsSelection()
 {
 }
 
-std::vector<int> NeighborsSelection::getNeighbors(const APoint& point) const
+void NeighborsSelection::getNeighbors(const APoint& point, std::vector<int> & indexSelected) const
 {
-   std::vector<int> indexSelected;
-   auto beginIt = m_cloud->m_points.begin();
+    for(int i = 0; i < m_cloud->size(); ++i)
+    {
+        if ((m_cloud->at(i).pos() - point.pos()).norm() <= m_influenceRadius)
+        {
+            indexSelected.push_back(i);
+        }
+    }
+}
 
-   for (auto currentIt = beginIt; currentIt != m_cloud->m_points.end(); ++currentIt)
-   {
-       if ((currentIt->pos() - point.pos()).norm() <= m_influenceRadius)
-       {
-           indexSelected.push_back(currentIt-beginIt);
-       }
-   }
-   return indexSelected;
+void NeighborsSelection::processNeighbors(const APoint& point, NeighborsProcessor& f) const
+{
+    auto beginIt = m_cloud->m_points.begin();
+
+    for (auto currentIt = beginIt; currentIt != m_cloud->m_points.end(); ++currentIt)
+    {
+        if ((currentIt->pos() - point.pos()).norm() <= m_influenceRadius)
+        {
+            f(currentIt-beginIt);
+        }
+    }
 }
 
 bool NeighborsSelection::isEligible(const APoint& point) const
 {
    int neighbors = 0;
-   auto beginIt = m_cloud->m_points.begin();
-   auto currentIt = beginIt;
-   while (currentIt != m_cloud->m_points.end() && neighbors < 6)
+   int i = 0;
+   while (i < m_cloud->size() && neighbors < 6)
    {
-       if ((currentIt->pos() - point.pos()).norm() <= m_influenceRadius)
+       if ((m_cloud->at(i).pos() - point.pos()).norm() <= m_influenceRadius)
        {
            ++neighbors;
        }
-       ++currentIt;
+       ++i;
    }
    return (neighbors >=6);
 }

@@ -15,6 +15,13 @@
 
 #define LOGP(log) LOG(log) << "PointyCloudPlugin : "
 
+#define TIMED
+#ifndef TIMED
+#   define ON_TIMED(CODE) /* rien */
+#else
+#   define ON_TIMED(CODE) CODE
+#endif
+
 namespace Ra
 {
     namespace Engine
@@ -84,11 +91,10 @@ namespace PointyCloudPlugin
     public:
         static const std::array<std::string,MAX_UPSAMPLING_METHOD> UPSAMPLING_METHOD_STR;
         static const std::array<std::string,MAX_PROJECTION_METHOD> PROJECTION_METHOD_STR;
-        static constexpr QDoubleSpinBoxInit splatRadiusInit { 0.01,  5.0, 0.01, 0.5};
-        static constexpr QDoubleSpinBoxInit influenceInit   { 0.01, 30.0, 0.01, 2.5};
-        static constexpr QDoubleSpinBoxInit betaInit        {-8   ,  8  , 0.5 , 0.0};
-        static constexpr QSpinBoxInit thresholdInit { 1,   5,  1, 1};
-        static constexpr QSpinBoxInit mInit         { 1, 100, 2, 3};
+        static constexpr QDoubleSpinBoxInit splatRadiusInit { 0.0001,   5.0, 0.01, 0.5};
+        static constexpr QDoubleSpinBoxInit influenceInit   { 0.0001, 100.0, 0.01, 1.2};
+        static constexpr QSpinBoxInit thresholdInit { 1, 1000, 10, 80};
+        static constexpr QSpinBoxInit mInit         { 1,  100,  1,  3};
     };
 
 } // namespace

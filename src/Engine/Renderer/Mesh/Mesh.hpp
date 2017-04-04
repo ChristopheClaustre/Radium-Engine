@@ -71,7 +71,7 @@ namespace Ra
             /// Optional vector 1 data
             enum Vec1Data : uint
             {
-                POINT_SPLATSIZE = 0,   /// points splat size.
+                POINT_RADIUS = 0,   /// point's splat size.
 
                 MAX_VEC1
             };

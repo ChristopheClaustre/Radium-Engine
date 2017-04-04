@@ -50,8 +50,6 @@ namespace PointyCloudPlugin
 
         virtual void generateTasks( Ra::Core::TaskQueue* taskQueue, const Ra::Engine::FrameInfo& frameInfo ) override;
 
-        std::vector<PointyCloudComponent*> getComponents();
-
         void setSplatRadius(Scalar splatRadius);
         void setInfluenceRadius(Scalar influenceRadius);
         void setThreshold(int threshold);
@@ -65,7 +63,6 @@ namespace PointyCloudPlugin
 
         inline const Scalar& getSplatRadius() const { return m_splatRadius; }
         inline const Scalar& getInfluenceRadius()  const { return m_influenceRadius; }
-        inline const Scalar& getBeta() const { return m_beta; }
         inline const int& getThreshold() const { return m_threshold; }
         inline const int& getM() const { return m_M; }
         inline const UPSAMPLING_METHOD& getUpsamplingMethod() const { return m_upsampler; }
@@ -81,9 +78,12 @@ namespace PointyCloudPlugin
         Ra::Gui::Viewer * m_viewer;
         std::vector<PointyCloudComponent*> pointyCloudComponentList;
 
+        // camera attributes
+        Ra::Core::Matrix4 m_prevProjMatrix;
+        Ra::Core::Matrix4 m_prevViewMatrix;
+
         Scalar m_splatRadius;
         Scalar m_influenceRadius;
-        Scalar m_beta;
         int m_threshold;
         int m_M;
         UPSAMPLING_METHOD m_upsampler;
@@ -96,6 +96,8 @@ namespace PointyCloudPlugin
         std::vector<Cuda::APSS*> m_APSSalgo;
         std::vector<std::shared_ptr<Ra::Engine::Mesh> > m_mesh;
         std::vector<TimeStat*> m_timeStat;
+
+        bool to_refresh;
     };
 
 } // namespace PointyCloudPlugin
