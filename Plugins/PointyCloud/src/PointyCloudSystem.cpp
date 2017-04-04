@@ -100,7 +100,7 @@ namespace PointyCloudPlugin
                                                       mesh->getData(Ra::Engine::Mesh::VERTEX_COLOR).data(),
                                                       mesh->getGeometry().m_vertices.size());
                     // stack: APSS Cuda class + associated target mesh + timing statistics
-                    m_APPS.push_back(apss);
+                    m_APSSalgo.push_back(apss);
                     m_mesh.push_back(mesh);
                     m_timeStat.push_back(new TimeStat());
                 }
@@ -115,8 +115,8 @@ namespace PointyCloudPlugin
 
     void PointyCloudSystem::generateTasks( Ra::Core::TaskQueue* taskQueue, const Ra::Engine::FrameInfo& frameInfo )
     {
-        for(int k=0; k<m_APPS.size(); ++k)
-            taskQueue->registerTask(new APSSTask(m_APPS[k], m_mesh[k], m_timeStat[k], m_viewer->getCameraInterface()->getCamera(),
+        for(int k=0; k<m_APSSalgo.size(); ++k)
+            taskQueue->registerTask(new APSSTask(m_APSSalgo[k], m_mesh[k], m_timeStat[k], m_viewer->getCameraInterface()->getCamera(),
                                                  m_splatRadius, m_M, m_influenceRadius));
 
 //        if(m_APSS)
