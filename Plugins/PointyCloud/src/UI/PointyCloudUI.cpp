@@ -40,7 +40,11 @@ PointyCloudUI::PointyCloudUI(Scalar splatRadius, Scalar influenceRadius, int Thr
     }
     ui->m_projectionMethod->setCurrentIndex(projector);
 
+#ifdef POINTYCLOUD_CAN_USE_CUDA
     ui->m_cuda->setChecked(cuda);
+#else
+    ui->m_cuda->setEnabled(false);
+#endif
     ui->m_octree->setChecked(octree);
 
     ui->m_APSS->setChecked(APSS);

@@ -262,7 +262,7 @@
      <item>
       <widget class="QCheckBox" name="m_cuda">
        <property name="toolTip">
-        <string>use cuda optimisation or not (not yet implemented)</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;use cuda optimisation or not (not yet fully implemented)&lt;/p&gt;&lt;p&gt;if this checkbox is disable, it means that you don't have CUDA installed on your device&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="text">
         <string>CUDA</string>

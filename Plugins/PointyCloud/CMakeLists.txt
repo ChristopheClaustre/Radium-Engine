@@ -36,7 +36,7 @@ find_package( Qt5Widgets REQUIRED )
 
 # CUDA
 set(CUDA_HOST_COMPILER /usr/bin/gcc-4.9)
-find_package( CUDA REQUIRED )
+find_package( CUDA QUIET )
 
 if(${CUDA_FOUND})
     message("Found CUDA " ${CUDA_VERSION_STRING} " in " ${CUDA_TOOLKIT_ROOT_DIR})
@@ -45,6 +45,7 @@ if(${CUDA_FOUND})
     set( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${PLUGIN_FLAGS}" )
     file( GLOB_RECURSE cuda    src/*.cu src/*.h )
     set( CMAKE_CXX_FLAGS "-DAPSS_CUDA ${CMAKE_CXX_FLAGS}")
+    add_definitions(-DPOINTYCLOUD_CAN_USE_CUDA)
 else()
     message("CUDA not found...")
 endif(${CUDA_FOUND})
